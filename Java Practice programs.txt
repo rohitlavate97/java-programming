@@ -1,2 +1,183 @@
 --Java Programs:
   -------------
+  
+1) Swapping Two Numbers:
+  ---------------------
+package com.alchemist.logical;
+
+public class SwappingNumbers {
+	public static void main(String[] args) {
+		int a = 10;
+		int b = 20;
+		System.out.println("Numbers before swapping are 'a':"+a+"'b':"+b);
+		System.out.println("Swapping two numbers");
+		swapLogic_one(a,b);
+		System.out.println("Numbers after swapping are 'a':"+a+"'b':"+b);
+	}
+	
+	public static void swapLogic_one(int a, int b) {
+		int t = a;
+		a = b;
+		b = t;
+	}
+	
+	public static void swapLogic_two(int a, int b) {
+		a = a + b;
+		b = a - b;
+		a = a - b;
+	}
+	
+	public static void swapLogic_three(int a, int b) {
+		a = a/b;
+		b = a/b;
+		a = a/b;
+	}
+	
+	public static void swapLogic_four(int a, int b) {
+		b = a^b;
+		a = a^b;
+	}
+}
+
+2) Reverse the Number:
+   ------------------
+package com.alchemist.logical;
+
+import java.util.Scanner;
+
+public class ReverseTheNumber {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		System.out.println("Enter the number: ");
+		int num = scn.nextInt();
+		num = reverseInt_one(num);
+		System.out.println("Reversed Number: "+num);
+	}
+	
+	public static int reverseInt_one(int num) {
+		int rev = 0;
+		while(num!=0) {
+			rev = rev*10 + num%10;
+			num = num/10;
+		}
+		return rev;
+	}
+	
+	public static int reverseInt_two(int num) {
+	    StringBuffer sb = new StringBuffer(String.valueOf(num));
+	    StringBuffer rev = sb.reverse();
+	    return Integer.parseUnsignedInt(rev.toString());
+	}
+	
+	public static int reverseInt_three(int num) {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(num);
+	    StringBuilder rev = sb.reverse();
+	    return Integer.parseUnsignedInt(rev.toString());
+	}
+}
+
+3) Reverse the String:
+   ------------------
+package com.alchemist.logical;
+
+import java.util.Scanner;
+
+public class ReverseTheString {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		System.out.println("Enter the String: ");
+		String name = scn.next();
+		String rev = reverseString_one(name);
+		System.out.println("Reversed String is: "+rev);
+	}
+	
+	public static String reverseString_one(String name) {
+		String rev = " ";
+		for(int i = name.length()-1; i>=0;i--) {
+			rev = rev + name.charAt(i);
+		}
+		return rev;
+	}
+	
+	public static String reverseString_two(String name) {
+		String rev = "";
+		char[] a = name.toCharArray();
+		for(int i = a.length-1; i>=0; i--) {
+			rev = rev + a[i];
+		}
+		return rev;
+	}
+	
+	public static String reverseString_three(String name) {
+		StringBuffer sb = new StringBuffer(name);
+		return sb.reverse().toString();
+	}
+	
+	public static String reverseString_four(String name) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
+		return sb.reverse().toString();
+	}
+}
+
+4) Palindrome String: (Same for Palindrome number)
+  ------------------
+package com.alchemist.logical;
+
+import java.util.Scanner;
+
+public class PalindromeString {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		System.out.println("Enter the String: ");
+		String name = scn.next();
+		boolean output = palindromeString(name);
+		System.out.println("This String is pandromic: "+output);
+	}
+	
+	public static boolean palindromeString(String name) {
+		String input = name;
+		String rev = "";
+		for(int i = name.length()-1; i>=0;i--) {
+			rev = rev + name.charAt(i);
+		}
+		if(input.equals(rev)) return true;
+		else return false;
+	}
+}
+
+5) Count Appearances of Each Character:
+   -----------------------------------
+package com.alchemist.logical;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class CharacterCount {
+
+    public static void main(String[] args) {
+
+        String str = "Programming";
+        HashMap<Character, Integer> map = countChar(str);
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " = " + entry.getValue());
+        }
+    }
+    
+    public static HashMap<Character, Integer> countChar(String str) {
+    	// Convert to lowercase (optional)
+        str = str.toLowerCase();
+        HashMap<Character, Integer> map = new HashMap<>();
+        // Count character occurrence
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (map.containsKey(ch)) {
+                map.put(ch, map.get(ch) + 1);
+            } else {
+                map.put(ch, 1);
+            }
+        }
+        return map;
+    }
+}
