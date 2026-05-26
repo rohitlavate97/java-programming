@@ -1,0 +1,433 @@
+-Java Programming:
+------------------
+-Core Java:
+----------
+FullStack Development == FrontEnd Development + BackEnd Developement
+FrontEnd = User Interface --> Clients/Users will interact with software application using frontend
+BackEnd = The hidden part of application, which contains business logic. Bridge between database and frontend
+        - When User perform some action on frontend, their backend logic will be executed to handle that operation
++------------------+      +------------------+      +------------------------------+
+|  Phone / Laptop  | ---> |        UI        | ---> |   Server (App + Database)   |
++------------------+      +------------------+      +------------------------------+
+
+-FrontEnd = HTML(Only Static website developed , same response for every user)
+            JavaScript(Website with dynamic behavior)
+            BootStrap(To achieve mobile compatibility)
+            Angular/React(As ready-made template or ready-made code is available, rapid frontend developement)
+            Angular(JS Framework)
+            React(JS Library)
+-BackEnd = Java/.Net/Python/PHP/NodeJs
+-Databases = Oracle/MySQL/MS-SQL server/Postgres/MongoDB/Casandra/Hbase/Hiveßß
+-Server = Software used to run application eg: Tomcat/JBoss/WebLogic/Websphere/IIS/Wildfly
+          For .Net --> IIS(Server by application)
+          Remaining for Java
+-Tools:
+       Github: To integrate code (Code repository)
+       Sonarqube: To identify programmer mistakes. Code review ie Code quality checking
+       JUnit: Is program working as expected
+       JMeter: Used for checking the performance
+       Jenkins: Deployment software (Takes code from github and keep in server ie Jenkins used to deploy code)
+       JIRA: Project management tool/Bug tracking/Work Assignment
+       Maven, Log4j and SLF4J, Docker, Postman, Swagger, Debugging, Graddle, Project Lombok, Git, BitBucket,
+       Putty and Winscp, splunk, Mocking, Jacoco, Kubernetes, Apache kafka, Redis cache
+       Cloud: Give infrastructure for rent it will provide Network, Power, Security, Storage and Setup for project
+              AWS, Azure, GCP, Oracle cloud, IBM cloud, VMWare cloud, Alibaba cloud etc
+
+-Java Introduction:  Open source
+-------------------
+-Java language developed by sun microsystem under lead of James gosling in 1991(OAK)
+-The first version of Java came in market in 1995
+-Oracle corporation acquired sun microsyste, now java is under licence of oracle corporation
+-Java divided into 3 parts: J2SE --> Core Java(JSE -> Java Stadard Edition)         --> Software/App restricted to particular machine
+                            J2EE --> Advanced Java(JEE -> Java Entreprise Edition)  --> Can develop Web Application
+                            J2ME --> Java Micro Edition(Not in demand, as android)  --> To develop mobile apps
+
+-Java Features: (Tagline: WORA --> Write Once, Run Anywhere)
+--------------
+1. Simple: Confusing concepts from C language removed in Java
+2. Platform Independent: Platform means an environment where we are going to run program eg: OS(Mediator between User and Computer)
+
+C Language => object code => Machine code(binary)
+
++------------------+       compile        +------------------+
+|   Java Source    | ------------------> |     Bytecode     |
+|     (.java)      |   (javac compiler)  |     (.class)     |
++------------------+                     +------------------+
+                                                   |
+                                                   v
+                                +----------------------------------+
+                                |               JVM                |
+                                | (Java Virtual Machine)           |
+                                +----------------------------------+
+                                   /             |              \
+                                  /              |               \
+                                 v               v                v
+
+                    +----------------+  +----------------+  +----------------+
+                    |   Windows OS   |  |    Linux OS    |  |     macOS      |
+                    +----------------+  +----------------+  +----------------+
+
+JVM will not execute program directly, it will check which machine it is when we are runnning program -> It converts program into machine understandable format
+If you install java software then JVM also installed. when you run program JVM will comes automatically .java file compiled generate .class file
+JVM(Java Virtual Machine) made Java as platform Independent. JVM is responsible to run/execute Java Programs
+3.Robust: Strong programming language, following 2 reasons
+-Automatic memory management(Memory allocation + deallocation)
+-Self Healing capacity(Exception Handling)
+4. OOPs(Object Oriented Programming System):
+-Everything will be represented in Objectt format
+-Code Reusablility
+5. Secure: Virus can attack on object code, but cannot attack on Byte code
+6. Distributed Systems: In Java, code is not needed to execute sequentially
+7. Portable: Easily Java program can be transfered from one machine to another machine
+8. Java is Dynamic
+
+-Environment Setup:
+------------------
+1. Download and Install Java Software
+2. Set Path for Java 
+path = C:\Program Files\Java\jdk1.8.0-202\bin (Edit System Variables)  -> To tell where java is available
+3. Open command prompt and check 'Java'
+
+- What is difference between JDK, JRE and JVM?
+---------------------------------------------
+-JDK(Java Development Kit) => Contains setup of tool to develop program
+-JRE(Java Runtime Environment) => Give platform to run program
+-JVM will take care of program execution
++----------------------------------------------------------------------------------------------------------------------------------+
+|                                           JDK (Java Development Kit)                                                             |
+|----------------------------------------------------------------------------------------------------------------------------------|
+| Purpose : Used for Java Development (Write, Compile, Debug, Run Applications)                                                    |
+|                                                                                                                                  |
+| Components Included:                                                                                                              |
+|                                                                                                                                  |
+|   +------------------+   +------------------+   +------------------+   +------------------+                                     |
+|   | javac Compiler   |   |   Debugger (jdb) |   |   Javadoc Tool  |   |   Jar Tool       |                                     |
+|   | Converts .java   |   | Debug Java Code  |   | Generate Docs   |   | Create JAR Files |                                     |
+|   | to .class        |   |                  |   |                  |   |                  |                                     |
+|   +------------------+   +------------------+   +------------------+   +------------------+                                     |
+|                                                                                                                                  |
+|                                         Contains JRE                                                                             |
+|                                                                                                                                  |
+|   +--------------------------------------------------------------------------------------------------------------------------+   |
+|   |                                    JRE (Java Runtime Environment)                                                      |   |
+|   |--------------------------------------------------------------------------------------------------------------------------|   |
+|   | Purpose : Used to RUN Java Applications                                                                                 |   |
+|   |                                                                                                                          |   |
+|   | Components Included:                                                                                                     |   |
+|   |                                                                                                                          |   |
+|   |   +--------------------------------+   +--------------------------------+                                                |   |
+|   |   | Java Class Libraries           |   | Runtime Supporting Files       |                                                |   |
+|   |   | String, Collection, IO, etc.   |   | Properties, Configs, Modules   |                                                |   |
+|   |   +--------------------------------+   +--------------------------------+                                                |   |
+|   |                                                                                                                          |   |
+|   |                                              Contains JVM                                                                |   |
+|   |                                                                                                                          |   |
+|   |   +--------------------------------------------------------------------------------------------------------------+       |   |
+|   |   |                             JVM (Java Virtual Machine)                                                      |       |   |
+|   |   |--------------------------------------------------------------------------------------------------------------|       |   |
+|   |   | Purpose : Executes Java Bytecode                                                                            |       |   |
+|   |   |                                                                                                              |       |   |
+|   |   | Internal Components:                                                                                        |       |   |
+|   |   |                                                                                                              |       |   |
+|   |   |  +--------------+   +--------------+   +--------------+   +--------------+                                 |       |   |
+|   |   |  | Class Loader |   | Bytecode     |   | JIT Compiler |   | Garbage      |                                 |       |   |
+|   |   |  | Loads .class |   | Verifier     |   | Converts      |   | Collector    |                                 |       |   |
+|   |   |  | files        |   | Checks code  |   | bytecode to   |   | Removes      |                                 |       |   |
+|   |   |  |              |   | security     |   | machine code  |   | unused objs  |                                 |       |   |
+|   |   |  +--------------+   +--------------+   +--------------+   +--------------+                                 |       |   |
+|   |   |                                                                                                              |       |   |
+|   |   +--------------------------------------------------------------------------------------------------------------+       |   |
+|   |                                                                                                                          |   |
+|   +--------------------------------------------------------------------------------------------------------------------------+   |
+|                                                                                                                                  |
++----------------------------------------------------------------------------------------------------------------------------------+
+
+
+FLOW:
+======
+Java Source Code (.java)
+          |
+          v
+     javac Compiler
+          |
+          v
+     Bytecode (.class)
+          |
+          v
+           JVM
+(Class Loader -> Verifier -> JIT Compiler -> Execution)
+          |
+          v
+   OS + Hardware
+
+-Java Program Execution flow:
+-----------------------------
++------------------+
+|   Java Program   |
+|     (.java)      |
++------------------+
+          |
+          |  javac (Compiler)
+          v
++------------------+
+|    Bytecode      |
+|    (.class)      |
++------------------+
+          |
+          |  JVM loads class
+          v
++------------------+
+|   Class Loader   |
++------------------+
+          |
+          |  Bytecode Verification
+          v
++------------------+
+|   Bytecode Verifier |
++------------------+
+          |
+          |  Interpreter / JIT Compiler
+          v
++------------------+
+|  Machine Code    |
++------------------+
+          |
+          |  Executed by
+          v
++------------------+
+| Operating System |
+|     + CPU        |
++------------------+
+
+To run program in <filename>.java
+compile program --> javac <filename>.java. -> javac means java compiler, which is used to compile java programs, java compiler is called translator
+To run --> java <filename>
+
+-Java Program Structure:
+------------------------
+package statements             --> Optional/On demand, Replacement for header file
+import statements.             --> Optional/On demand basis
+class declaration              --> Our plan/what we are going to do, our action(Logic starts here)
+variables                      --> used to store the data
+methods                        --> Used to perform actions
+
+Java is case sensitive, we need to follow syntax
+
+-Translators: It is used to convert from one format to other format
+------------
+3 types of translators available
+1. Interpreter  -> It will convert program line by line (Performance is low)
+2. Compiler     -> It will convert all the lines of program (Performance is fast)
+3. Assembler    -> It is used to convert assembler programming language into machine language.
+
+Note: Java using both, at time of compilation it uses compiler, at time of execution stage, it uses intrepreter
+      JVM will run byte code, inside JVM iterpreter available
+
+-JVM(Java Virtual Machine): JVM is part of JRE
+--------------------------
+-JVM is responsible for executing Java Programs
+-JVM will allocate memory required for program execution(ie why java is called dynamic programming language) and deallocate when it is not
+used. that's why Java is robust.
+-It will convert byte code into machine understandable code
+-Java is platform independent but JVM is not.
+
+-JVM Architecture:
+-----------------
+1. Classloader subsystem --> Responsible to load .class into JVM
+2. Method Area
+3. Heap Area 
+4. Java Stack
+5. PC Register
+6. Native Stack
+7. Execution Engine(Intrepreter available here)
+8. Native Interface
+9. Native Libraries
+
+                                                JAVA CODE EXECUTION INSIDE JVM
+
++-------------+        javac         +------------------+
+|  demo.java  | ------------------> |  demo.class      |
+| Source Code |                     |   Bytecode       |
++-------------+                     +------------------+
+                                              |
+                                              | loaded by
+                                              v
+
+        +====================================================================================================+
+        |                                         JVM                                                        |
+        |====================================================================================================|
+        |                                                                                                    |
+        |  +--------------------------+                                                                      |
+        |  |     Class Loader         |                                                                      |
+        |  |--------------------------|                                                                      |
+        |  | Loads .class files       |                                                                      |
+        |  +--------------------------+                                                                      |
+        |                                                                                                    |
+        |  +----------------+  +----------------+  +----------------+  +----------------+  +--------------+ |
+        |  |  Method Area   |  |   Heap Area   |  |   Java Stack  |  |  PC Register  |  | Native Stack | |
+        |  |----------------|  |----------------|  |----------------|  |----------------|  |--------------| |
+        |  | Class Metadata |  | Objects        |  | Method Frames  |  | Current        |  | Native       | |
+        |  | Static Data    |  | Instance Data  |  | Local Variables|  | Instruction    |  | Method Calls | |
+        |  | Runtime Pool   |  | Shared Memory  |  | Method Calls   |  | Address        |  |              | |
+        |  +----------------+  +----------------+  +----------------+  +----------------+  +--------------+ |
+        |                                                                                                    |
+        |                                     +--------------------------+                                   |
+        |                                     |    Execution Engine      |                                   |
+        |                                     |--------------------------|                                   |
+        |                                     |  Interpreter             |                                   |
+        |                                     |  JIT Compiler            |                                   |
+        |                                     |  Garbage Collector       |                                   |
+        |                                     +--------------------------+                                   |
+        |                                                    |                                               |
+        |                                                    v                                               |
+        |                                     +--------------------------+                                   |
+        |                                     | Native Interface (JNI)  |                                   |
+        |                                     +--------------------------+                                   |
+        |                                                    |                                               |
+        |                                                    v                                               |
+        |                                     +--------------------------+                                   |
+        |                                     |   Native Libraries       |                                   |
+        |                                     |   (C / C++ Libraries)    |                                   |
+        |                                     +--------------------------+                                   |
+        |                                                                                                    |
+        +====================================================================================================+
+                                              |
+                                              v
+                                         +----------+
+                                         |  Output  |
+                                         +----------+
+
+
+
+                                                JAVA PROGRAM EXECUTION & JVM ARCHITECTURE
+
++----------------+        javac Compiler         +----------------------+
+|   Hello.java   | ----------------------------> |    Hello.class       |
+|  Source Code   |                               |   Bytecode File      |
++----------------+                               +----------------------+
+                                                           |
+                                                           | Loaded into JVM
+                                                           v
+
+
++==============================================================================================================================+
+|                                               JVM (Java Virtual Machine)                                                      |
++==============================================================================================================================+
+
+             +--------------------------------------------------------------------------------------------------+
+             |                                 1. CLASSLOADER SUBSYSTEM                                         |
+             |--------------------------------------------------------------------------------------------------|
+             | Responsible for loading .class files into JVM memory                                             |
+             |                                                                                                  |
+             | [ Loading ]  -->  [ Linking ]  -->  [ Initialization ]                                          |
+             |                                                                                                  |
+             | Loading:                                                                                         |
+             |  - Bootstrap ClassLoader                                                                         |
+             |  - Platform ClassLoader                                                                          |
+             |  - Application ClassLoader                                                                       |
+             |                                                                                                  |
+             | Linking:                                                                                         |
+             |  - Verification                                                                                  |
+             |  - Preparation                                                                                   |
+             |  - Resolution                                                                                    |
+             |                                                                                                  |
+             | Initialization:                                                                                  |
+             |  - Executes Static Blocks                                                                        |
+             |  - Assigns Static Variables                                                                      |
+             +--------------------------------------------------------------------------------------------------+
+                                                           |
+                                                           v
+
+
++==============================================================================================================================+
+|                                             2. JVM RUNTIME MEMORY AREAS                                                      |
++==============================================================================================================================+
+
+        SHARED ACROSS THREADS                                           UNIQUE FOR EACH THREAD
+
++----------------------------------------+        +----------------------------------------+
+| 2.1 METHOD AREA                        |        | 2.3 JAVA STACK                         |
+|----------------------------------------|        |----------------------------------------|
+| - Class Metadata                       |        | - Stack Frames                         |
+| - Method Information                   |        | - Method Calls                         |
+| - Static Variables                     |        | - Local Variables                      |
+| - Runtime Constant Pool                |        | - Operand Stack                        |
++----------------------------------------+        +----------------------------------------+
+
++----------------------------------------+        +----------------------------------------+
+| 2.2 HEAP AREA                          |        | 2.4 PC REGISTER                        |
+|----------------------------------------|        |----------------------------------------|
+| - Objects & Arrays                     |        | - Current Instruction Address          |
+| - Instance Variables                   |        | - One PC Register per Thread           |
+| - Shared Main Memory                   |        +----------------------------------------+
+| - Garbage Collector works here         |
++----------------------------------------+        +----------------------------------------+
+                                                  | 2.5 NATIVE METHOD STACK                |
+                                                  |----------------------------------------|
+                                                  | - Native Method Execution              |
+                                                  | - Stores Native Method State           |
+                                                  | - Used during JNI Calls                |
+                                                  +----------------------------------------+
+
+                                                           |
+                                                           v
+
+
++==============================================================================================================================+
+|                                                  3. EXECUTION ENGINE                                                         |
++==============================================================================================================================+
+
++----------------------------------+   +----------------------------------+   +----------------------------------+
+| 3.1 INTERPRETER                  |   | 3.2 JIT COMPILER                |   | 3.3 GARBAGE COLLECTOR           |
+|----------------------------------|   |----------------------------------|   |----------------------------------|
+| - Executes bytecode              |   | - Converts bytecode             |   | - Removes unused objects         |
+|   line-by-line                   |   |   into native machine code      |   |   from Heap Memory               |
+| - Slower execution               |   | - Improves performance          |   | - Automatic memory management    |
++----------------------------------+   +----------------------------------+   +----------------------------------+
+
+                                                           |
+                                                           v
+
+
+             +--------------------------------------------------------------------------------------------------+
+             |                              4. JAVA NATIVE INTERFACE (JNI)                                     |
+             |--------------------------------------------------------------------------------------------------|
+             | - Bridge between Java and Native Applications                                                    |
+             | - Allows Java code to call C/C++ native methods                                                  |
+             | - Enables communication with OS-level libraries                                                   |
+             +--------------------------------------------------------------------------------------------------+
+                                                           |
+                                                           v
+
+
+             +--------------------------------------------------------------------------------------------------+
+             |                                5. NATIVE METHOD LIBRARIES                                        |
+             |--------------------------------------------------------------------------------------------------|
+             | Native libraries written in:                                                                     |
+             |  - C                                                                                             |
+             |  - C++                                                                                           |
+             |  - Assembly Language                                                                             |
+             |                                                                                                  |
+             | Examples:                                                                                        |
+             |  - Windows : .dll                                                                                |
+             |  - Linux   : .so                                                                                 |
+             |  - macOS   : .dylib                                                                              |
+             +--------------------------------------------------------------------------------------------------+
+
+                                                           |
+                                                           v
+
+
+                                                +----------------------+
+                                                |        OUTPUT        |
+                                                |  Program Execution   |
+                                                +----------------------+
+
+-Method area -> Class code will be stored her
+-Heap Area -> Objects will be stored into heap area
+-Stack Area -> Method execution information will be stored here ie execution order
+-PC register -> It will maintain next line information to execute
+-Native Stack -> Maintain non-java code execution info
+-Execution engine -> Repsonsible to execute program and provide output
+-Native Libraries -> non-java libraries, which are required for native code (old gen) execution
+-Native Interface -> It will load native libraries
