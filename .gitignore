@@ -1,1 +1,79 @@
-/.metadata/
+# =========================
+# Maven
+# =========================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# =========================
+# Eclipse / STS
+# =========================
+.metadata/
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Java
+# =========================
+*.class
+*.log
+*.ctxt
+*.jar
+*.war
+*.nar
+*.ear
+hs_err_pid*
+replay_pid*
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Test Reports
+# =========================
+test-output/
+surefire-reports/
+failsafe-reports/
+
+# =========================
+# Selenium / Automation
+# =========================
+screenshots/
+allure-results/
+allure-report/
+logs/
+
+# =========================
+# Environment Files
+# =========================
+.env
+
+# =========================
+# Temporary Files
+# =========================
+*.tmp
+*.swp

@@ -605,3 +605,63 @@ eg: java.lang, com.alchemist
 Note: classname and interface name conventions are same.
       Java naming conventions are also known as Java code standard.
 	  Variable name and method naming conventions also called as camel case format.
+	  
+-Operators: It is symbol which perform some operation on operands
+----------+------------------------+---------------------------------------------+----------------------------------+
+| OPERATOR TYPE          | OPERATORS                                   | EXAMPLE                          |
++------------------------+---------------------------------------------+----------------------------------+
+| Arithmetic Operators   | +, -, *, /, %                               | a + b                            |
++------------------------+---------------------------------------------+----------------------------------+
+| Unary Operators        | ++, --, +, -, !                             | ++a                              |
++------------------------+---------------------------------------------+----------------------------------+
+| Assignment Operators   | =, +=, -=, *=, /=, %=                       | a += 5                           |
++------------------------+---------------------------------------------+----------------------------------+
+| Relational Operators   | ==, !=, >, <, >=, <=                        | a == b                           |
++------------------------+---------------------------------------------+----------------------------------+
+| Logical Operators      | &&, ||, !                                   | a > 5 && b < 10                  |
++------------------------+---------------------------------------------+----------------------------------+
+| Bitwise Operators      | &, |, ^, ~                                  | a & b                            |
++------------------------+---------------------------------------------+----------------------------------+
+| Shift Operators        | <<, >>, >>>                                 | a << 2                           |
++------------------------+---------------------------------------------+----------------------------------+
+| Conditional Operator   | ?:                                          | (a > b) ? a : b                  |
++------------------------+---------------------------------------------+----------------------------------+
+| instanceof Operator    | instanceof                                  | obj instanceof String            |
++------------------------+---------------------------------------------+----------------------------------+
+
+Note: post increment --> a++ -> after using variable, increment will happen
+      pre increment --> ++a --> before using variable increment happens
+	  .(dot) is relational operator  --> used to access member of class (ie class, variables and methods)
+	  Memory for classes allocated in method area.
+	  Ternary operator is used in decision making
+	  instanceof is used to check if this object belongs to particular class or not. ie it is used to check object reference belongs to a class or not
+	  
+public class Operators {
+	public static void main(String[] args) {
+		int a = 5;
+		System.out.println(a++);  //5
+		a++;
+		System.out.println(a++);  //7
+		System.out.println(a);    //8
+		
+		int b = 8;
+		System.out.println(++b);  //9
+		++b;
+		System.out.println(++b);  //11
+		System.out.println(b);    //11
+		
+		int c = 3;
+		int d = ++c + c++;
+		System.out.println(d);   //8   --> as c increment to 4 first , 4 + 4
+		
+		String str = "rohit";
+		if(str instanceof String) {
+			System.out.println("It is string");
+		}else {
+			System.out.println("It is not a string");
+		}
+	}
+}
+
+-Control Statements:
+-------------------
