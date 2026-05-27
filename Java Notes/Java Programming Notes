@@ -431,3 +431,177 @@ used. that's why Java is robust.
 -Execution engine -> Repsonsible to execute program and provide output
 -Native Libraries -> non-java libraries, which are required for native code (old gen) execution
 -Native Interface -> It will load native libraries
+
+-Variables: Variables are used to store the data
+----------
+- We have to specify type of variable to store the data.
+- To specify type of data, we will use data types.
+-To store data into variables, we need to perform 2 steps
+    1. Variable Declaration: Creating variable with datatypes/ defining variable with datatype
+	   eg: byte age;               //datatype
+	2. Variable Initialization: 
+	   eg: age = 20;              //Storing the value
+	Note: Above both steps can be combined --> byte age = 20;   //Declaration and Initialization in single step.
+Data Types: Used to specify type of the data.
+----------
+- Data types are divided into 2 main categories --> Primitive, Reference/Non-Primitive
+Under Primitive --> Integral, Decimal, Character, Boolean
+Under Non-primitive --> Arrays, Strings,Classes
+Primitive Data Types:
+--------------------
+1. Integral Data Type -> These are used to store integer type number without decimal points
+                         We can store both positive and negative numbers using integral data types.
+						 We have 4 data types in this category -> byte, short, int  and long
+						 -byte --> Default value = 0 --> 1 byte
+						 -short --> Default value = 0 --> 2 byte
+						 -int --> Default value = 0 --> 4 bytes
+						 -long --> Default value = 0 --> 8 bytes
+						 eg: long balance = 30000000;
+2. Decimal Data Types -> Used to store numbers with decimal values (Floating values)
+                         We can use both positive and negative values
+						 In this category, we have 2 data types
+						 -float --> 4 bytes --> upto 6 decimal points
+						 -double --> 8 bytes --> upto 15 decimal points
+						 Note: Whenever we store any decimal value, compiler will think by default as a double value. 
+						       8 bytes required to store it and we storing into 4 bytes
+							   float a = 25.01;  //error
+							   float a =25.01f;
+3. Character Data Types -> used to store single character
+                           Any single character(Alphabet/digits/special characters) We  can store using 'char' data type
+						   Char data type will occupy 2 bytes of memory (In C language, 1 byte as ASCII values and Unicode values also)
+						   When we are storing data into 'char' data type variable single quote is mandatory. Default value is '\u0000'
+						   eg: char gender = 'm';
+						       char rank = '1'   --> correct
+							   char rank = '10'  --> Not correct, only one character from 0 to 9.
+4. Boolean Data Types --> Used to store only True or False value. Occupies only 1 bit value.
+                          A true is represented as 1 , and false as 0 (In binary language)
+						  Default value for boolean is False.
+						  eg: isPass = true;
+Note: 8 bits = 1 byte
+
+TYPES OF JAVA COMMENTS
+======================
+1) Single-line Comment
+----------------------
+-> Used for short explanations.
+-> Compiler ignores everything after // on that line.
+Syntax:
+    // comment
+Example:
+    // This is a single-line comment
+    int x = 10;
+
+2) Multi-line Comment
+---------------------
+-> Used for writing comments in multiple lines.
+-> Starts with /* and ends with */
+Syntax:
+    /*
+       comment
+    */
+Example:
+    /*
+      This is a multi-line comment
+      used for longer descriptions.
+    */
+    int y = 20;
+
+
+3) Documentation Comment (Javadoc)
+----------------------------------
+-> Used to generate official Java documentation.
+-> Mostly written before classes, methods, and constructors.
+-> Starts with /** and ends with */
+Syntax:
+    /**
+     * comment
+     */
+Example:
+    /**
+     * Adds two numbers
+     * @param a first number
+     * @param b second number
+     * @return sum
+     */
+    int add(int a, int b) {
+        return a + b;
+    }
+
+-Identifiers: Java components -> packages, class, method, variables
+-------------
+-All Java components requires a name, which is called Identifiers
+-Java Provided few rules to work with identifiers
+Rule 1: Java will allow only below character for Identifiers --> a-z,A-Z,$,0-9,_
+Rule 2: Identifier should not start with digit (First character should not be digit) -> eg 1age = Invalid, age2 = valid
+Rule 3: Java reserved words should not be used as identifier (53 reserved keywords)
+
+JAVA RESERVED KEYWORDS
+======================
++------------------------------+--------------------------------------------------+
+| CATEGORY                     | KEYWORDS                                         |
++------------------------------+--------------------------------------------------+
+| Datatype Keywords            | byte, short, int, long, float, double,           |
+|                              | char, boolean, void                              |
++------------------------------+--------------------------------------------------+
+| Flow Control Keywords        | if, else, switch, case, default,                 |
+|                              | while, do, for, break, continue, return          |
++------------------------------+--------------------------------------------------+
+| Modifier Keywords            | public, private, protected, static,              |
+|                              | final, abstract, synchronized, native,           |
+|                              | transient, volatile, strictfp                    |
++------------------------------+--------------------------------------------------+
+| Exception Handling Keywords  | try, catch, finally, throw, throws, assert       |
++------------------------------+--------------------------------------------------+
+| Class Related Keywords       | class, interface, enum, extends,                 |
+|                              | implements, package, import                      |
++------------------------------+--------------------------------------------------+
+| Object Related Keywords      | new, this, super, instanceof, null               |
++------------------------------+--------------------------------------------------+
+| Reserved but Unused Keywords | const, goto                                      |
++------------------------------+--------------------------------------------------+
+Note: true and false are NOT Java keywords.
+      They are boolean literals.
+Rule 4: Java is case sensitive language eg: name and NAME are not same.
+Rule 5: Spaces are not allowed in identifier  
+        eg: int mobile bill = 400;   //Invalid
+		    int mobile_bill = 400; //valid
+			int _bill = 400;    //valid
+			
+-Java Naming Conventions (Java coding conventions):
+---------------------------------------------------
+-Java language followed some standards for pre-defined packages,classes and methods
+-Java language suggested java programmers also to follow same standards
+-Following these standards is not mandatory but highly recommended (Optional but recommended)
+1. Naming conventions for the Class name:
+----------------------------------------
+A class name can contain any number of words without spaces.
+Recommended to write every word first letter as uppercase
+2. Naming conventions for the variable name:
+--------------------------------------------
+A variable name can contain any number of words without spaces.
+Recommended to start word first letter as lowercase
+If variable name contains multiple words then recommended to write from second word onwords every first character in Uppercase
+eg: int age; int userAge; long creaditCardNumber;
+3. Naming conventions for the method name:
+-----------------------------------------
+A Method name can contain any number of words without spaces.
+Recommended to start word first letter as lowercase
+If method name contains multiple words then recommended to write from second word onwords every first character in Uppercase
+eg: saveUserAll();
+4. Naming conventions for the Constants:
+----------------------------------------
+constant means fixed value.
+Recommended to write constant variable all character in uppercase.
+If constant variable contains multiple words, recommendes to use _(underscore) with all uppercase character.
+eg: int MIN_AGE =21;
+    final int MIN_AGE = 21; //final used to represent this as constant variable, and they can't be changed in future.
+Note: Reinitializing is not accepted for constant, it will throw error.
+5. Naming conventions for the Constants:
+----------------------------------------
+package name can have any number of characters and any no of words
+Recommended to use only lowercase letter in package names.
+If package name contains multiple words, we will use .(dot) to seperate  words
+eg: java.lang, com.alchemist
+Note: classname and interface name conventions are same.
+      Java naming conventions are also known as Java code standard.
+	  Variable name and method naming conventions also called as camel case format.
