@@ -865,3 +865,361 @@ public strictfp class StrictfpExample
 
 -javadoc tool:
 -------------
+The javadoc tool is a utility in Java used to generate HTML documentation from Java source code. It parses the source code, 
+extracts the comments written in the Javadoc format, and generates API documentation in HTML format. To generate Javadoc documentation, 
+you need to include Javadoc comments in your source code and run the javadoc command from the command line. 
+
+-Command Line Arg:
+-----------------
+Java programs can access command-line arguments through the args parameter in the main method. The args parameter is an array of strings, 
+where each element represents a command-line argument.
+
+-Object vs. Class:
+-----------------
+Class: A class is a blueprint or template for creating objects. It defines the structure and behavior of objects but does not occupy memory space. 
+It is like a user-defined data type.
+Object: An object is an instance of a class. It is a runtime entity that occupies memory and can be used to access the members 
+(fields and methods) defined in its class.
+
+-Overloading vs. Overriding:
+---------------------------
+Overloading: Overloading is a concept in Java that allows a class to have multiple methods with the same name but different parameters. The methods
+must have different method signatures, i.e., the number or types of parameters should be different. Overloading is a form of compile-time polymorphism.
+Overriding: Overriding is a concept in Java that occurs when a subclass provides a specific implementation for a method that is already defined in 
+its superclass. The method in the subclass must have the same name, return type, and parameters as the method in the superclass. Overriding is a form 
+of runtime polymorphism.
+
+class Animal {
+    public void makeSound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+
+    // Method Overriding
+    @Override
+    public void makeSound() {
+        System.out.println("Dog barks");
+    }
+
+    // Method Overloading
+    public void makeSound(String soundType) {
+        System.out.println("Dog " + soundType);
+    }
+}
+
+public class OverloadingOverridingExample {
+
+    public static void main(String[] args) {
+
+        Animal animal = new Animal();
+        Animal dog = new Dog();
+
+        // Method overriding - Runtime Polymorphism
+        animal.makeSound(); // Animal version
+        dog.makeSound();    // Dog version
+
+        // Method overloading
+        Dog myDog = new Dog();
+
+        myDog.makeSound();          // No argument method
+        myDog.makeSound("howls");   // String argument method
+    }
+}
+
+--Java String: In Java, string is basically an object that represents sequence of char values. An array of characters works same as Java string.(java.lang)
+-------------
+String objects are immutable, which means that once a String is created, its value cannot be changed. Any modification to a String results in 
+a new String object being created.
+-CharSequence Interface: The CharSequence interface is a part of the java.lang package and is implemented by the String , 
+StringBuilder , and StringBuffer classes in Java. It represents a sequence of characters and provides a read-only access to the character data. 
+As it is an interface, it cannot be directly instantiated, but its implementing classes can be used to work with character sequences in Java.
+How to create a String object?
+There are two ways to create a String object in Java:
+1. String Literal: A string literal is a sequence of characters enclosed in doublequotes. When you create a string using a string literal, 
+Java automatically creates a String object in the string pool if it does not already exist.
+String str1 = "Hello, World!";
+2. By new keyword: You can also create a String object using the new keyword. This creates a new String object in the heap memory, even if a similar string
+already exists in the string pool.
+String str2 = new String("Java is fun!");
+
+-Java String class methods:
+--------------------------
+| Method                                                         | Description                                           | Example                                         |
+| -------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------- |
+| `length()`                                                     | Returns length of string                              | `str.length()`                                  |
+| `charAt(int index)`                                            | Returns character at index                            | `str.charAt(0)`                                 |
+| `concat(String str)`                                           | Concatenates strings                                  | `str.concat(" World")`                          |
+| `contains(CharSequence s)`                                     | Checks substring existence                            | `str.contains("Java")`                          |
+| `equals(Object obj)`                                           | Compares content                                      | `str.equals("Hello")`                           |
+| `equalsIgnoreCase(String str)`                                 | Case-insensitive comparison                           | `str.equalsIgnoreCase("hello java")`            |
+| `startsWith(String prefix)`                                    | Checks starting text                                  | `str.startsWith("Hello")`                       |
+| `endsWith(String suffix)`                                      | Checks ending text                                    | `str.endsWith("Java")`                          |
+| `indexOf(String str)`                                          | Finds first occurrence                                | `str.indexOf("Java")`                           |
+| `lastIndexOf(String str)`                                      | Finds last occurrence                                 | `str.lastIndexOf("a")`                          |
+| `substring(int beginIndex)`                                    | Extracts part of string                               | `str.substring(6)`                              |
+| `substring(int begin, int end)`                                | Extracts string between indexes                       | `str.substring(0, 5)`                           |
+| `replace(char old, char new)`                                  | Replaces characters                                   | `str.replace('a', 'x')`                         |
+| `replace(CharSequence old, CharSequence new)`                  | Replaces text                                         | `str.replace("Java", "Python")`                 |
+| `replaceAll(String regex, String replacement)`                 | Replaces all substrings matching regex                | `str.replaceAll("a", "@")`                      |
+| `toUpperCase()`                                                | Converts to uppercase                                 | `str.toUpperCase()`                             |
+| `toLowerCase()`                                                | Converts to lowercase                                 | `str.toLowerCase()`                             |
+| `trim()`                                                       | Removes spaces from ends                              | `str.trim()`                                    |
+| `split(String regex)`                                          | Splits string into array                              | `str.split(" ")`                                |
+| `isEmpty()`                                                    | Checks empty string                                   | `str.isEmpty()`                                 |
+| `valueOf(int i)`                                               | Converts int to String                                | `String.valueOf(100)`                           |
+| `valueOf(double d)`                                            | Converts double to String                             | `String.valueOf(10.5)`                          |
+| `valueOf(char c)`                                              | Converts char to String                               | `String.valueOf('A')`                           |
+| `intern()`                                                     | Returns canonical representation from string pool     | `str.intern()`                                  |
+| `compareTo(String str)`                                        | Lexicographical comparison                            | `str.compareTo("Hello")`                        |
+| `format(String format, Object... args)`                        | Formats a string using format specifiers              | `String.format("Name: %s Age: %d", "John", 25)` |
+| `getBytes()`                                                   | Converts string into byte array using default charset | `str.getBytes()`                                |
+| `getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)` | Copies characters into character array                | `str.getChars(0, 5, arr, 0)`                    |
+| `join(CharSequence delimiter, CharSequence... elements)`       | Joins strings using delimiter                         | `String.join("-", "Java", "Python")`            |
+| `toCharArray()`                                                | Converts string to character array                    | `str.toCharArray()`                             |
+
+
+public class StringMethodsExample {
+
+    public static void main(String[] args) {
+
+        String str = "Hello, Java!";
+
+        // Length of the string
+        int length = str.length();
+        System.out.println("Length of the string: " + length);
+
+        // Get character at a specific index
+        char ch = str.charAt(4);
+        System.out.println("Character at index 4: " + ch);
+
+        // Concatenate strings
+        String concatStr = str.concat(" Welcome");
+        System.out.println("Concatenated string: " + concatStr);
+
+        // Check if the string contains a specific substring
+        boolean containsJava = str.contains("Java");
+        System.out.println("Contains 'Java': " + containsJava);
+
+        // Check if the string starts with a specific prefix
+        boolean startsWithHello = str.startsWith("Hello");
+        System.out.println("Starts with 'Hello': " + startsWithHello);
+
+        // Check if the string ends with a specific suffix
+        boolean endsWithExclamation = str.endsWith("!");
+        System.out.println("Ends with '!': " + endsWithExclamation);
+
+        // Find the index of a substring
+        int indexJava = str.indexOf("Java");
+        System.out.println("Index of 'Java': " + indexJava);
+
+        // Convert the string to uppercase and lowercase
+        String uppercaseStr = str.toUpperCase();
+        String lowercaseStr = str.toLowerCase();
+
+        System.out.println("Uppercase: " + uppercaseStr);
+        System.out.println("Lowercase: " + lowercaseStr);
+
+        // Replace characters or substrings
+        String replacedStr = str.replace("Java", "Python");
+        System.out.println("Replaced string: " + replacedStr);
+
+        // Split the string into an array of substrings
+        String[] words = str.split(", ");
+
+        for (String word : words) {
+            System.out.println("Word: " + word);
+        }
+
+        // Remove leading and trailing whitespaces
+        String trimmedStr = str.trim();
+        System.out.println("Trimmed string: " + trimmedStr);
+    }
+}
+
+String Comparison:
+------------------
+In Java, you can compare strings using the equals() method to check if the content of two strings is the same. For reference-based comparison, 
+you can use the == operator, but it only checks if the two string references point to the same memory location, not the content.
+== → compares references
+equals() → compares content
+
+Immutable String:
+----------------
+In Java, a String object is immutable, which means once it is created, its content cannot be changed. When you modify a String , 
+a new String object is created with the modified content. The immutability of strings ensures their safety in multithreaded environments 
+and allows for efficient string manipulation because the same string can be shared by multiple references without fear of modification.
+
+String Concatenation:
+--------------------
+String concatenation in Java can be performed using the + operator or the concat() method of the String class. When concatenating multiple 
+strings using the + operator, the Java compiler automatically converts the expression into a StringBuilder or StringBuffer object for efficiency.
+
+Substring:
+---------
+The substring() method in Java is used to extract a portion of a string. It takes two parameters: the starting index (inclusive) and 
+the ending index (exclusive) of the substring to be extracted.
+String subStr1 = str.substring(0, 5);
+System.out.println("Substring 1: " + subStr1);
+// Extract a substring from index 7 to the end of the string
+String subStr2 = str.substring(7);
+
+StringBuffer class:
+-------------------
+The StringBuffer class in Java provides a mutable sequence of characters. It is similar to String but allows modification of the 
+content without creating a new object. This makes StringBuffer suitable for situations where frequent string modifications are required, 
+such as in a loop.
+| Method             | Description                    | Example                  |
+| ------------------ | ------------------------------ | ------------------------ |
+| `append()`         | Adds text at end               | `sb.append(" Java")`     |
+| `insert()`         | Inserts text at specific index | `sb.insert(5, " World")` |
+| `replace()`        | Replaces characters            | `sb.replace(0, 5, "Hi")` |
+| `delete()`         | Deletes characters             | `sb.delete(0, 5)`        |
+| `deleteCharAt()`   | Deletes single character       | `sb.deleteCharAt(2)`     |
+| `reverse()`        | Reverses string                | `sb.reverse()`           |
+| `charAt()`         | Gets character at index        | `sb.charAt(1)`           |
+| `setCharAt()`      | Changes character at index     | `sb.setCharAt(0, 'h')`   |
+| `length()`         | Returns length                 | `sb.length()`            |
+| `capacity()`       | Returns current capacity       | `sb.capacity()`          |
+| `substring()`      | Extracts substring             | `sb.substring(0, 5)`     |
+| `ensureCapacity()` | Increases capacity if needed   | `sb.ensureCapacity(50)`  |
+| `toString()`       | Converts to String             | `sb.toString()`          |
+
+public class StringBufferMethods {
+
+    public static void main(String[] args) {
+
+        StringBuffer sb = new StringBuffer("Hello");
+        // append
+        sb.append(" Java");
+        System.out.println("append(): " + sb);
+        // insert
+        sb.insert(5, " World");
+        System.out.println("insert(): " + sb);
+        // replace
+        sb.replace(0, 5, "Hi");
+        System.out.println("replace(): " + sb);
+        // delete
+        sb.delete(2, 8);
+        System.out.println("delete(): " + sb);
+        // reverse
+        sb.reverse();
+        System.out.println("reverse(): " + sb);
+        // length
+        System.out.println("length(): " + sb.length());
+        // capacity
+        System.out.println("capacity(): " + sb.capacity());
+    }
+}
+
+StringBuilder class:
+-------------------
+The StringBuilder class in Java is similar to StringBuffer in functionality but is not synchronized, 
+making it more efficient for single-threaded environments. It is used when you need a mutable sequence of characters in a single-threaded application.
+| Method             | Description                    | Example                  |
+| ------------------ | ------------------------------ | ------------------------ |
+| `append()`         | Adds text at end               | `sb.append(" Java")`     |
+| `insert()`         | Inserts text at specific index | `sb.insert(5, " World")` |
+| `replace()`        | Replaces characters            | `sb.replace(0, 5, "Hi")` |
+| `delete()`         | Deletes characters             | `sb.delete(0, 5)`        |
+| `deleteCharAt()`   | Deletes single character       | `sb.deleteCharAt(2)`     |
+| `reverse()`        | Reverses string                | `sb.reverse()`           |
+| `charAt()`         | Returns character at index     | `sb.charAt(1)`           |
+| `setCharAt()`      | Changes character at index     | `sb.setCharAt(0, 'h')`   |
+| `length()`         | Returns string length          | `sb.length()`            |
+| `capacity()`       | Returns capacity               | `sb.capacity()`          |
+| `substring()`      | Extracts substring             | `sb.substring(0, 5)`     |
+| `ensureCapacity()` | Increases capacity             | `sb.ensureCapacity(50)`  |
+| `toString()`       | Converts to String             | `sb.toString()`          |
+| `indexOf()`        | Finds substring index          | `sb.indexOf("Java")`     |
+| `lastIndexOf()`    | Finds last occurrence          | `sb.lastIndexOf("a")`    |
+
+public class StringBuilderMethodsExample {
+
+    public static void main(String[] args) {
+
+        StringBuilder sb = new StringBuilder("Hello");
+        // append
+        sb.append(" Java");
+        System.out.println("append(): " + sb);
+        // insert
+        sb.insert(5, " World");
+        System.out.println("insert(): " + sb);
+        // replace
+        sb.replace(0, 5, "Hi");
+        System.out.println("replace(): " + sb);
+        // delete
+        sb.delete(2, 8);
+        System.out.println("delete(): " + sb);
+        // reverse
+        sb.reverse();
+        System.out.println("reverse(): " + sb);
+        // charAt
+        System.out.println("charAt(2): " + sb.charAt(2));
+        // setCharAt
+        sb.setCharAt(0, 'A');
+        System.out.println("setCharAt(): " + sb);
+        // length
+        System.out.println("length(): " + sb.length());
+        // capacity
+        System.out.println("capacity(): " + sb.capacity());
+        // toString
+        String str = sb.toString();
+        System.out.println("toString(): " + str);
+    }
+}
+
+| Feature       | String                      | StringBuffer                  |
+| ------------- | --------------------------- | ----------------------------- |
+| Mutability    | Immutable                   | Mutable                       |
+| Modification  | Creates new object          | Modifies same object          |
+| Performance   | Slower for frequent changes | Faster for frequent changes   |
+| Memory Usage  | More memory usage           | Less memory usage             |
+| Thread Safety | Not synchronized            | Synchronized and thread-safe  |
+| Best Use Case | Fixed text                  | Frequent string modifications |
+
+| Feature       | StringBuffer   | StringBuilder                |
+| ------------- | -------------- | ---------------------------- |
+| Mutable       | Yes            | Yes                          |
+| Thread Safe   | Yes            | No                           |
+| Synchronized  | Yes            | No                           |
+| Performance   | Slower         | Faster                       |
+| Best Use Case | Multithreading | Single-threaded applications |
+
+Rules to Create an Immutable Class:
+----------------------------------
+| Rule                                  | Explanation                    |
+| ------------------------------------- | ------------------------------ |
+| `final class`                         | Prevents inheritance           |
+| `final fields`                        | Field values cannot be changed |
+| No setter methods                     | Prevents modification          |
+| Initialize fields through constructor | Values set only once           |
+| Provide only getters                  | Read-only access               |
+
+public final class ImmutableClassExample {
+
+    private final String name;
+    private final int age;
+    // Constructor
+    public ImmutableClassExample(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    // Getter methods
+    public String getName() {
+        return name;
+    }
+    public int getAge() {
+        return age;
+    }
+}
+
+-Java Regex:
+-----------
+Java Regular Expressions, also known as Java Regex, are used to match patterns in strings. They are a powerful tool for text processing 
+and pattern matching. Java provides built-in support for regular expressions through two main classes: Pattern and Matcher .
+-The Matcher class is used to search for patterns defined by a Pattern object within a given input string. It provides methods to 
+perform various operations on the matched patterns, such as finding all occurrences, replacing, and extracting groups.
+-The Pattern class is used to compile a regular expression into a pattern that can be used by the Matcher class for matching against input strings. 
+It provides methods to create and manipulate regular expression patterns.
