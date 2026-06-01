@@ -1221,5 +1221,702 @@ Java Regular Expressions, also known as Java Regex, are used to match patterns i
 and pattern matching. Java provides built-in support for regular expressions through two main classes: Pattern and Matcher .
 -The Matcher class is used to search for patterns defined by a Pattern object within a given input string. It provides methods to 
 perform various operations on the matched patterns, such as finding all occurrences, replacing, and extracting groups.
+| Method                                      | Description                 | Example                          |
+| ------------------------------------------- | --------------------------- | -------------------------------- |
+| `compile(String regex)`                     | Compiles regex into pattern | `Pattern.compile("\\d+")`        |
+| `matcher(CharSequence input)`               | Creates matcher object      | `pattern.matcher("Java123")`     |
+| `matches(String regex, CharSequence input)` | Checks complete match       | `Pattern.matches("\\d+", "123")` |
+| `split(CharSequence input)`                 | Splits string using regex   | `pattern.split("a,b,c")`         |
+| `quote(String s)`                           | Treats string literally     | `Pattern.quote(".")`             |
+
 -The Pattern class is used to compile a regular expression into a pattern that can be used by the Matcher class for matching against input strings. 
 It provides methods to create and manipulate regular expression patterns.
+| Method                             | Description              | Example                     |
+| ---------------------------------- | ------------------------ | --------------------------- |
+| `find()`                           | Finds next match         | `matcher.find()`            |
+| `matches()`                        | Checks full string match | `matcher.matches()`         |
+| `group()`                          | Returns matched text     | `matcher.group()`           |
+| `start()`                          | Returns start index      | `matcher.start()`           |
+| `end()`                            | Returns end index        | `matcher.end()`             |
+| `replaceAll(String replacement)`   | Replaces all matches     | `matcher.replaceAll("*")`   |
+| `replaceFirst(String replacement)` | Replaces first match     | `matcher.replaceFirst("*")` |
+| `group(int group)`                 | Returns capturing group  | `matcher.group(1)`          |
+| `reset()`                          | Resets matcher           | `matcher.reset()`           |
+
+Common Regex Symbols
+| Regex | Meaning         |
+| ----- | --------------- |
+| `.`   | Any character   |
+| `\\d` | Digit           |
+| `\\D` | Non-digit       |
+| `\\w` | Word character  |
+| `\\s` | Whitespace      |
+| `+`   | One or more     |
+| `*`   | Zero or more    |
+| `?`   | Optional        |
+| `^`   | Start of string |
+| `$`   | End of string   |
+
+Common Regex Character Classes: used to match one character from a specific set of characters. They are written inside square brackets: [ ]
+| Character Class | Meaning                                   | Example Match |
+| --------------- | ----------------------------------------- | ------------- |
+| `[abc]`         | Matches `a`, `b`, or `c`                  | `a`           |
+| `[0-9]`         | Matches any digit from 0 to 9             | `5`           |
+| `[a-z]`         | Matches lowercase letters                 | `m`           |
+| `[A-Z]`         | Matches uppercase letters                 | `K`           |
+| `[a-zA-Z]`      | Matches any uppercase or lowercase letter | `P`           |
+| `[a-zA-Z0-9]`   | Matches letters and digits                | `A`, `5`      |
+| `[^0-9]`        | Matches non-digit characters              | `A`, `#`      |
+| `[^abc]`        | Matches characters except `a`, `b`, `c`   | `x`           |
+| `[aeiou]`       | Matches vowels                            | `e`           |
+| `[A-F]`         | Matches letters from A to F               | `C`           |
+
+
+Common Flags in Pattern Class:
+| Flag                       | Purpose                                 | Example                                             |
+| -------------------------- | --------------------------------------- | --------------------------------------------------- |
+| `Pattern.CASE_INSENSITIVE` | Ignores case while matching             | `Pattern.compile("java", Pattern.CASE_INSENSITIVE)` |
+| `Pattern.MULTILINE`        | Enables multiline matching              | `Pattern.compile("^Java", Pattern.MULTILINE)`       |
+| `Pattern.DOTALL`           | Makes `.` match newline characters also | `Pattern.compile("A.*B", Pattern.DOTALL)`           |
+| `Pattern.UNICODE_CASE`     | Enables Unicode-aware case matching     | `Pattern.compile("ä", Pattern.UNICODE_CASE)`        |
+
+Pattern Example:
+| Pattern             | Meaning              |
+| ------------------- | -------------------- |
+| `"\\d+"`            | One or more digits   |
+| `"[a-z]+"`          | Lowercase letters    |
+| `"[A-Z]+"`          | Uppercase letters    |
+| `"[0-9]{10}"`       | 10-digit number      |
+| `"\\w+@\\w+\\.com"` | Simple email pattern |
+
+
+import java.util.regex.*;
+
+public class RegexExample {
+    public static void main(String[] args) {
+        String input =
+                "The quick brown fox jumps over the lazy dog.";
+        // Define regex pattern
+        String regex = "quick.*fox";  //Matches any text that starts with "quick" and ends with "fox" with any characters in between.
+        // Compile pattern
+        Pattern pattern = Pattern.compile(regex);
+        // Create matcher object
+        Matcher matcher = pattern.matcher(input);
+        // Perform matching
+        if (matcher.find()) {
+            System.out.println(
+                    "Pattern found: " + matcher.group());
+        } else {
+            System.out.println("Pattern not found.");
+        }
+    }
+}
+
+import java.util.regex.*;
+
+public class CharacterClassExample {
+    public static void main(String[] args) {
+        String input ="The car costs $500, the bike costs $200.";
+        // Regex pattern to find digits
+        String regex = "[0-9]+";    //Matches a sequence of one or more digits (0–9)
+        // Compile regex
+        Pattern pattern = Pattern.compile(regex);
+        // Create matcher object
+        Matcher matcher = pattern.matcher(input);
+        // Find and print all matches
+        while (matcher.find()) {
+            System.out.println("Found: " + matcher.group());
+        }
+    }
+}
+
+Common Regex Quantifiers:
+| Quantifier | Meaning                   | Example  | Description                         | Real Example                |
+| ---------- | ------------------------- | -------- | ----------------------------------- | --------------------------- |
+| `*`        | Zero or more times        | `a*`     | Matches zero or more `a` characters | `"caaar"` → matches `aaa`   |
+| `+`        | One or more times         | `a+`     | Matches one or more `a` characters  | `"cat"` → matches `a`       |
+| `?`        | Zero or one time          | `a?`     | Matches optional `a`                | `"color"` and `"colour"`    |
+| `{n}`      | Exactly `n` times         | `a{3}`   | Matches exactly 3 `a` characters    | `"baaat"` → matches `aaa`   |
+| `{n,}`     | At least `n` times        | `a{2,}`  | Matches 2 or more `a` characters    | `"caaaat"` → matches `aaaa` |
+| `{n,m}`    | Between `n` and `m` times | `a{2,4}` | Matches 2 to 4 `a` characters       | `"caaaat"` → matches `aaaa` |
+
+import java.util.regex.*;
+public class QuantifiersExample {
+    public static void main(String[] args) {
+        String input = "abbbbbbcde";
+        // Regex to match b occurring 2 to 5 times
+        String regex = "b{2,5}";
+        // Compile regex
+        Pattern pattern = Pattern.compile(regex);
+        // Create matcher
+        Matcher matcher = pattern.matcher(input);
+        // Find matches
+        while (matcher.find()) {
+            System.out.println(
+                    "Found: " + matcher.group());
+        }
+    }
+}
+
+Common Regex Metacharacters:
+| Metacharacter | Meaning                             | Example    | Real Example         |
+| ------------- | ----------------------------------- | ---------- | -------------------- |
+| `.`           | Any single character except newline | `a.b`      | `"acb"`, `"a1b"`     |
+| `^`           | Start of line/string                | `^Java`    | `"Java Programming"` |
+| `$`           | End of line/string                  | `Java$`    | `"I love Java"`      |
+| `\|`          | OR operator                         | `cat\|dog` | `"dog is pet"`       |
+
+import java.util.regex.*;
+
+public class MetacharactersExample {
+
+    public static void main(String[] args) {
+        String input = "The cat sat on the mat.";
+        // Regex to find words starting with c or m
+        String regex = "\\b(c|m)\\w+\\b";
+        // Compile regex
+        Pattern pattern = Pattern.compile(regex);
+        // Create matcher
+        Matcher matcher = pattern.matcher(input);
+        // Find matches
+        while (matcher.find()) {
+            System.out.println(
+                    "Found: " + matcher.group());
+        }
+    }
+}
+"\\b(c|m)\\w+\\b" → Matches complete words that start with either 'c' or 'm' followed by one or more word characters.
+\\b   → Word boundary
+(c|m) → c OR m
+\\w+  → One or more word characters
+\\b   → End word boundary
+
+-Exception Handling in Java:
+---------------------------
+It is a mechanism in Java that deals with runtime errors or exceptional situations that may occur during the program's execution. 
+When an exception occurs, it disrupts the normal flow of the program, and without proper handling, it can lead to program termination.
+Java Try-Catch Block:
+--------------------
+If an exception occurs within the try block, it is caught by the corresponding catch block, which contains code to handle the exception.
+
+Java Multiple Catch Block:
+-------------------------
+Java allows us to use multiple catch blocks to handle different types of exceptions that may arise within the try block.
+public class MultipleCatchExample {
+    public static void main(String[] args) {
+        try {
+            String str = null;
+            // Throws NullPointerException
+            System.out.println(str.length());
+        } catch (NullPointerException e) {
+            System.out.println(
+                    "NullPointerException caught: "
+                    + e.getMessage());
+        } catch (ArithmeticException e) {
+            System.out.println(
+                    "ArithmeticException caught: "
+                    + e.getMessage());
+        }
+        System.out.println(
+                "Program continues after exception handling.");
+    }
+}
+
+Java Nested Try:
+----------------
+We can use nested try blocks to handle exceptions at different levels of code execution.
+public class NestedTryExample {
+    public static void main(String[] args) {
+        try {
+
+            int[] arr = {1, 2, 3};
+            int num1 = 10;
+            int num2 = 0;
+            try {
+                // Throws ArithmeticException
+                int result = num1 / num2;
+                System.out.println("Result: " + result);
+            } catch (ArithmeticException e) {
+                System.out.println(
+                        "Inner Exception caught: "
+                        + e.getMessage());
+            }
+            // Throws ArrayIndexOutOfBoundsException
+            System.out.println(arr[5]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(
+                    "Outer Exception caught: "
+                    + e.getMessage());
+        }
+        System.out.println(
+                "Program continues after exception handling.");
+    }
+}
+
+Java Finally Block:
+-------------------
+The finally block is used to specify code that should be executed regardless of whether an exception occurs or not. It is often used to release resources, 
+close files or clean up operations.
+
+public class FinallyExample {
+    public static void main(String[] args) {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(
+                    new FileReader("input.txt"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(
+                    "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println(
+                    "IOException: " + e.getMessage());
+        } finally {
+            try {
+                if (br != null)
+                    br.close(); // Close resource    //ensure that it gets closed regardless of whether an exception occurs or not.
+            } catch (IOException e) {
+                System.out.println(
+                        "Error closing BufferedReader: "
+                        + e.getMessage());
+            }
+        }
+    }
+}
+
+Java Throw Keyword:
+------------------
+The throw keyword is used to explicitly throw an exception. It is often used when the program encounters an exceptional situation that 
+cannot be handled by the program.
+public class ThrowExample {
+    public static void main(String[] args) {
+        int age = 15;
+        if (age < 18) {
+            throw new ArithmeticException(
+                    "Age must be greater than or equal to 18.");
+        }
+        System.out.println("You are eligible to vote.");
+    }
+}
+
+Java Exception Propagation:
+--------------------------
+Java allows exceptions to be propagated from a method to its caller method. If a method does not handle an exception, 
+it can declare the exception using the throws keyword, and the caller method can handle it.
+In below example, the method2() throws a NullPointerException , which is propagated to method1() , and finally caught in the ` main()` method.
+public class ExceptionPropagationExample {
+    public static void main(String[] args) {
+        try {
+            method1();
+        } catch (NullPointerException e) {
+            System.out.println("Exception caught: "+ e.getMessage());
+        }
+    }
+
+    public static void method1() throws NullPointerException {
+        method2();
+    }
+
+    public static void method2() throws NullPointerException {
+        String str = null;
+        System.out.println(str.length());
+    }
+}
+//throws → Used in a method signature to declare that the method may throw one or more exceptions, allowing the caller to handle or propagate them.
+
+| Term         | Type    | Purpose                                                                                                       | Example                                   |
+| ------------ | ------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `throw`      | Keyword | Used to explicitly throw an exception within a method.                                                        | `throw new ArithmeticException("Error");` |
+| `throws`     | Keyword | Used in a method signature to declare that the method may throw one or more exceptions.                       | `void test() throws IOException { }`      |
+| `try`        | Block   | Contains code that may generate an exception.                                                                 | `try { riskyCode(); }`                    |
+| `catch`      | Block   | Handles an exception thrown by the `try` block.                                                               | `catch(Exception e) { }`                  |
+| `finally`    | Block   | Executes whether an exception occurs or not.                                                                  | `finally { cleanup(); }`                  |
+| `final`      | Keyword | Used to declare a constant variable, a method that cannot be overridden, or a class that cannot be inherited. | `final int AGE = 18;`                     |
+| `finalize()` | Method  | Called by the garbage collector before reclaiming an object's memory. *(Deprecated since Java 9)*             | `protected void finalize() { }`           |
+
+Exception Handling with Method Overriding:
+-----------------------------------------
+When a subclass overrides a method from its superclass, it can choose to throw the same exception as the superclass method or a subclass of that exception.
+class Parent {
+    void method() throws Exception {
+        System.out.println("Parent's method");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void method() throws ArithmeticException {
+        System.out.println("Child's method");
+    }
+}
+
+public class ExceptionHandlingWithMethodOverriding {
+    public static void main(String[] args) {
+        Parent parent = new Child();  //When the method is called through the reference of the Parent class but pointing to a Child object, 
+		                              //the Child class's method is executed.
+        try {
+            parent.method();
+        } catch (ArithmeticException e) {
+            System.out.println(
+                    "Exception caught: "
+                    + e.getMessage());
+        }
+    }
+}
+
+Java Custom Exceptions:
+----------------------
+you can create custom exceptions by extending the built-in Exception or RuntimeException classes. Custom exceptions allow you to handle specific
+exceptional situations in your application and provide meaningful error messages for better debugging and error reporting.
+// Custom exception class
+class CustomException extends Exception {
+    public CustomException(String message) {
+        super(message);  //The CustomException class has a constructor that takes a message as an argument and passes it to the super() constructor of the Exception class.
+
+    }
+}
+
+// Class with a method that throws the custom exception
+class ExampleClass {
+    public void performOperation(int num)
+            throws CustomException {
+        if (num < 0) {
+            throw new CustomException(
+                    "Number cannot be negative.");
+        }
+        System.out.println("Operation successful.");
+    }
+}
+
+// Main class
+public class CustomExceptionExample {
+    public static void main(String[] args) {
+        ExampleClass example = new ExampleClass();
+        try {
+            example.performOperation(-5);
+            example.performOperation(10);
+        } catch (CustomException e) {
+            System.out.println(
+                    "Exception caught: "
+                    + e.getMessage());
+        }
+    }
+}
+
+-Java Inner Classes:
+------------------
+In Java, an inner class is a class defined within another class. Inner classes provide a way to logically group classes that belong together, making the code more
+readable and maintainable. There are several types of inner classes in Java:
+Member Inner Class:
+------------------
+A Member Inner class is defined as a non-static class inside another class. It has access to all members of the enclosing class, including private members. 
+To create an instance of a Member Inner class, it must be associated with an instance of the enclosing class.
+| Feature                                | Description |
+| -------------------------------------- | ----------- |
+| Defined inside another class           | Yes         |
+| Non-static                             | Yes         |
+| Can access outer class private members | Yes         |
+| Requires outer class object            | Yes         |
+
+class Outer {
+    private int outerField = 10;
+    // Member Inner Class
+    class Inner {
+        private int innerField = 20;
+        void display() {
+            System.out.println(
+                    "Outer Field: " + outerField);
+            System.out.println(
+                    "Inner Field: " + innerField);
+        }
+    }
+}
+
+public class MemberInnerClassExample {
+    public static void main(String[] args) {
+        Outer outerObj = new Outer();
+        Outer.Inner innerObj =
+                outerObj.new Inner();
+        innerObj.display();
+    }
+}
+
+Anonymous Inner Class:
+---------------------
+An Anonymous Inner class is a type of inner class that does not have a name. It is declared and instantiated at the same time. It is used when you need to create a
+class instance only once.
+interface Greeting {
+    void greet();
+}
+
+public class AnonymousInnerClassExample {
+    public static void main(String[] args) {
+        Greeting greeting = new Greeting() {             //implementation of interface
+            @Override
+            public void greet() {
+                System.out.println(
+                        "Hello, Anonymous Inner Class!");
+            }
+        };
+        greeting.greet();
+    }
+}
+
+Local Inner Class:
+-----------------
+A Local Inner class is defined inside a block of code, typically within a method. It is only accessible within the block where it is declared.
+public class LocalInnerClassExample {
+    private int outerField = 100;
+    void display() {
+        // Local Inner Class
+        class Inner {
+            void innerMethod() {
+                System.out.println(
+                        "Outer Field from Inner: "
+                        + outerField);
+            }
+        }
+        Inner innerObj = new Inner();
+        innerObj.innerMethod();
+    }
+
+    public static void main(String[] args) {
+        LocalInnerClassExample outerObj =
+                new LocalInnerClassExample();
+        outerObj.display();
+    }
+}
+
+Static Nested Class:
+--------------------
+A Static Nested class is a static class defined inside another class. It is similar to a regular class but is just nested for packaging convenience. 
+A static nested class does not have access to the non-static members of the enclosing class.
+class Outer {
+    private static int outerStaticField = 50;
+    // Static Nested Class
+    static class StaticNested {
+        void display() {
+            System.out.println(
+                    "Outer Static Field from Static Nested: "
+                    + outerStaticField);
+        }
+    }
+}
+
+public class StaticNestedClassExample {
+    public static void main(String[] args) {
+        Outer.StaticNested nestedObj =
+                new Outer.StaticNested();
+        nestedObj.display();
+    }
+}
+
+Nested Interface:
+----------------
+A Nested Interface is an interface declared within another class or interface. It is implicitly static and accessible within the enclosing class or interface. 
+It is used for logical grouping of related interfaces.
+class Outer {
+    interface NestedInterface {
+        void display();
+    }
+}
+
+public class NestedInterfaceExample {
+    public static void main(String[] args) {
+        Outer.NestedInterface nestedObj =
+                new Outer.NestedInterface() {
+            @Override
+            public void display() {
+                System.out.println(
+                        "Hello, Nested Interface!");
+            }
+        };
+        nestedObj.display();
+    }
+}
+
+-Java Multithreading:
+--------------------
+It is a programming concept that allows multiple threads to execute independently within a single Java program. It enables efficient utilization of CPU resources 
+and helps in building responsive and concurrent applications.
+The life cycle of a thread in Java consists of the following states:
+| State                 | Description                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| **New**               | The thread is created but has not yet been started using `start()`.                        |
+| **Runnable**          | The thread is ready to run and waiting for CPU time from the scheduler.                    |
+| **Running**           | The thread is currently executing its `run()` method.                                      |
+| **Blocked / Waiting** | The thread is waiting for a lock, another thread, or a specific condition to be satisfied. |
+| **Terminated (Dead)** | The thread has completed execution or has been stopped due to an exception.                |
+
+| Method           | Resulting State               |
+| ---------------- | ----------------------------- |
+| `start()`        | New → Runnable                |
+| `sleep()`        | Running → Timed Waiting       |
+| `wait()`         | Running → Waiting             |
+| `join()`         | Calling thread enters Waiting |
+| Lock unavailable | Running → Blocked             |
+| Task completed   | Running → Terminated          |
+
+
++------+    start()    +----------+   CPU assigned   +---------+
+| New  | ----------->  | Runnable | --------------> | Running |
++------+               +----------+                  +---------+
+                             ^                            |
+                             |                            |
+                             |                            | waiting for
+                             |                            | lock/resource
+                             |                            v
+                       resource available        +------------------+
+                             |                   | Blocked/Waiting  |
+                             +-------------------+------------------+
+                                                 |
+                                                 | task completed
+                                                 v
+                                          +------------+
+                                          | Terminated |
+                                          +------------+
+How to Create a Thread:
+----------------------
+1. By extending the Thread class: 
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        // Code executed by the thread
+        System.out.println("Thread is running...");
+    }
+}
+
+public class ThreadExample {
+    public static void main(String[] args) {
+        MyThread thread = new MyThread();
+        thread.start(); // Starts a new thread
+    }
+}
+
+2.By implementing the Runnable interface:
+class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        // Code executed by the thread
+        System.out.println("Thread is running...");
+    }
+}
+
+public class RunnableExample {
+    public static void main(String[] args) {
+        Thread thread =
+                new Thread(new MyRunnable());
+        thread.start(); // Starts the thread
+    }
+}
+
+>Thread Scheduler: The thread scheduler is responsible for assigning CPU time to threads based on their priorities and states.
+>Sleeping a Thread: The sleep() method is used to make a thread pause its execution for a specified amount of time.
+try {
+    Thread.sleep(1000); // Sleep for 1 second
+} catch (InterruptedException e) {
+    e.printStackTrace();
+}
+
+
+Important Notes About Threads:
+| Topic                        | Description                                                                                                                                  |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Starting a Thread Twice**  | A thread can be started only once. If you call `start()` again on the same thread object, Java throws `IllegalThreadStateException`.         |
+| **Calling `run()` Directly** | Never call `run()` directly to start a thread. It executes in the current thread like a normal method call and does not create a new thread. |
+| **Using `start()`**          | Always use `start()` to create a new thread. The JVM then invokes `run()` in a separate thread.                                              |
+Thread t = new Thread();
+Ex:
+t.start(); // Valid
+t.start(); // Throws IllegalThreadStateException
+
+MyThread t = new MyThread();
+
+t.run();   // Normal method call, no new thread
+t.start(); // Creates a new thread and calls run()
+
+| Concept         | Description                                                                 | Example                                    |
+| --------------- | --------------------------------------------------------------------------- | ------------------------------------------ |
+| `join()`        | Makes the current thread wait until another thread completes its execution. | `thread.join();`                           |
+| `setName()`     | Assigns a name to a thread for easier identification and debugging.         | `thread.setName("MyThread");`              |
+| `setPriority()` | Sets the priority of a thread to influence CPU scheduling.                  | `thread.setPriority(Thread.MAX_PRIORITY);` |
+
+Thread thread = new Thread(() -> {
+// Thread task
+});
+thread.setName("MyThread")
+
+Daemon Thread: A daemon thread is a thread that runs in the background and does not prevent the JVM from exiting when the main thread finishes. You can
+set a thread as a daemon thread using setDaemon(true) .
+| User Thread                  | Daemon Thread                                      |
+| ---------------------------- | -------------------------------------------------- |
+| Keeps JVM running            | Does not keep JVM running                          |
+| Main thread is a user thread | Runs in background                                 |
+| JVM waits for completion     | JVM may terminate it anytime when user threads end |
+
+// Creates a thread using a lambda expression
+Thread daemonThread = new Thread(() -> {
+    // Daemon thread task
+});
+// Marks the thread as a daemon (background) thread
+daemonThread.setDaemon(true);
+// Starts the daemon thread
+daemonThread.start();
+
+| Concept           | Description                                                                                                                  | Example                                                       |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| **Thread Pool**   | A collection of reusable threads managed by an executor to avoid the overhead of creating and destroying threads repeatedly. | `ExecutorService executor = Executors.newFixedThreadPool(5);` |
+| **Thread Group**  | A mechanism for grouping multiple threads together for management purposes. Rarely used in modern Java applications.         | `ThreadGroup group = new ThreadGroup("MyGroup");`             |
+| **Shutdown Hook** | A thread that executes automatically when the JVM is shutting down, typically used for cleanup tasks.                        | `Runtime.getRuntime().addShutdownHook(new Thread(() -> {}));` |
+Ex: Thread Pool
+// Creates a thread pool with 5 worker threads
+ExecutorService executor =
+        Executors.newFixedThreadPool(5);
+// Submits a task to the thread pool
+executor.submit(() ->
+        System.out.println("Task executed"));
+// Shuts down the thread pool
+executor.shutdown();
+
+Ex: Shutdown Hook
+// Registers a shutdown hook
+Runtime.getRuntime().addShutdownHook(
+        new Thread(() -> {
+            System.out.println(
+                    "Cleanup before JVM shutdown");
+        }));
+		
+| Concept                       | Description                                                                                               | Example                                           |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **Performing Multiple Tasks** | Multiple threads can execute different tasks concurrently, improving application performance.             | `executor.submit(task1); executor.submit(task2);` |
+| **Garbage Collection (GC)**   | JVM automatically reclaims memory occupied by objects that are no longer reachable.                       | `System.gc();` *(request only)*                   |
+| **Runtime Class**             | Provides access to the Java Runtime Environment and allows interaction with the JVM and operating system. | `Runtime.getRuntime();`                           |
+
+Ex: Multiple taks
+// Creates a thread pool with 2 threads
+ExecutorService executor =
+        Executors.newFixedThreadPool(2);
+// Task 1
+executor.submit(() ->
+        System.out.println("Task 1"));
+// Task 2
+executor.submit(() ->
+        System.out.println("Task 2"));
+executor.shutdown();
+
+Runtime class:
+| Method                  | Description                          |
+| ----------------------- | ------------------------------------ |
+| `getRuntime()`          | Returns the Runtime instance         |
+| `availableProcessors()` | Returns number of CPU cores          |
+| `freeMemory()`          | Returns available JVM memory         |
+| `totalMemory()`         | Returns total JVM memory             |
+| `maxMemory()`           | Returns maximum JVM memory           |
+| `gc()`                  | Requests garbage collection          |
+| `exec(String command)`  | Executes an operating system command |
+
+-Java Synchronization:
+---------------------
