@@ -2115,3 +2115,583 @@ public class Main {
     }
 }
 Main Thread → method1() → Lock Acquired → method2() → Re-enters Lock → Execution Complete → Lock Released
+
+-Java I/OInput/Output):Java I/O is a framework that enables reading data from input sources and writing data to output destinations using streams, files, and object serialization mechanisms
+----------------------
+1. FileInputStream and FileOutputStream: FileInputStream and FileOutputStream classes are used for reading from and writing to files, respectively
+---------------------------------------
+import java.io.FileInputStream;   // Imports FileInputStream for reading data from a file
+import java.io.FileOutputStream;  // Imports FileOutputStream for writing data to a file
+import java.io.IOException;       // Imports IOException for handling file-related exceptions
+public class FileStreamExample {
+    public static void main(String[] args) {
+        String content = "Hello, this is some content to write to a file!"; // Data to be written
+        // Writing data to the file
+        try (FileOutputStream fos = new FileOutputStream("output.txt")) {
+            byte[] data = content.getBytes(); // Converts String to bytes
+            fos.write(data); // Writes bytes to the file
+            System.out.println("Content written to the file successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Reading data from the file
+        try (FileInputStream fis = new FileInputStream("output.txt")) {
+            int data;
+            System.out.println("\nReading content from file:");
+            while ((data = fis.read()) != -1) { // Reads one byte at a time, It returns an int value between 0 and 255. When the end of the file is reached, it returns -1.
+                System.out.print((char) data);  // Converts byte to character and prints
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+Create Content → Open output.txt → Convert String to Bytes → Write Bytes to File → Close FileOutputStream → Display Success Message
+
+Note: We also can do for reading for small files
+      byte[] data = fis.readAllBytes();
+      System.out.println(new String(data));
+	  or
+	  Scanner scanner = new Scanner(new File("output.txt"));
+      while (scanner.hasNextLine()) {
+          System.out.println(scanner.nextLine());
+      }
+      scanner.close();
+	  
+| Approach              | Best For                                      |
+| --------------------- | --------------------------------------------- |
+| `fis.read()`          | Learning and small examples                   |
+| `fis.read(byte[])`    | General file reading                          |
+| `readAllBytes()`      | Small files                                   |
+| `BufferedInputStream` | Large files and performance                   |
+| `Scanner`             | Simple text processing                        |
+| `BufferedReader`      | Reading text files line by line (most common) |
+
+2. BufferedOutputStream and BufferedInputStream: These classes provide buffering capabilities to enhance the performance of I/O operations by reducing the number of direct system calls.
+-----------------------------------------------
+BufferedInputStream and BufferedOutputStream wrap file streams with an internal buffer, reducing disk access and significantly improving I/O performance.
+| Concept                 | Explanation                                                                                          | Most Common Use                                   |
+| ----------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **BufferedInputStream** | Reads data using an internal buffer instead of directly accessing the file for every read operation. | Faster file reading and improved I/O performance. |
+| **Buffer**              | Temporary memory used to store chunks of data.                                                       | Reducing expensive disk access operations.        |
+
+| Class                    | Explanation                                                      | Most Common Use                 |
+| ------------------------ | ---------------------------------------------------------------- | ------------------------------- |
+| **BufferedOutputStream** | Writes data to a buffer before writing to the file.              | Faster file writing operations. |
+| **BufferedInputStream**  | Reads data into a buffer before providing it to the application. | Faster file reading operations. |
+
+import java.io.BufferedInputStream;   // Imports BufferedInputStream for buffered reading
+import java.io.BufferedOutputStream;  // Imports BufferedOutputStream for buffered writing
+import java.io.FileInputStream;       // Imports FileInputStream for reading from a file
+import java.io.FileOutputStream;      // Imports FileOutputStream for writing to a file
+import java.io.IOException;           // Imports IOException for exception handling
+public class BufferedStreamExample {
+    public static void main(String[] args) {
+        String content = "Hello, this is Buffered Stream Example!";
+        // Writing data using BufferedOutputStream
+        try (BufferedOutputStream bos =
+                 new BufferedOutputStream(new FileOutputStream("output.txt"))) {
+            byte[] data = content.getBytes(); // Convert String to byte array
+            bos.write(data); // Write data to buffer
+            System.out.println("Content written successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Reading data using BufferedInputStream
+        try (BufferedInputStream bis =
+                 new BufferedInputStream(new FileInputStream("output.txt"))) {
+            int data;
+            System.out.println("\nReading content from file:");
+            // Read one byte at a time until end of file
+            while ((data = bis.read()) != -1) {
+                // Convert byte to character and print
+                System.out.print((char) data);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+3. SequenceInputStream:
+----------------------
+| Class                   | Explanation                                                                       | Most Common Use                                            |
+| ----------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **SequenceInputStream** | Combines multiple input streams into a single stream and reads them sequentially. | Reading data from multiple files as if they were one file. |
+
+import java.io.FileInputStream;     // Imports FileInputStream for reading files
+import java.io.SequenceInputStream; // Imports SequenceInputStream for combining streams
+import java.io.IOException;         // Imports IOException for exception handling
+public class SequenceInputStreamExample {
+    public static void main(String[] args) {
+        // Opens file1.txt and file2.txt for reading
+        try (FileInputStream fis1 = new FileInputStream("file1.txt");
+             FileInputStream fis2 = new FileInputStream("file2.txt");
+             // Combines both input streams into a single stream
+             SequenceInputStream sis = new SequenceInputStream(fis1, fis2)) {
+            int data;
+            // Reads data from the combined stream until EOF
+            while ((data = sis.read()) != -1) {
+                // Converts byte to character and prints
+                System.out.print((char) data);
+            }
+
+        } catch (IOException e) {
+            // Prints exception details
+            e.printStackTrace();
+        }
+    }
+}
+
+4. ByteArrayOutputStream and ByteArrayInputStream: used for reading from and writing to byte arrays, respectively.
+-------------------------------------------------
+| Class                     | Explanation                             | Most Common Use                                       |
+| ------------------------- | --------------------------------------- | ----------------------------------------------------- |
+| **ByteArrayOutputStream** | Writes data to a byte array in memory.  | Creating byte arrays dynamically without using files. |
+| **ByteArrayInputStream**  | Reads data from a byte array in memory. | Processing byte array data as an input stream.        |
+
+import java.io.ByteArrayOutputStream; // Imports ByteArrayOutputStream for writing to a byte array
+import java.io.ByteArrayInputStream;  // Imports ByteArrayInputStream for reading from a byte array
+import java.io.IOException;           // Imports IOException for exception handling
+public class ByteArrayStreamExample {
+    public static void main(String[] args) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            String content = "Hello, this is some content to write to a byte array!";
+            byte[] data = content.getBytes(); // Converts String to byte array
+            baos.write(data); // Writes data to the byte array
+            System.out.println("Content written to the byte array successfully!");
+            // Gets the byte array from ByteArrayOutputStream
+            byte[] byteArray = baos.toByteArray();
+            // Reads data from the byte array
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(byteArray)) {
+                int ch;
+                System.out.println("\nReading content from byte array:");
+                while ((ch = bais.read()) != -1) {
+                    System.out.print((char) ch); // Converts byte to character and prints
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+5. DataOutputStream and DataInputStream: provide methods to write and read primitive data types and strings to and from streams, respectively
+---------------------------------------
+| Class                | Explanation                                                    | Most Common Use                        |
+| -------------------- | -------------------------------------------------------------- | -------------------------------------- |
+| **DataOutputStream** | Writes Java primitive data types and strings in binary format. | Storing structured data in files.      |
+| **DataInputStream**  | Reads Java primitive data types and strings in binary format.  | Retrieving structured data from files. |
+
+| Write Method     | Read Method     |
+| ---------------- | --------------- |
+| `writeInt()`     | `readInt()`     |
+| `writeDouble()`  | `readDouble()`  |
+| `writeBoolean()` | `readBoolean()` |
+| `writeChar()`    | `readChar()`    |
+| `writeFloat()`   | `readFloat()`   |
+| `writeLong()`    | `readLong()`    |
+| `writeUTF()`     | `readUTF()`     |
+
+import java.io.DataInputStream;    // Imports DataInputStream for reading primitive data types
+import java.io.DataOutputStream;   // Imports DataOutputStream for writing primitive data types
+import java.io.FileInputStream;    // Imports FileInputStream for reading from a file
+import java.io.FileOutputStream;   // Imports FileOutputStream for writing to a file
+import java.io.IOException;        // Imports IOException for exception handling
+public class DataOutputStreamExample {
+    public static void main(String[] args) {
+        // Writing primitive data types to a file
+        try (DataOutputStream dos =
+                 new DataOutputStream(new FileOutputStream("data.txt"))) {
+            dos.writeInt(42); // Writes an integer
+            dos.writeDouble(3.14); // Writes a double
+            dos.writeUTF("Hello, this is a string."); // Writes a String
+            System.out.println("Data written to the file successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Reading primitive data types from the file
+        try (DataInputStream dis =
+                 new DataInputStream(new FileInputStream("data.txt"))) {
+            int intValue = dis.readInt(); // Reads an integer
+            double doubleValue = dis.readDouble(); // Reads a double
+            String stringValue = dis.readUTF(); // Reads a String
+            System.out.println("Read values: "
+                    + intValue + ", "
+                    + doubleValue + ", "
+                    + stringValue);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+Open DataOutputStream → Write Integer → Write Double → Write String → Close Output Stream → Open DataInputStream → Read Integer → Read Double → Read String → Display Values → Close Input Stream
+
+6. Java FilterOutputStream and FilterInputStream:
+------------------------------------------------
+FilterOutputStream and FilterInputStream are abstract classes that allow you to filter or modify the data while reading from or writing to streams. The concrete implementations, 
+such as BufferedOutputStream , DataOutputStream , and ObjectOutputStream , extend FilterOutputStream .
+| Class                  | Explanation                                                                  | Most Common Use                                                                |
+| ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **FilterOutputStream** | Filters or modifies output data before writing it to the destination stream. | Creating custom output streams and adding extra processing while writing data. |
+| **FilterInputStream**  | Filters or modifies input data while reading from a source stream.           | Creating custom input streams and preprocessing data during reading.           |
+
+import java.io.FileInputStream;     // Imports FileInputStream for reading from a file
+import java.io.FileOutputStream;    // Imports FileOutputStream for writing to a file
+import java.io.FilterInputStream;   // Imports FilterInputStream for filtering input data
+import java.io.FilterOutputStream;  // Imports FilterOutputStream for filtering output data
+import java.io.IOException;         // Imports IOException for exception handling
+public class FilterStreamExample {
+    public static void main(String[] args) {
+        String content =
+                "Hello, this is some content to write with additional formatting!";
+        // Writing data using FilterOutputStream
+        try (FileOutputStream fos =
+                     new FileOutputStream("filtered_output.txt");
+             FilterOutputStream fosFiltered =
+                     new FilterOutputStream(fos)) {
+            byte[] data = content.getBytes(); // Converts String to bytes
+            fosFiltered.write(data); // Writes data to the file
+            fosFiltered.write('\n'); // Adds a new line character
+            System.out.println(
+                    "Content written to the file with additional formatting!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Reading data using FilterInputStream
+        try (FileInputStream fis =
+                     new FileInputStream("filtered_output.txt");
+             FilterInputStream fisFiltered =
+                     new FilterInputStream(fis) {}) {
+            int data;
+            System.out.println("\nReading content from file:");
+            while ((data = fisFiltered.read()) != -1) {
+                System.out.print((char) data); // Converts byte to character and prints
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+7. Java ObjectStream and Java ObjectStreamField: used for serializing and deserializing Java objects, respectively. They allow objects to be written to streams and read back later.
+-----------------------------------------------
+| Class / Interface      | Explanation                                                          | Most Common Use                                                      |
+| ---------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **ObjectOutputStream** | Serializes Java objects and writes them to a stream.                 | Saving objects to files, databases, or network streams.              |
+| **ObjectInputStream**  | Deserializes Java objects from a stream.                             | Restoring previously saved objects.                                  |
+| **Serializable**       | Marker interface that enables object serialization.                  | Allowing objects to be persisted or transferred.                     |
+| **ObjectStreamField**  | Describes and controls the fields that participate in serialization. | Custom serialization and field management during object persistence. |
+
+| Process             | Description                                                    |
+| ------------------- | -------------------------------------------------------------- |
+| **Serialization**   | Converting an object into a byte stream (`writeObject()`).     |
+| **Deserialization** | Converting a byte stream back into an object (`readObject()`). |
+
+import java.io.Serializable;          // Imports Serializable for object serialization
+import java.io.ObjectOutputStream;    // Imports ObjectOutputStream for writing objects
+import java.io.ObjectInputStream;     // Imports ObjectInputStream for reading objects
+import java.io.FileOutputStream;      // Imports FileOutputStream for file writing
+import java.io.FileInputStream;       // Imports FileInputStream for file reading
+import java.io.IOException;           // Imports IOException for exception handling
+// Serializable allows objects of this class to be converted into a byte stream
+class Person implements Serializable {
+    private String name;
+    private int age;
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Age: " + age;
+    }
+}
+
+public class ObjectStreamExample {
+    public static void main(String[] args) {
+        // Writing objects to file
+        try (ObjectOutputStream oos =
+                     new ObjectOutputStream(
+                             new FileOutputStream("objects.dat"))) {  //"objects.dat" is simply a file name where serialized Java objects are stored.
+            Person person1 = new Person("Alice", 30);
+            Person person2 = new Person("Bob", 25);
+            oos.writeObject(person1); // Serializes person1
+            oos.writeObject(person2); // Serializes person2
+            System.out.println("Objects written to the file successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Reading objects from file
+        try (ObjectInputStream ois =
+                     new ObjectInputStream(
+                             new FileInputStream("objects.dat"))) {
+            Person person1 = (Person) ois.readObject(); // Deserializes person1
+            Person person2 = (Person) ois.readObject(); // Deserializes person2
+            System.out.println("\nRead objects:");
+            System.out.println(person1);
+            System.out.println(person2);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+class Person implements Serializable {
+    private String name;      // Name of the person
+    private int age;          // Age of the person
+    private String password;  // Sensitive field that should not be serialized
+    // Specifies which fields should be serialized
+    private static final ObjectStreamField[] serialPersistentFields = {
+        new ObjectStreamField("name", String.class), // Serialize name field
+        new ObjectStreamField("age", int.class)      // Serialize age field
+    };
+    // Custom serialization method
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        // Creates a container for serializable fields
+        ObjectOutputStream.PutField fields = out.putFields();
+        // Stores the value of the name field
+        fields.put("name", name);
+        // Stores the value of the age field
+        fields.put("age", age);
+        // Writes only the specified fields to the stream
+        out.writeFields();
+    }
+}
+
+Java I/O (Hierarchy)
+    │
+    ├── Byte Streams
+    │      ├── InputStream
+    │      └── OutputStream
+    │
+    ├── Character Streams
+    │      ├── Reader
+    │      └── Writer
+    │
+    ├── Buffered Streams
+    │      ├── BufferedInputStream
+    │      └── BufferedOutputStream
+    │
+    ├── Data Streams
+    │      ├── DataInputStream
+    │      └── DataOutputStream
+    │
+    └── Object Streams
+           ├── ObjectInputStream
+           └── ObjectOutputStream
+		   
+| Java I/O Class / Interface | Explanation                                           | Most Common Use                                           |
+| -------------------------- | ----------------------------------------------------- | --------------------------------------------------------- |
+| **FileInputStream**        | Reads byte data from a file.                          | Reading binary files such as images, PDFs, and documents. |
+| **FileOutputStream**       | Writes byte data to a file.                           | Writing binary data to files.                             |
+| **BufferedInputStream**    | Reads data using an internal buffer.                  | High-performance file reading.                            |
+| **BufferedOutputStream**   | Writes data using an internal buffer.                 | High-performance file writing.                            |
+| **SequenceInputStream**    | Combines multiple input streams into a single stream. | Reading multiple files as one continuous stream.          |
+| **ByteArrayInputStream**   | Reads data from a byte array in memory.               | Processing byte array data as an input stream.            |
+| **ByteArrayOutputStream**  | Writes data to a byte array in memory.                | Creating dynamic byte arrays without file I/O.            |
+| **DataInputStream**        | Reads primitive data types and strings from a stream. | Reading structured binary data.                           |
+| **DataOutputStream**       | Writes primitive data types and strings to a stream.  | Writing structured binary data.                           |
+| **FilterInputStream**      | Filters or modifies input data while reading.         | Custom input processing and stream decoration.            |
+| **FilterOutputStream**     | Filters or modifies output data while writing.        | Custom output processing and stream decoration.           |
+| **ObjectInputStream**      | Deserializes Java objects from a stream.              | Restoring previously saved objects.                       |
+| **ObjectOutputStream**     | Serializes Java objects to a stream.                  | Persisting objects to files or networks.                  |
+| **ObjectStreamField**      | Defines fields that participate in serialization.     | Custom serialization control.                             |
+| **InputStream**            | Abstract superclass for byte input streams.           | Base class for all byte-reading streams.                  |
+| **OutputStream**           | Abstract superclass for byte output streams.          | Base class for all byte-writing streams.                  |
+| **Reader**                 | Abstract superclass for character input streams.      | Reading text data.                                        |
+| **Writer**                 | Abstract superclass for character output streams.     | Writing text data.                                        |
+| **FileReader**             | Reads character data from a file.                     | Reading text files.                                       |
+| **FileWriter**             | Writes character data to a file.                      | Writing text files.                                       |
+| **BufferedReader**         | Reads text efficiently using buffering.               | Reading text files line by line.                          |
+| **BufferedWriter**         | Writes text efficiently using buffering.              | Writing text files efficiently.                           |
+| **Console**                | Reads user input and passwords from the command line. | Command-line applications and secure password input.      |
+| **Serializable**           | Marker interface that enables object serialization.   | Persisting and transferring Java objects.                 |
+
+| Category              | Classes                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Byte Streams**      | InputStream, OutputStream, FileInputStream, FileOutputStream, BufferedInputStream, BufferedOutputStream |
+| **Character Streams** | Reader, Writer, FileReader, FileWriter, BufferedReader, BufferedWriter                                  |
+| **Data Streams**      | DataInputStream, DataOutputStream                                                                       |
+| **Object Streams**    | ObjectInputStream, ObjectOutputStream, ObjectStreamField, Serializable                                  |
+| **Memory Streams**    | ByteArrayInputStream, ByteArrayOutputStream                                                             |
+| **Filter Streams**    | FilterInputStream, FilterOutputStream                                                                   |
+| **Special Streams**   | SequenceInputStream, Console                                                                            |
+
+Console: The Console class in Java provides a simple way to interact with the console or command-line interface. It allows reading input and printing output directly to the console.
+-------
+import java.io.Console; // Imports Console class
+public class ConsoleExample {
+    public static void main(String[] args) {
+        Console console = System.console(); // Gets the console object
+        if (console != null) { // Checks if console is available
+            String input =
+                    console.readLine("Enter your name: "); // Reads user input
+            console.printf("Hello, %s!%n", input); // Prints formatted output
+        } else {
+            System.out.println("Console not available."); // Displayed when console is unavailable
+        }
+    }
+}
+
+FilePermission: The FilePermission class in Java is used to represent the access rights to files and directories. It is a part of the security framework to control what resources a codebase can access.
+---------------
+| Action         | Description                         |
+| -------------- | ----------------------------------- |
+| **read**       | Allows reading a file.              |
+| **write**      | Allows writing to a file.           |
+| **execute**    | Allows executing a file or program. |
+| **delete**     | Allows deleting a file.             |
+| **read,write** | Allows both reading and writing.    |
+
+import java.io.FilePermission;   // Imports FilePermission class
+import java.security.Permission; // Imports Permission class
+public class FilePermissionExample {
+    public static void main(String[] args) {
+        String filePath = "/path/to/file.txt"; // File path
+        // Creates a permission object with read access
+        Permission permission =
+                new FilePermission(filePath, "read");
+        // Checks whether read permission is implied
+        if (permission.implies(
+                new FilePermission(filePath, "read"))) {
+            System.out.println("Read access granted.");
+        } else {
+            System.out.println("Read access denied.");
+        }
+    }
+}
+
+Writer: The Writer class is an abstract base class for writing characters to an output stream. It provides various methods to write character data to a destination, like a file or a network socket.
+------
+| Class          | Explanation                                                              | Most Common Use                                                           |
+| -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| **Writer**     | Abstract base class for writing character data to an output destination. | Writing text data to files, network sockets, and other character streams. |
+| **FileWriter** | Concrete implementation of Writer for writing text to files.             | Creating and updating text files.                                         |
+
+import java.io.FileWriter; // Imports FileWriter for writing characters to a file
+import java.io.IOException; // Imports IOException for exception handling
+import java.io.Writer; // Imports Writer abstract class
+public class WriterExample {
+    public static void main(String[] args) {
+        // Creates a FileWriter and refers to it using Writer
+        try (Writer writer = new FileWriter("output.txt")) {    //The FileWriter class is a subclass of Writer that writes characters to a file.
+            writer.write("Hello, Java!"); // Writes character data to the file
+            System.out.println("Content written successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+Common Writer Implementations:
+| Class              | Purpose                                        |
+| ------------------ | ---------------------------------------------- |
+| **FileWriter**     | Writes characters to a file.                   |
+| **BufferedWriter** | Writes characters efficiently using buffering. |
+| **PrintWriter**    | Writes formatted text data.                    |
+| **StringWriter**   | Writes character data to a string buffer.      |
+
+Writer writer = new Writer();  --> Invalid, above FileWriter() is valid
+
+Reader: The Reader class is an abstract base class for reading character data from an input stream. It provides various methods to read characters from a source, such as a file or a network socket.
+------
+| Class          | Explanation                                                          | Most Common Use                                                             |
+| -------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **Reader**     | Abstract base class for reading character data from an input source. | Reading text data from files, network streams, and other character sources. |
+| **FileReader** | Concrete implementation of Reader for reading text from files.       | Reading text files.                                                         |
+
+import java.io.FileReader; // Imports FileReader for reading characters from a file
+import java.io.IOException; // Imports IOException for exception handling
+import java.io.Reader; // Imports Reader abstract class
+public class ReaderExample {
+    public static void main(String[] args) {
+        // Creates a FileReader and refers to it using Reader
+        try (Reader reader = new FileReader("input.txt")) {
+            int data;
+            // Reads one character at a time until end of file
+            while ((data = reader.read()) != -1) {
+                System.out.print((char) data); // Converts int to character and prints
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+BufferedWriter and BufferedReader: Subclasses of Writer and Reader
+---------------------------------
+| Class              | Explanation                                                       | Most Common Use                                 |
+| ------------------ | ----------------------------------------------------------------- | ----------------------------------------------- |
+| **BufferedWriter** | Adds buffering to character output streams for efficient writing. | Writing large amounts of text data efficiently. |
+| **BufferedReader** | Adds buffering to character input streams for efficient reading.  | Reading text files line by line efficiently.    |
+
+import java.io.BufferedWriter; // Imports BufferedWriter for buffered writing
+import java.io.BufferedReader; // Imports BufferedReader for buffered reading
+import java.io.FileWriter;     // Imports FileWriter for writing to a file
+import java.io.FileReader;     // Imports FileReader for reading from a file
+import java.io.IOException;    // Imports IOException for exception handling
+import java.io.Writer;         // Imports Writer abstract class
+import java.io.Reader;         // Imports Reader abstract class
+public class BufferedReaderWriterExample {
+    public static void main(String[] args) {
+        // Writing data using BufferedWriter
+        try (Writer writer = new FileWriter("output.txt");
+             BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
+            bufferedWriter.write("Hello, BufferedWriter!"); // Writes text to file
+            System.out.println("Content written successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Reading data using BufferedReader
+        try (Reader reader = new FileReader("output.txt");
+             BufferedReader bufferedReader = new BufferedReader(reader)) {
+            String line;
+            System.out.println("\nReading content from file:");
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line); // Reads and prints one line at a time
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+CharArrayReader and CharArrayWriter: Subclasses of Writer and Reader
+-----------------------------------
+| Class               | Explanation                                                     | Most Common Use                               |
+| ------------------- | --------------------------------------------------------------- | --------------------------------------------- |
+| **CharArrayWriter** | Writes character data to an internal character array in memory. | Building and storing text data in memory.     |
+| **CharArrayReader** | Reads character data from a character array in memory.          | Processing character arrays as input streams. |
+
+import java.io.CharArrayReader; // Imports CharArrayReader for reading from a character array
+import java.io.CharArrayWriter; // Imports CharArrayWriter for writing to a character array
+import java.io.IOException;     // Imports IOException for exception handling
+import java.io.Reader;          // Imports Reader abstract class
+import java.io.Writer;          // Imports Writer abstract class
+public class CharArrayStreamExample {
+    public static void main(String[] args) {
+        // Writing characters to an internal character array
+        try (Writer writer = new CharArrayWriter()) {
+            writer.write("Hello, CharArrayWriter!"); // Writes data to character array
+            char[] data =
+                    ((CharArrayWriter) writer).toCharArray(); // Converts content to char array
+            System.out.println("Written Data:");
+            System.out.println(data);
+            // Reading characters from the character array
+            try (Reader reader = new CharArrayReader(data)) {
+                int ch;
+                System.out.println("\nReading Data:");
+                while ((ch = reader.read()) != -1) {
+                    System.out.print((char) ch); // Reads and prints characters
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
