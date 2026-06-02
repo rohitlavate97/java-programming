@@ -1920,3 +1920,198 @@ Runtime class:
 
 -Java Synchronization:
 ---------------------
+Synchronization is a technique used to control access to shared resources in a multi-threaded environment. When multiple threads try to access shared resources concurrently, 
+synchronization ensures that only one thread can access the critical section (the synchronized block) at a time. This prevents race conditions and maintains data consistency.
+Synchronized Block:
+------------------ 
+use the synchronized keyword to create a synchronized block. A synchronized block allows you to specify a block of code that should be executed by only one thread at a time. 
+The block is synchronized on a specified object, ensuring that only one thread at a time can enter that block for that particular object.
+class BankAccount {
+    private int balance = 1000;
+    public synchronized void withdraw(int amount) {
+        balance -= amount;
+    }
+    public int getBalance() {
+        return balance;
+    }
+}
+
+class SharedResource {
+    public synchronized void instanceMethod() {}
+    public static synchronized void staticMethod() {}
+}
+
+| Method           | Lock                 |
+| ---------------- | -------------------- |
+| instanceMethod() | this                 |
+| staticMethod()   | SharedResource.class |
+
+
+| Feature                     | Instance Synchronized | Static Synchronized |
+| --------------------------- | --------------------- | ------------------- |
+| Lock Object                 | `this`                | `ClassName.class`   |
+| Scope                       | Per object            | Entire class        |
+| Multiple Objects Allowed?   | Yes                   | No                  |
+| Lock Shared Across Objects? | No                    | Yes                 |
+
+class SharedResource {
+    public static synchronized void staticSyncMethod() {
+        // Static synchronized method can be accessed by only one thread at a time.
+        // Critical section code
+    }
+    public static void staticSyncBlock() {
+        synchronized (SharedResource.class) {
+            // Static synchronized block can be accessed by only one thread at a time.
+            // Critical section code
+        }
+    }
+}
+Note: Both of these acquire the same lock on SharedResource.class ie use the same class-level lock.
+      SharedResource obj1 = new SharedResource();
+      SharedResource obj2 = new SharedResource();
+      //Instance Synchronization
+      obj1.instanceMethod();
+      obj2.instanceMethod();
+      ✅ Can execute concurrently because: obj1 lock != obj2 lock
+	  
+	  obj1.staticMethod();
+      obj2.staticMethod();
+      ❌ Cannot execute concurrently because:
+	  SharedResource.class lock == SharedResource.class lock
+	  
+Deadlock in Java: 
+----------------
+Deadlock occurs when two or more threads are unable to proceed because each of them is waiting for a resource that is held by another thread. It leads to a circular waiting scenario, 
+causing the threads to get stuck indefinitely. Deadlocks are undesirable and can lead to application hang-ups
+class SharedResource {
+    public synchronized void method1(SharedResource resource) {
+        // This method acquires a lock on this object
+        // (current instance of SharedResource).
+        // It will now try to call method2 on the 'resource' object.
+        resource.method2(this);
+    }
+    public synchronized void method2(SharedResource resource) {
+        // This method acquires a lock on this object
+        // (current instance of SharedResource).
+        // It will now try to call method1 on the 'resource' object.
+        resource.method1(this);
+    }
+}
+
+SharedResource resource1 = new SharedResource();
+SharedResource resource2 = new SharedResource();
+
+Thread t1 = new Thread(() -> {
+    resource1.method1(resource2);
+});
+
+Thread t2 = new Thread(() -> {
+    resource2.method2(resource1);
+});
+
+Thread-1
+Holding: resource1
+Waiting: resource2
+
+Thread-2
+Holding: resource2
+Waiting: resource1
+
+| Prevention Technique                | Details                                                                                                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Acquire Locks in the Same Order** | Acquire multiple locks in a fixed order to prevent circular waiting.Use in Applications with multiple synchronized resources.                         |
+| **Use a Single Lock**               | Use one common lock for all critical sections to avoid lock dependency.Use in  Simple applications with shared resources.                             |
+| **Use `ReentrantLock.tryLock()`**   | Attempts to acquire a lock without waiting forever if it is unavailable.Use in High-concurrency applications requiring non-blocking lock acquisition. |
+
+Inter-thread Communication:
+--------------------------
+Inter-thread communication allows threads to communicate with each other by waiting and notifying on a shared object. This is achieved using the wait() , notify() , and notifyAll() methods 
+from the Object class. Threads can wait for certain conditions to be satisfied before proceeding.
+| Method            | Explanation                                                                              | Most Common Use                                                                      |
+| ----------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **`wait()`**      | Causes the current thread to release the lock and wait until another thread notifies it. | Producer-Consumer scenarios where a thread must wait for a condition to become true. |
+| **`notify()`**    | Wakes up one waiting thread that is waiting on the same object.                          | When only one waiting thread needs to continue execution.                            |
+| **`notifyAll()`** | Wakes up all threads waiting on the same object.                                         | Multiple producer and consumer threads waiting for resources.                        |
+
+| Method        | Must Be Called Inside Synchronized Block/Method? | Releases Lock? |
+| ------------- | ------------------------------------------------ | -------------- |
+| `wait()`      | ✅ Yes                                            | ✅ Yes          |
+| `notify()`    | ✅ Yes                                            | ❌ No           |
+| `notifyAll()` | ✅ Yes                                            | ❌ No           |
+
+class SharedResource {
+    public synchronized void produce() {
+        while (queueIsFull()) {
+            try {
+                // Wait until the queue is not full
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // Produce an item and add it to the queue
+        addToQueue();
+        // Notify waiting consumer threads that a new item is available in the queue
+        notifyAll();
+    }
+
+    public synchronized void consume() {
+        while (queueIsEmpty()) {
+            try {
+                // Wait until the queue is not empty
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // Consume an item from the queue
+        removeFromQueue();
+        // Notify waiting producer threads that space is available in the queue
+        notifyAll();
+    }
+}
+
+Interrupting Thread:
+-------------------
+The interrupt() method is used to interrupt a thread in Java. When a thread is interrupted, it sets the thread's interrupt status to true. A thread can check its interrupt status using 
+isInterrupted() method or by catching InterruptedException
+| Method                 | Clears Interrupt Flag? |
+| ---------------------- | ---------------------- |
+| `isInterrupted()`      | ❌ No                   |
+| `Thread.interrupted()` | ✅ Yes                  |
+
+Thread myThread = new Thread(() -> {
+    while (!Thread.currentThread().isInterrupted()) {
+        // Thread's task
+    }
+});
+myThread.start();
+// Somewhere else in the code, you can interrupt the thread:
+myThread.interrupt();
+
+Reentrant Monitor: 
+-----------------
+Java's synchronization is based on a concept called a "reentrant monitor." It means that a thread can acquire the lock on an object multiple times without being blocked by itself. 
+Reentrant synchronization ensures that a thread can re-enter a synchronized block that it already holds the lock for, without deadlocking itself.
+| Feature                      | Explanation                                                                      | Most Common Use                                            |
+| ---------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **Reentrant Monitor**        | Allows a thread to acquire the same lock multiple times without blocking itself. | Nested synchronized method calls within the same object.   |
+| **Lock Hold Count**          | Java keeps track of how many times a thread has acquired a lock.                 | Managing recursive or nested synchronized operations.      |
+| **Self-Deadlock Prevention** | Prevents a thread from waiting on a lock it already owns.                        | Object-oriented designs with synchronized method chaining. |
+class SharedResource {
+    public synchronized void method1() {
+        System.out.println("Inside method1");
+        method2();
+    }
+    public synchronized void method2() {
+        System.out.println("Inside method2");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        SharedResource resource = new SharedResource();
+        resource.method1();
+    }
+}
+Main Thread → method1() → Lock Acquired → method2() → Re-enters Lock → Execution Complete → Lock Released
