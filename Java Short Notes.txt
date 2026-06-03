@@ -2933,3 +2933,261 @@ public class ScannerExample {
         }
     }
 }
+
+-Java Collections Framework: (fundamental part of the Java Standard Library)
+---------------------------
+The Java Collections Framework is a set of classes and interfaces that provide implementations of common data structures to store, manage, and manipulate
+collections of objects in Java providing developers with a variety of data structures and algorithms for handling collections of data efficiently.
+
+Hierarchy of Collection Framework
+---------------------------------
+The Collections Framework provides a set of interfaces and classes for storing and manipulating groups of objects.
+
+1. Iterable Interface
+   └── Collection Interface
+       ├── List Interface
+       │   ├── ArrayList
+       │   ├── LinkedList
+       │   └── Vector
+       │       └── Stack
+       │
+       ├── Set Interface
+       │   ├── HashSet
+       │   │   └── LinkedHashSet
+       │   ├── SortedSet
+       │   │   └── NavigableSet
+       │   │       └── TreeSet
+       │
+       └── Queue Interface
+           ├── PriorityQueue
+           ├── Deque Interface
+           │   ├── ArrayDeque
+           │   └── LinkedList
+
+2. Map Interface (Not a child of Collection)
+   ├── HashMap
+   │   └── LinkedHashMap
+   ├── Hashtable
+   ├── SortedMap
+   │   └── NavigableMap
+   │       └── TreeMap
+   └── WeakHashMap
+
+Collection Interface: The root of the collection hierarchy. It defines the most general methods applicable to all collections, such as add , remove , contains etc.
+| Level | Interface/Class      | Description                                                  | Implementations                          |
+| ------- | -------------------- | ------------------------------------------------------------ | ---------------------------------------- |
+| 1       | Collection           | Root interface of Collection Framework                       | List, Set, Queue                         |
+| 2       | List                 | Ordered collection, allows duplicates                        | ArrayList, LinkedList, Vector, Stack     |
+| 2       | Set                  | Does not allow duplicate elements                            | HashSet, LinkedHashSet, TreeSet          |
+| 2       | Queue                | Holds elements before processing (FIFO)                      | LinkedList, PriorityQueue, ArrayDeque    |
+| 1       | Map                  | Stores key-value pairs (Not a child of Collection interface) | HashMap, LinkedHashMap, TreeMap, Hashtable |
+
+Collection Interface: The Collection interface is the root interface of the Java Collection Framework.
+--------------------
+Purpose:
+- Provides standard functionality for all collections.
+- Defines common methods used to store and manipulate groups of objects.
+
+Common Methods:
+| Method          | Description                          |
+| --------------- | ------------------------------------ |
+| add()           | Adds an element to the collection.   |
+| remove()        | Removes an element from collection.  |
+| contains()      | Checks if element exists.            |
+| size()          | Returns number of elements.          |
+| isEmpty()       | Checks whether collection is empty.  |
+| clear()         | Removes all elements.                |
+| iterator()      | Returns iterator for traversal.      |
+
+Important Child Interfaces:
+| Interface | Description                            |
+| ----------| -------------------------------------- |
+| List      | Ordered collection, allows duplicates. |
+| Set       | No duplicate elements.                 |
+| Queue     | Holds elements before processing.      |
+
+Example:
+import java.util.*;
+public class CollectionExample {
+    public static void main(String[] args) {
+        //loose coupling and runtime polymorphism.
+        Collection<String> collection = new ArrayList<>();   //As Collection is an interface, we cannot create an object
+
+        collection.add("Apple");
+        collection.add("Banana");
+
+        collection.remove("Banana");
+
+        System.out.println(collection);
+
+        // Output: [Apple]
+    }
+}
+
+Iterator Interface: The Iterator interface provides a way to traverse elements of a collection one by one.
+------------------
+Purpose:
+- Used to iterate through collection elements.
+- Works with List, Set, Queue, etc.
+- Supports safe removal of elements during iteration.
+
+Common Methods:
+| Method     | Return Type | Description                                |
+| ---------- | ----------- | ------------------------------------------ |
+| hasNext()  | boolean     | Checks if more elements are available.     |
+| next()     | E           | Returns the next element.                  |
+| remove()   | void        | Removes the current element from collection.|
+
+Example:
+
+import java.util.*;
+
+public class IteratorRemoveExample {
+    public static void main(String[] args) {
+
+        List<String> list = new ArrayList<>();
+
+        list.add("Apple");
+        list.add("Banana");
+        list.add("Cherry");
+
+        Iterator<String> iterator = list.iterator();   //iterator() returns an Iterator object.
+
+        while(iterator.hasNext()) {
+            String fruit = iterator.next();
+
+            if(fruit.equals("Banana")) {
+                iterator.remove();
+            }
+        }
+
+        System.out.println(list);
+    }
+}
+
+Flow:
+Iterator
+    |
+    +--> hasNext()
+    |
+    +--> next()
+    |
+    +--> remove()
+
+Output:
+[Apple, Cherry]
+
+Iterator vs For Loop
+--------------------
+
+| Feature             | Iterator | For Loop |
+| ------------------- | -------- | -------- |
+| Works on all Collections | Yes | No |
+| Safe Removal        | Yes      | No |
+| Index Access        | No       | Yes |
+| Used with Set       | Yes      | No |
+
+Iterator vs ListIterator
+------------------------
+
+| Feature             | Iterator | ListIterator |
+| ------------------- | -------- | ------------ |
+| Traverse Forward    | Yes      | Yes          |
+| Traverse Backward   | No       | Yes          |
+| Add Elements        | No       | Yes          |
+| Update Elements     | No       | Yes          |
+| Works on List Only  | No       | Yes          |
+
+Important Note
+--------------
+Collection
+    |
+    +--> iterator()
+            |
+            +--> Iterator
+			
+Every Collection implementation provides the iterator() method, which returns an Iterator object for traversal.
+
+Note: Use Iterator instead of for loop,As it provides a uniform way to traverse collections and allows safe removal of elements.
+
+List Interface
+==============
+| Feature              | Description                                        |
+| -------------------- | -------------------------------------------------- |
+| Parent Interface     | Collection(extends)                                         |
+| Ordering             | Maintains insertion order                          |
+| Duplicates           | Allowed                                            |
+| Null Values          | Allowed                                            |
+| Access               | Index-based                                        |
+| Common Methods       | add(), get(), remove(), indexOf(), size()          |
+| Implementations      | ArrayList, LinkedList, Vector, Stack               |
+
+| Feature                | ArrayList                              | LinkedList                              |
+| ---------------------- | -------------------------------------- | --------------------------------------- |
+| Type                   | Class                                  | Class                                   |
+| Implements             | List                                   | List, Deque                             |
+| Purpose                | Dynamic Array implementation of List   | Doubly Linked List implementation of List |
+| Ordering               | Maintains insertion order              | Maintains insertion order               |
+| Duplicates             | Allowed                                | Allowed                                 |
+| Null Values            | Allowed                                | Allowed                                 |
+| Underlying Structure   | Dynamic Array                          | Doubly Linked List                      |
+| Access by Index        | Fast O(1)                              | Slow O(n)                               |
+| Insertion at End       | O(1) Amortized                         | O(1)                                    |
+| Insertion in Middle    | Slow O(n)                              | Fast O(1)*                              |
+| Deletion in Middle     | Slow O(n)                              | Fast O(1)*                              |
+| Search                 | O(n)                                   | O(n)                                    |
+| Memory Usage           | Less                                   | More (stores node references)           |
+| Random Access          | Yes                                    | No                                      |
+| Resizable              | Yes                                    | Yes                                     |
+| Common Methods         | add(), get(), remove(), size()         | add(), get(), remove(), size()          |
+| Best Use Case          | Frequent reading/retrieval             | Frequent insertion/deletion             |
+| Example                | ArrayList<String> list = new ArrayList<>(); | LinkedList<String> list = new LinkedList<>(); |
+
+*After reaching the required node.
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class ArrayListVsLinkedListExample {
+
+    public static void main(String[] args) {
+
+        // ArrayList Example
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("Alice");
+        arrayList.add("Bob");
+        arrayList.add("Charlie");
+
+        System.out.println("ArrayList:");
+        System.out.println(arrayList);
+        System.out.println("Element at index 1: " + arrayList.get(1));
+
+        // Insert element in middle
+        arrayList.add(1, "David");
+        System.out.println("After insertion: " + arrayList);
+
+        // Remove element
+        arrayList.remove("Bob");
+        System.out.println("After deletion: " + arrayList);
+
+        System.out.println();
+
+        // LinkedList Example
+        LinkedList<String> linkedList = new LinkedList<>();
+        linkedList.add("Alice");
+        linkedList.add("Bob");
+        linkedList.add("Charlie");
+
+        System.out.println("LinkedList:");
+        System.out.println(linkedList);
+        System.out.println("Element at index 1: " + linkedList.get(1));
+
+        // Insert element in middle
+        linkedList.add(1, "David");
+        System.out.println("After insertion: " + linkedList);
+
+        // Remove element
+        linkedList.remove("Bob");
+        System.out.println("After deletion: " + linkedList);
+    }
+}
