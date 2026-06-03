@@ -3147,47 +3147,885 @@ List Interface
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-
 public class ArrayListVsLinkedListExample {
-
     public static void main(String[] args) {
-
         // ArrayList Example
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Alice");
         arrayList.add("Bob");
         arrayList.add("Charlie");
-
         System.out.println("ArrayList:");
         System.out.println(arrayList);
         System.out.println("Element at index 1: " + arrayList.get(1));
-
         // Insert element in middle
         arrayList.add(1, "David");
         System.out.println("After insertion: " + arrayList);
-
         // Remove element
         arrayList.remove("Bob");
         System.out.println("After deletion: " + arrayList);
-
         System.out.println();
-
         // LinkedList Example
         LinkedList<String> linkedList = new LinkedList<>();
         linkedList.add("Alice");
         linkedList.add("Bob");
         linkedList.add("Charlie");
-
         System.out.println("LinkedList:");
         System.out.println(linkedList);
         System.out.println("Element at index 1: " + linkedList.get(1));
-
         // Insert element in middle
         linkedList.add(1, "David");
         System.out.println("After insertion: " + linkedList);
-
         // Remove element
         linkedList.remove("Bob");
         System.out.println("After deletion: " + linkedList);
     }
 }
+
+Vector: Vector is a legacy class in Java that implements the List interface. It is similar to ArrayList but is synchronized (thread-safe).
+======
+Hierarchy:
+-----------
+Collection
+    |
+List
+    |
+Vector
+    |
+Stack
+
+Key Features:
+✓ Dynamic Array
+✓ Maintains Insertion Order
+✓ Allows Duplicates
+✓ Allows Null Values
+✓ Thread Safe (Synchronized)
+✓ Legacy Collection Class
+
+Example:
+Vector<String> names = new Vector<>();
+
+names.add("Alice");
+names.add("Bob");
+names.add("Charlie");
+
+System.out.println(names);
+Output:
+-------
+[Alice, Bob, Charlie]
+
+Common Methods:
+| Method      | Description                     |
+| ----------- | ------------------------------- |
+| add()       | Adds element                    |
+| get()       | Retrieves element by index      |
+| remove()    | Removes element                 |
+| size()      | Returns number of elements      |
+| contains()  | Checks if element exists        |
+| clear()     | Removes all elements            |
+
+ArrayList vs Vector:
+| Feature         | ArrayList                    | Vector                      |
+| --------------- | ---------------------------- | --------------------------- |
+| Synchronization | Not Synchronized             | Synchronized                |
+| Thread Safe     | No                           | Yes                         |
+| Performance     | Faster                       | Slower                      |
+| Legacy Class    | No                           | Yes                         |
+| Null Values     | Allowed                      | Allowed                     |
+| Duplicates      | Allowed                      | Allowed                     |
+| Recommended     | Yes                          | No                          |
+
+Set Interface:
+--------------
+| Feature              | HashSet                              | LinkedHashSet                              | TreeSet                                |
+| -------------------- | ------------------------------------ | ------------------------------------------ | -------------------------------------- |
+| Interface            | Set                                  | Set                                        | Set (NavigableSet)                     |
+| Underlying Structure | Hash Table                           | Hash Table + Linked List                   | Red-Black Tree                         |
+| Ordering             | No Order Guaranteed                  | Maintains Insertion Order                  | Sorted Order                           |
+| Duplicates           | Not Allowed                          | Not Allowed                                | Not Allowed                            |
+| Null Values          | One Null Allowed                     | One Null Allowed                           | Null Not Allowed                       |
+| Performance          | Fastest                              | Slightly Slower than HashSet               | Slower (Sorting Overhead)              |
+| Search               | O(1)                                 | O(1)                                       | O(log n)                               |
+| Insertion            | O(1)                                 | O(1)                                       | O(log n)                               |
+| Deletion             | O(1)                                 | O(1)                                       | O(log n)                               |
+| Best Use Case        | Fast Lookup                          | Maintain Insertion Order                   | Maintain Sorted Data                   |
+| Example Output       | [Bob, Alice] (Order Not Guaranteed)  | [Alice, Bob, Charlie]                      | [Alice, Bob, Charlie]                  |
+
+| Requirement                 | Recommended Collection |
+| --------------------------- | ---------------------- |
+| Fastest Performance         | HashSet                |
+| Preserve Insertion Order    | LinkedHashSet          |
+| Sorted Elements             | TreeSet                |
+| Allow Null                  | HashSet, LinkedHashSet |
+| Natural Sorting             | TreeSet                |
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.TreeSet;
+public class SetExample {
+    public static void main(String[] args) {
+        HashSet<String> hashSet = new HashSet<>();
+        hashSet.add("Bob");
+        hashSet.add("Alice");
+        hashSet.add("Bob"); // Duplicate ignored
+
+        LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
+        linkedHashSet.add("Bob");
+        linkedHashSet.add("Alice");
+        linkedHashSet.add("Charlie");
+
+        TreeSet<String> treeSet = new TreeSet<>();
+        treeSet.add("Bob");
+        treeSet.add("Alice");
+        treeSet.add("Charlie");
+
+        System.out.println("HashSet       : " + hashSet);
+        System.out.println("LinkedHashSet : " + linkedHashSet);
+        System.out.println("TreeSet       : " + treeSet);
+    }
+}
+
+Queue:
+-----
+| Feature              | Queue                                      | PriorityQueue                              |
+| -------------------- | ------------------------------------------ | ------------------------------------------ |
+| Type                 | Interface                                  | Class                                      |
+| Parent Interface     | Collection                                 | Implements Queue                           |
+| Principle            | FIFO (First In First Out)                  | Priority-Based Ordering                    |
+| Ordering             | Depends on Implementation                  | Natural Order / Custom Comparator          |
+| Duplicates           | Allowed                                    | Allowed                                    |
+| Null Values          | Not Allowed                                | Not Allowed                                |
+| Underlying Structure | Depends on Implementation                  | Heap (Priority Heap)                       |
+| Insertion Method     | add(), offer()                             | add(), offer()                             |
+| Removal Method       | remove(), poll()                           | remove(), poll()                           |
+| Retrieve Head        | element(), peek()                          | element(), peek()                          |
+| Performance          | Depends on Implementation                  | O(log n) insertion/removal                 |
+| Best Use Case        | FIFO Processing                            | Priority-Based Processing                  |
+| Example              | Queue<String> q = new LinkedList<>();      | Queue<String> q = new PriorityQueue<>();   |
+
+Common Queue Methods:
+| Method     | Description                               |
+| ---------- | ----------------------------------------- |
+| add()      | Inserts element into queue                |
+| offer()    | Inserts element into queue                |
+| remove()   | Removes and returns head element          |
+| poll()     | Removes and returns head, null if empty   |
+| element()  | Returns head element                      |
+| peek()     | Returns head, null if empty               |
+
+Queue vs PriorityQueue
+======================
+Important: PriorityQueue does not guarantee insertion order. It maintains elements according to priority (natural sorting by default).
+| Feature              | Queue (FIFO)        | PriorityQueue            |
+| -------------------- | ------------------- | -------------------------|
+| Processing Order     | Insertion Order     | Priority Order           |
+| First Removed        | First Inserted      | Smallest/Highest Priority|
+| Sorting              | No                  | Yes                      |
+| Use Case             | Waiting Line        | Task Scheduling          |
+
+import java.util.PriorityQueue;
+import java.util.Queue;
+public class QueueExample {
+    public static void main(String[] args) {
+        Queue<String> queue = new PriorityQueue<>();
+        queue.add("Alice");
+        queue.add("Bob");
+        queue.add("Charlie");
+
+        System.out.println("Queue: " + queue);
+        String removedElement = queue.remove();
+
+        System.out.println("Removed: " + removedElement);
+        System.out.println("After Removal: " + queue);
+    }
+}
+
+| Feature              | Deque                                      | ArrayDeque                                |
+| -------------------- | ------------------------------------------ | ----------------------------------------- |
+| Type                 | Interface                                  | Class                                     |
+| Parent Interface     | Queue                                      | Implements Deque                          |
+| Full Form            | Double Ended Queue                         | Array-based Deque                         |
+| Principle            | FIFO + LIFO                                | FIFO + LIFO                               |
+| Insertion            | Both Front and Rear                        | Both Front and Rear                       |
+| Deletion             | Both Front and Rear                        | Both Front and Rear                       |
+| Duplicates           | Allowed                                    | Allowed                                   |
+| Null Values          | Depends on Implementation                  | Null Not Allowed                          |
+| Underlying Structure | Depends on Implementation                  | Resizable Array                           |
+| Performance          | Depends on Implementation                  | O(1) for add/remove at both ends          |
+| Stack Operations     | Supported                                  | Supported                                 |
+| Queue Operations     | Supported                                  | Supported                                 |
+| Common Methods       | addFirst(), addLast(), removeFirst(), removeLast(), peekFirst(), peekLast() | Same |
+| Best Use Case        | Double-ended processing                    | Stack and Queue replacement               |
+| Example              | Deque<String> deque;                       | Deque<String> deque = new ArrayDeque<>(); |
+
+Common Deque Methods:
+| Method         | Description                          |
+| -------------- | ------------------------------------ |
+| addFirst()     | Inserts element at front             |
+| addLast()      | Inserts element at rear              |
+| removeFirst()  | Removes element from front           |
+| removeLast()   | Removes element from rear            |
+| peekFirst()    | Returns first element                |
+| peekLast()     | Returns last element                 |
+| push()         | Adds element to front (Stack)        |
+| pop()          | Removes element from front (Stack)   |
+
+Queue vs Deque
+==============
+
+| Feature          | Queue                 | Deque                    |
+| ---------------- | --------------------- | ------------------------ |
+| Insert Front     | No                    | Yes                      |
+| Insert Rear      | Yes                   | Yes                      |
+| Remove Front     | Yes                   | Yes                      |
+| Remove Rear      | No                    | Yes                      |
+| FIFO             | Yes                   | Yes                      |
+| LIFO             | No                    | Yes                      |
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+public class DequeExample {
+    public static void main(String[] args) {
+        Deque<String> deque = new ArrayDeque<>();
+
+        deque.addFirst("Alice");
+        deque.addLast("Bob");
+        deque.addLast("Charlie");
+
+        System.out.println("Deque: " + deque);
+        String removedElement = deque.removeFirst();
+        System.out.println("Removed: " + removedElement);
+        System.out.println("After Removal: " + deque);
+        System.out.println("First Element: " + deque.peekFirst());
+        System.out.println("Last Element: " + deque.peekLast());
+    }
+}
+
+Deque Interface: Deque (Double Ended Queue) is an interface that extends Queue and allows insertion and removal of elements from both ends.
+===============
+Can be used as:
+---------------
+✓ Queue (FIFO)
+✓ Stack (LIFO)
+
+Common Implementations:
+-----------------------
+✓ ArrayDeque
+✓ LinkedList
+
+Key Features
+============
+✓ Insert at Front and Rear
+✓ Remove from Front and Rear
+✓ Supports FIFO and LIFO
+✓ Extends Queue Interface
+✓ Better alternative to Stack
+
+Common Methods:
+| Method          | Description                         |
+| --------------- | ----------------------------------- |
+| addFirst()      | Inserts element at front            |
+| addLast()       | Inserts element at rear             |
+| removeFirst()   | Removes first element               |
+| removeLast()    | Removes last element                |
+| getFirst()      | Retrieves first element             |
+| getLast()       | Retrieves last element              |
+| peekFirst()     | Returns first element               |
+| peekLast()      | Returns last element                |
+
+Deque as Queue (FIFO):
+--------------------
+addLast("Alice")
+addLast("Bob")
+addLast("Charlie")
+
+removeFirst()
+
+Output:
+--------
+Alice
+
+Deque as Stack (LIFO):
+---------------------
+
+push("Alice")
+push("Bob")
+push("Charlie")
+
+pop()
+
+Output:
+--------
+Charlie
+
+Example:
+Deque<String> deque =
+        new ArrayDeque<>();
+
+deque.addFirst("Alice");
+deque.addLast("Bob");
+deque.addLast("Charlie");
+
+System.out.println(
+        deque.removeFirst());
+
+Output:
+-------
+Alice
+
+Deque vs Queue:
+--------------
+| Feature       | Queue          | Deque                |
+| ------------- | -------------- | -------------------- |
+| Insert Front  | No             | Yes                  |
+| Insert Rear   | Yes            | Yes                  |
+| Remove Front  | Yes            | Yes                  |
+| Remove Rear   | No             | Yes                  |
+| FIFO          | Yes            | Yes                  |
+| LIFO          | No             | Yes                  |
+
+Java Stack:
+==========
+Stack is a linear data structure that follows the LIFO (Last In First Out) principle.
+Stack Hierarchy:
+Iterable
+   |
+Collection
+   |
+List
+   |
+Vector
+   |
+Stack
+
+Stack Class:
+-----------
+| Feature              | Description                           |
+| -------------------- | ------------------------------------- |
+| Type                 | Class                                 |
+| Parent Class         | Vector                                |
+| Principle            | LIFO (Last In First Out)              |
+| Thread Safe          | Yes (Inherited from Vector)           |
+| Duplicates           | Allowed                               |
+| Null Values          | Allowed                               |
+| Index Based          | Yes                                   |
+| Package              | java.util                             |
+
+Common Stack Methods:
+| Method      | Return Type | Description                          | Time Complexity |
+| ----------- | ----------- | ------------------------------------ | --------------- |
+| push(E e)   | E           | Adds element to top of stack         | O(1)            |
+| pop()       | E           | Removes and returns top element      | O(1)            |
+| peek()      | E           | Returns top element without removing | O(1)            |
+| empty()     | boolean     | Checks whether stack is empty        | O(1)            |
+| search(E e) | int         | Returns position from top of stack   | O(n)            |
+
+import java.util.Stack;
+
+public class StackExample {
+    public static void main(String[] args) {
+
+        Stack<String> stack = new Stack<>();
+
+        stack.push("Alice");
+        stack.push("Bob");
+        stack.push("Charlie");
+
+        System.out.println("Stack: " + stack);
+
+        System.out.println("Top Element: "
+                + stack.peek());
+
+        System.out.println("Removed: "
+                + stack.pop());
+
+        System.out.println("Stack After Pop: "
+                + stack);
+    }
+}
+
+| Feature        | Stack                | Queue               |
+| -------------- | -------------------- | ------------------- |
+| Principle      | LIFO                 | FIFO                |
+| Insert         | push()               | add()/offer()       |
+| Remove         | pop()                | remove()/poll()     |
+| Access         | Top Element          | Front Element       |
+
+| Feature       | Stack                  | ArrayDeque            |
+| ------------- | ---------------------- | --------------------- |
+| Thread Safe   | Yes                    | No                    |
+| Performance   | Slower                 | Faster                |
+| Legacy Class  | Yes                    | No                    |
+| Recommended   | No                     | Yes                   |
+
+Valid Examples:
+List<String> list1 = new ArrayList<>();
+
+List<String> list2 = new LinkedList<>();
+
+List<String> list3 = new Vector<>();
+
+List<String> list4 = new Stack<>();
+
+Note: When you use a Stack object with a List reference, you cannot directly access Stack-specific methods like push(), pop(), and peek().
+      What should be used instead of Stack?", the answer is ArrayDeque
+	  
+Java Map Interface: collection of key-value pairs, where each key is unique, and each key is associated with a value
+==================
+The Map interface does not extend the Collection interface, but it is an important part of the Java Collections Framework.
+The Map interface includes methods such as put , get , remove , containsKey , and containsValue .
+| Feature              | HashMap                              | LinkedHashMap                          | TreeMap                               | Hashtable                            |
+| -------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------- | ------------------------------------ |
+| Interface            | Map                                  | Map                                    | NavigableMap / SortedMap             | Map                                  |
+| Underlying Structure | Hash Table                           | Hash Table + Doubly Linked List        | Red-Black Tree                       | Hash Table                           |
+| Ordering             | No Order Guaranteed                  | Maintains Insertion Order              | Sorted by Key                        | No Order Guaranteed                  |
+| Key-Value Storage    | Yes                                  | Yes                                    | Yes                                  | Yes                                  |
+| Null Key             | One Null Key Allowed                 | One Null Key Allowed                   | Not Allowed                          | Not Allowed                          |
+| Null Value           | Multiple Null Values Allowed         | Multiple Null Values Allowed           | Allowed                              | Not Allowed                          |
+| Thread Safe          | No                                   | No                                     | No                                   | Yes                                  |
+| Synchronization      | Not Synchronized                     | Not Synchronized                       | Not Synchronized                     | Synchronized                         |
+| Performance          | Fastest                              | Slightly Slower than HashMap           | Slower (Sorting Overhead)            | Slower than HashMap                  |
+| Search               | O(1)                                 | O(1)                                   | O(log n)                             | O(1)                                 |
+| Insertion            | O(1)                                 | O(1)                                   | O(log n)                             | O(1)                                 |
+| Deletion             | O(1)                                 | O(1)                                   | O(log n)                             | O(1)                                 |
+| Best Use Case        | Fast Lookup                          | Preserve Insertion Order               | Sorted Data                          | Thread-Safe Legacy Applications      |
+
+Working of HashMap
+-----------------
+1. HashMap stores data as Key-Value pairs.
+2. When put(key, value) is called:
+   - hashCode() of the key is calculated.
+   - Bucket is identified using the hash value.
+   - Key-Value pair is stored in that bucket.
+3. If multiple keys map to the same bucket:
+   - Collision occurs.
+   - Stored using Linked List.
+   - Converted to Red-Black Tree in Java 8+ if collisions increase.
+4. When get(key) is called:
+   - hashCode() finds the bucket.
+   - equals() finds the exact key.
+   - Corresponding value is returned.
+
+ConcurrentHashMap
+-----------------
+ConcurrentHashMap is the modern, thread-safe alternative to Hashtable.
+Why use ConcurrentHashMap instead of Hashtable?
+✓ Better Performance
+✓ Thread Safe
+✓ Allows multiple threads to read and write simultaneously
+✓ Uses fine-grained locking instead of locking the entire map 
+✓ Recommended for modern multithreaded applications
+
+Comparison:
+| Feature            | Hashtable        | ConcurrentHashMap |
+| ------------------ | ---------------- | ----------------- |
+| Thread Safe        | Yes              | Yes               |
+| Performance        | Slower           | Faster            |
+| Locking            | Entire Map       | Segment/Bucket Level |
+| Null Key           | Not Allowed      | Not Allowed       |
+| Null Value         | Not Allowed      | Not Allowed       |
+| Recommended Today? | No               | Yes               |
+
+EnumSet and EnumMap: are rarely asked compared to HashMap, ArrayList, HashSet, etc.
+-------------------
+| Feature              | EnumSet                                  | EnumMap                                  |
+| -------------------- | ---------------------------------------- | ---------------------------------------- |
+| Type                 | Set Implementation                       | Map Implementation                       |
+| Package              | java.util                                | java.util                                |
+| Works With           | Enum Values                              | Enum Keys                                |
+| Underlying Structure | Bit Vector                               | Array                                    |
+| Performance          | Very Fast (Faster than HashSet)          | Very Fast ( Faster than HashMap)        |
+| Null Allowed         | No                                       | Null Key Not Allowed                     |
+| Memory Usage         | Low                                      | Low                                      |
+| Best Use Case        | Storing Enum Constants                   | Mapping Enum Keys to Values              |
+| Example              | EnumSet<Days>                            | EnumMap<Days, String>                    |
+
+import java.util.EnumMap;
+import java.util.EnumSet;
+
+enum Days {
+    MONDAY, TUESDAY, WEDNESDAY,
+    THURSDAY, FRIDAY, SATURDAY, SUNDAY
+}
+
+public class EnumExample {
+    public static void main(String[] args) {
+        EnumSet<Days> workingDays =
+                EnumSet.range(Days.MONDAY, Days.FRIDAY);
+        System.out.println("EnumSet : " + workingDays);
+        EnumMap<Days, String> tasks =
+                new EnumMap<>(Days.class);
+        tasks.put(Days.MONDAY, "Coding");
+        tasks.put(Days.TUESDAY, "Testing");
+        System.out.println("EnumMap : " + tasks);
+    }
+}
+
+Map.Entry: is a nested interface inside Map that represents a single key-value pair in a Map.
+---------
+Instead of getting keys and then fetching values separately, you can iterate through both key and value together.
+
+Map
+ |
+ +-- Entry<K,V>
+
+Each Entry contains:
+- Key
+- Value
+
+| Method            | Return Type | Description       |
+| ----------------- | ----------- | ----------------- |
+| getKey()          | K           | Returns the key   |
+| getValue()        | V           | Returns the value |
+| setValue(V value) | V           | Updates the value |
+
+import java.util.HashMap;
+import java.util.Map;
+public class EntryExample {
+    public static void main(String[] args) {
+        Map<String, Integer> ages = new HashMap<>();
+
+        ages.put("Alice", 30);
+        ages.put("Bob", 25);
+        ages.put("Charlie", 35);
+
+        for (Map.Entry<String, Integer> entry : ages.entrySet()) {
+            System.out.println(
+                    "Key = " + entry.getKey()
+                    + ", Value = " + entry.getValue());
+        }
+    }
+}
+
+Collections Class
+=================
+Collections is a utility class in java.util package that provides static methods to perform operations on collections.
+Note: Collection  -> Interface
+      Collections -> Utility Class
+
+Common Methods:
+| Method                    | Description                          |
+| ------------------------- | ------------------------------------ |
+| sort()                    | Sorts collection                     |
+| reverse()                 | Reverses collection                  |
+| shuffle()                 | Randomly shuffles elements           |
+| binarySearch()            | Searches element in sorted list      |
+| max()                     | Returns maximum element              |
+| min()                     | Returns minimum element              |
+| frequency()               | Counts occurrences of an element     |
+| copy()                    | Copies elements from one list to another |
+| fill()                    | Replaces all elements with given value |
+| unmodifiableList()        | Creates read-only list               |
+
+Sorting Collections:
+-------------------
+Natural Sorting
+---------------
+Uses Comparable Interface.
+Example:
+Collections.sort(fruits);
+
+Input:
+[Apple, Orange, Banana]
+
+Output:
+[Apple, Banana, Orange]
+
+Custom Sorting
+--------------
+Uses Comparator Interface.
+Example:
+Collections.sort(fruits, comparator);
+
+Used when:
+✓ Multiple sorting logic required
+✓ Class cannot be modified
+✓ Custom sorting needed
+
+Example:
+Sort by String Length
+
+Apple  -> 5
+Orange -> 6
+Banana -> 6
+
+Collections.sort(fruits,
+        (a,b) -> a.length() - b.length());
+
+Output:
+[Apple, Orange, Banana]
+
+Comparable vs Comparator
+========================
+| Feature                | Comparable                          | Comparator                           |
+| ---------------------- | ----------------------------------- | ------------------------------------ |
+| Package                | java.lang                           | java.util                            |
+| Interface Method       | compareTo()                         | compare()                            |
+| Implemented In         | Same Class                          | Separate Class                       |
+| Sorting Type           | Natural Sorting                     | Custom Sorting                       |
+| Number of Sort Orders  | One                                 | Multiple                             |
+| Modification Required  | Yes                                 | No                                   |
+| Used For               | Default Sorting                     | Alternative Sorting                  |
+| Example                | Sort Student by Name                | Sort Student by Age, Salary, etc.    |
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class CollectionsExample {
+
+    public static void main(String[] args) {
+
+        List<String> fruits = new ArrayList<>();
+
+        fruits.add("Apple");
+        fruits.add("Orange");
+        fruits.add("Banana");
+
+        // Natural Sorting
+        Collections.sort(fruits);
+        System.out.println("Natural Sort : " + fruits);
+
+        // Custom Sorting by Length
+        Collections.sort(fruits,
+                Comparator.comparingInt(String::length));
+
+        System.out.println("Length Sort  : " + fruits);
+
+        // Reverse
+        Collections.reverse(fruits);
+        System.out.println("Reverse      : " + fruits);
+
+        // Shuffle
+        Collections.shuffle(fruits);
+        System.out.println("Shuffle      : " + fruits);
+    }
+}
+
+
+import java.util.*;
+class Student implements Comparable<Student> {
+    String name;
+    int age;
+
+    Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // Comparable: Sort by Name
+    @Override
+    public int compareTo(Student s) {
+        return this.name.compareTo(s.name);
+    }
+
+    @Override
+    public String toString() {
+        return name + " - " + age;
+    }
+}
+
+class AgeComparator
+        implements Comparator<Student> {
+
+    @Override
+    public int compare(Student s1,
+                       Student s2) {
+        return Integer.compare(
+                s1.age,
+                s2.age);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        List<Student> students =
+                new ArrayList<>();
+        students.add(
+                new Student("Charlie", 25));
+        students.add(
+                new Student("Alice", 22));
+        students.add(
+                new Student("Bob", 20));
+
+        // Comparable
+        Collections.sort(students);
+        System.out.println(
+                "Sort By Name: " + students);
+        // Comparator
+        Collections.sort(
+                students,
+                new AgeComparator());
+
+        System.out.println(
+                "Sort By Age: " + students);
+    }
+}
+
+Properties Class: Properties is a subclass of Hashtable used to store configuration data as key-value pairs.
+================
+Hierarchy:
+-----------
+
+Object
+  |
+Hashtable<Object,Object>
+  |
+Properties
+
+Key Points:
+-----------
+✓ Used for Configuration Files
+✓ Stores Data as Key-Value Pairs
+✓ Keys and Values are Strings
+✓ Thread Safe (inherits Hashtable)
+✓ Commonly used in .properties files
+
+Common Methods:
+| Method                           | Description                          |
+| -------------------------------- | ------------------------------------ |
+| setProperty(key, value)          | Adds a key-value pair                |
+| getProperty(key)                 | Retrieves value for a key            |
+| getProperty(key, defaultValue)   | Returns default if key not found     |
+| load(InputStream)                | Loads properties from file           |
+| store(OutputStream, comment)     | Saves properties to file             |
+| stringPropertyNames()            | Returns all property names           |
+
+===================================================================
+
+Example
+========
+Properties properties = new Properties();
+
+properties.setProperty("username", "john_doe");
+properties.setProperty("password", "secret");
+
+System.out.println(
+        properties.getProperty("username"));  //john_doe
+
+Properties File Example
+=======================
+application.properties
+
+username=john_doe
+password=secret
+url=jdbc:mysql://localhost:3306/test
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+public class ReadPropertiesFile {
+    public static void main(String[] args)
+            throws IOException {
+        Properties properties = new Properties();
+        FileInputStream fis =
+                new FileInputStream("application.properties");
+        properties.load(fis);
+        System.out.println(
+                properties.getProperty("username"));
+        System.out.println(
+                properties.getProperty("url"));
+        fis.close();
+    }
+}
+Properties vs HashMap
+=====================
+| Feature         | Properties              | HashMap                  |
+| --------------- | ----------------------- | ------------------------ |
+| Parent Class    | Hashtable               | AbstractMap              |
+| Thread Safe     | Yes                     | No                       |
+| Key Type        | String                  | Any Object               |
+| Value Type      | String                  | Any Object               |
+| Main Use        | Configuration Files     | General Purpose Storage  |
+
+ConcurrentHashMap: ConcurrentHashMap is a thread-safe implementation of the Map interface.
+=================
+It allows multiple threads to read and write concurrently without external synchronization.
+Package:
+---------
+java.util.concurrent
+
+Key Features:
+
+✓ Thread Safe
+✓ High Performance
+✓ Supports Concurrent Read/Write
+✓ Better Alternative to Hashtable
+✓ No External Synchronization Required
+✓ Used in Multithreaded Applications
+
+Common Methods:
+| Method         | Description                    |
+| -------------- | ------------------------------ |
+| put()          | Adds key-value pair            |
+| get()          | Retrieves value by key         |
+| remove()       | Removes key-value pair         |
+| containsKey()  | Checks if key exists           |
+| replace()      | Replaces value for a key       |
+| size()         | Returns number of entries      |
+
+Example:
+ConcurrentHashMap<String, Integer> ages =
+        new ConcurrentHashMap<>();
+
+ages.put("Alice", 30);
+ages.put("Bob", 25);
+ages.put("Charlie", 35);
+
+System.out.println(
+        ages.get("Charlie")); //35
+
+HashMap vs Hashtable vs ConcurrentHashMap:
+-----------------------------------------
+| Feature          | HashMap        | Hashtable      | ConcurrentHashMap |
+| ---------------- | -------------- | -------------- | ----------------- |
+| Thread Safe      | No             | Yes            | Yes               |
+| Synchronization  | No             | Entire Map     | Fine-Grained      |
+| Performance      | Fastest        | Slow           | Faster            |
+| Null Key         | One Allowed    | Not Allowed    | Not Allowed       |
+| Null Value       | Allowed        | Not Allowed    | Not Allowed       |
+| Recommended      | Single Thread  | Legacy         | Multi Thread      |
+
+ConcurrentLinkedQueue: ConcurrentLinkedQueue is a thread-safe implementation of the Queue interface.
+=====================
+It is designed for high-performance concurrent applications where multiple threads can safely add and remove elements.
+Package:
+---------
+java.util.concurrent
+Key Features:
+✓ Thread Safe
+✓ Non-Blocking Queue
+✓ FIFO (First In First Out)
+✓ High Performance
+✓ Multiple Threads Can Access Simultaneously
+✓ No External Synchronization Required
+
+Common Methods:
+| Method      | Description                         |
+| ----------- | ----------------------------------- |
+| add()       | Inserts element into queue          |
+| offer()     | Inserts element into queue          |
+| poll()      | Removes and returns head element    |
+| peek()      | Returns head element                |
+| isEmpty()   | Checks if queue is empty            |
+| size()      | Returns number of elements          |
+
+Example:
+ConcurrentLinkedQueue<String> queue =
+        new ConcurrentLinkedQueue<>();
+
+queue.add("Alice");
+queue.add("Bob");
+queue.add("Charlie");
+
+System.out.println(queue.poll());  //Alice
+
+Queue vs ConcurrentLinkedQueue:
+| Feature              | Queue               | ConcurrentLinkedQueue |
+| -------------------- | ------------------- | --------------------- |
+| Thread Safe          | Depends             | Yes                   |
+| FIFO                 | Yes                 | Yes                   |
+| Concurrent Access    | No                  | Yes                   |
+| Performance          | Normal              | High                  |
+| Synchronization      | Required            | Not Required          |
