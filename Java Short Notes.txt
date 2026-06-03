@@ -2523,6 +2523,10 @@ Java I/O (Hierarchy)
 | **Filter Streams**    | FilterInputStream, FilterOutputStream                                                                   |
 | **Special Streams**   | SequenceInputStream, Console                                                                            |
 
+Note: From below mentioned classes focus mostly on File,InputStreamReader,OutputStreamWriter,PrintWriter,StringReader,StringWriter,Scanner
+----
+
+
 Console: The Console class in Java provides a simple way to interact with the console or command-line interface. It allows reading input and printing output directly to the console.
 -------
 import java.io.Console; // Imports Console class
@@ -2668,6 +2672,11 @@ CharArrayReader and CharArrayWriter: Subclasses of Writer and Reader
 | **CharArrayWriter** | Writes character data to an internal character array in memory. | Building and storing text data in memory.     |
 | **CharArrayReader** | Reads character data from a character array in memory.          | Processing character arrays as input streams. |
 
+| Class                                 | Source / Destination     |
+| ------------------------------------- | ------------------------ |
+| **FileReader / FileWriter**           | File System              |
+| **CharArrayReader / CharArrayWriter** | Character Array (Memory) |
+
 import java.io.CharArrayReader; // Imports CharArrayReader for reading from a character array
 import java.io.CharArrayWriter; // Imports CharArrayWriter for writing to a character array
 import java.io.IOException;     // Imports IOException for exception handling
@@ -2692,6 +2701,483 @@ public class CharArrayStreamExample {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+}
+
+PrintStream and PrintWriter:
+---------------------------
+| Class           | Explanation                                                   | Most Common Use                                |
+| --------------- | ------------------------------------------------------------- | ---------------------------------------------- |
+| **PrintStream** | Prints formatted representations of data to an output stream. | Console output (`System.out`) and file output. |
+| **PrintWriter** | Prints formatted text data to a character output stream.      | Writing formatted text to files and reports.   |
+
+| Feature             | PrintStream  | PrintWriter       |
+| ------------------- | ------------ | ----------------- |
+| Stream Type         | Byte Stream  | Character Stream  |
+| Parent Class        | OutputStream | Writer            |
+| Handles Text        | Yes          | Yes               |
+| Handles Binary Data | Yes          | No                |
+| Common Example      | `System.out` | File/Text Writing |
+
+import java.io.FileOutputStream; // Imports FileOutputStream for writing to a file
+import java.io.PrintStream;      // Imports PrintStream
+import java.io.PrintWriter;      // Imports PrintWriter
+import java.io.FileNotFoundException; // Imports FileNotFoundException
+public class PrintStreamWriterExample {
+    public static void main(String[] args) {
+        // Writing using PrintStream
+        try (PrintStream printStream =
+                     new PrintStream(
+                             new FileOutputStream("printstream.txt"))) {
+            printStream.println("Hello, PrintStream!"); // Writes a line
+            printStream.printf("Value of pi: %.2f%n", Math.PI); // Formatted output
+            printStream.println("Bye!"); // Writes another line
+            System.out.println("PrintStream data written successfully!");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // Writing using PrintWriter
+        try (PrintWriter printWriter =
+                     new PrintWriter(
+                             new FileOutputStream("printwriter.txt"))) {
+            printWriter.println("Hello, PrintWriter!"); // Writes a line
+            printWriter.printf("Value of pi: %.2f%n", Math.PI); // Formatted output
+            printWriter.println("Bye!"); // Writes another line
+            System.out.println("PrintWriter data written successfully!");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+OutputStreamWriter and InputStreamReader:
+-----------------------------------------
+| Class                  | Explanation                                                                             | Most Common Use                                                   |
+| ---------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **OutputStreamWriter** | Converts character data into bytes using a specified character encoding.                | Writing text data with a specific encoding (UTF-8, UTF-16, etc.). |
+| **InputStreamReader**  | Converts bytes from a byte stream into characters using a specified character encoding. | Reading text data with a specific encoding.                       |
+
+import java.io.FileOutputStream;    // Imports FileOutputStream
+import java.io.FileInputStream;     // Imports FileInputStream
+import java.io.OutputStream;        // Imports OutputStream
+import java.io.InputStream;         // Imports InputStream
+import java.io.OutputStreamWriter;  // Imports OutputStreamWriter
+import java.io.InputStreamReader;   // Imports InputStreamReader
+import java.io.Writer;              // Imports Writer
+import java.io.Reader;              // Imports Reader
+import java.io.IOException;         // Imports IOException
+public class StreamReaderWriterExample {
+    public static void main(String[] args) {
+        // Writing character data using OutputStreamWriter
+        try (OutputStream outputStream =
+                     new FileOutputStream("output.txt");
+             Writer writer =
+                     new OutputStreamWriter(outputStream, "UTF-8")) {
+            writer.write("Hello, OutputStreamWriter!");
+            System.out.println("Content written successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Reading character data using InputStreamReader
+        try (InputStream inputStream =
+                     new FileInputStream("output.txt");
+             Reader reader =
+                     new InputStreamReader(inputStream, "UTF-8")) {
+            int data;
+            System.out.println("\nReading content:");
+            while ((data = reader.read()) != -1) {
+                System.out.print((char) data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+PushbackInputStream and PushbackReader:
+--------------------------------------
+| Class                   | Explanation                                          | Most Common Use                                            |
+| ----------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| **PushbackInputStream** | Allows bytes to be pushed back into an input stream. | Parsers and tokenizers that need look-ahead functionality. |
+| **PushbackReader**      | Allows characters to be pushed back into a reader.   | Text parsing and lexical analysis.                         |
+
+import java.io.ByteArrayInputStream; // Imports ByteArrayInputStream
+import java.io.CharArrayReader;      // Imports CharArrayReader
+import java.io.InputStream;          // Imports InputStream
+import java.io.Reader;               // Imports Reader
+import java.io.PushbackInputStream;  // Imports PushbackInputStream
+import java.io.PushbackReader;       // Imports PushbackReader
+import java.io.IOException;          // Imports IOException
+public class PushbackExample {
+    public static void main(String[] args) {
+        // Creates byte array from string
+        byte[] byteData =
+                "Hello, PushbackInputStream!".getBytes();
+        // PushbackInputStream Example
+        try (InputStream inputStream =
+                     new ByteArrayInputStream(byteData);
+             // Wraps InputStream with PushbackInputStream
+             PushbackInputStream pushbackInputStream =
+                     new PushbackInputStream(inputStream)) {
+            int dataByte; // Stores each byte read
+            System.out.println("PushbackInputStream Output:");
+            // Reads one byte at a time
+            while ((dataByte = pushbackInputStream.read()) != -1) {
+                // If comma is encountered
+                if (dataByte == ',') {
+                    // Pushes '!' back into the stream
+                    pushbackInputStream.unread('!');
+                }
+                // Prints the current byte as a character
+                System.out.print((char) dataByte);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\n");
+        // Creates character array from string
+        char[] charData =
+                "Hello, PushbackReader!".toCharArray();
+        // PushbackReader Example
+        try (Reader reader =
+                     new CharArrayReader(charData);
+             // Wraps Reader with PushbackReader
+             PushbackReader pushbackReader =
+                     new PushbackReader(reader)) {
+            int dataChar; // Stores each character read
+            System.out.println("PushbackReader Output:");
+            // Reads one character at a time
+            while ((dataChar = pushbackReader.read()) != -1) {
+                // If comma is encountered
+                if (dataChar == ',') {
+                    // Pushes '!' back into the stream
+                    pushbackReader.unread('!');
+                }
+                // Prints the current character
+                System.out.print((char) dataChar);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+StringWriter and StringReader:
+-----------------------------
+| Class            | Explanation                                         | Most Common Use                                      |
+| ---------------- | --------------------------------------------------- | ---------------------------------------------------- |
+| **StringWriter** | Writes character data to an internal string buffer. | Building text content in memory without using files. |
+| **StringReader** | Reads character data from a string.                 | Processing string data as a character stream.        |
+
+import java.io.StringWriter; // Imports StringWriter
+import java.io.StringReader; // Imports StringReader
+import java.io.Writer;       // Imports Writer
+import java.io.Reader;       // Imports Reader
+import java.io.IOException;  // Imports IOException
+public class StringReaderWriterExample {
+    public static void main(String[] args) {
+        // Writing data to an internal string buffer
+        try (Writer writer = new StringWriter()) {
+            writer.write("Hello, StringWriter!"); // Writes text to string buffer
+            String data = writer.toString(); // Gets content from buffer
+            System.out.println("Written Data:");
+            System.out.println(data);
+            // Reading data from the string
+            try (Reader reader = new StringReader(data)) {
+                int ch;
+                System.out.println("\nReading Data:");
+                while ((ch = reader.read()) != -1) {
+                    System.out.print((char) ch); // Reads and prints characters
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+PipedWriter and PipedReader: PipedWriter and PipedReader are used for thread-to-thread communication, where one thread writes character data into a pipe and another thread reads it from the connected pipe.
+---------------------------
+| Class           | Explanation                                                   | Most Common Use                     |
+| --------------- | ------------------------------------------------------------- | ----------------------------------- |
+| **PipedWriter** | Writes character data into a pipe connected to a PipedReader. | Communication between threads.      |
+| **PipedReader** | Reads character data from a connected PipedWriter.            | Receiving data from another thread. |
+
+| Class Pair                               | Works With |
+| ---------------------------------------- | ---------- |
+| **PipedInputStream + PipedOutputStream** | Bytes      |
+| **PipedReader + PipedWriter**            | Characters |
+
+import java.io.PipedWriter; // Imports PipedWriter
+import java.io.PipedReader; // Imports PipedReader
+import java.io.Writer;      // Imports Writer
+import java.io.Reader;      // Imports Reader
+import java.io.IOException; // Imports IOException
+public class PipedWriterReaderExample {
+    public static void main(String[] args) {
+        try (PipedWriter pipedWriter = new PipedWriter();
+             // Connects PipedReader to PipedWriter
+             PipedReader pipedReader = new PipedReader(pipedWriter)) {
+            // Reader Thread
+            new Thread(() -> {
+                try (Reader reader = pipedReader) {
+                    int data;
+                    while ((data = reader.read()) != -1) {
+                        System.out.print((char) data);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            // Writer Thread (Main Thread)
+            Writer writer = pipedWriter;
+            writer.write("Hello, PipedWriter and PipedReader!");
+            writer.close(); // Signals end of data
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+FilterWriter and FilterReader:
+------------------------------
+| Class            | Explanation                                                              | Most Common Use                                                        |
+| ---------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| **FilterWriter** | Filters or modifies character data before writing it to the destination. | Text formatting, encryption, logging, and custom output processing.    |
+| **FilterReader** | Filters or modifies character data while reading it from the source.     | Text transformation, validation, parsing, and custom input processing. |
+
+import java.io.FileWriter;      // Imports FileWriter
+import java.io.CharArrayReader; // Imports CharArrayReader
+import java.io.FilterWriter;    // Imports FilterWriter
+import java.io.FilterReader;    // Imports FilterReader
+import java.io.Writer;          // Imports Writer
+import java.io.Reader;          // Imports Reader
+import java.io.IOException;     // Imports IOException
+public class FilterReaderWriterExample {
+    public static void main(String[] args) {
+        // FilterWriter Example
+        try (Writer writer = new FileWriter("output.txt");
+             FilterWriter filterWriter = new FilterWriter(writer) {
+                 @Override
+                 public void write(String str, int off, int len)
+                         throws IOException {
+                     // Replaces "Java" with "Java SE"
+                     String filteredStr =
+                             str.replace("Java", "Java SE");
+                     super.write(filteredStr, off, len);
+                 }
+             }) {
+            filterWriter.write(
+                    "Hello, Java! This is Java Programming.");
+            System.out.println(
+                    "Filtered content written successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // FilterReader Example
+        char[] data =
+                "Hello, Java! This is Java Programming."
+                        .toCharArray();
+        try (Reader reader = new CharArrayReader(data);
+             FilterReader filterReader = new FilterReader(reader) {
+                 @Override
+                 public int read(char[] cbuf, int off, int len)
+                         throws IOException {
+                     int charsRead =
+                             super.read(cbuf, off, len);
+                     if (charsRead != -1) {
+                         // Replace '!' with '.'
+                         for (int i = off;
+                              i < off + charsRead;
+                              i++) {
+                             if (cbuf[i] == '!') {
+                                 cbuf[i] = '.';
+                             }
+                         }
+                     }
+                     return charsRead;
+                 }
+             }) {
+            char[] buffer = new char[16];
+            int charsRead;
+            System.out.println("\nFiltered Reader Output:");
+            while ((charsRead =
+                    filterReader.read(buffer)) != -1) {
+                System.out.print(
+                        new String(buffer, 0, charsRead));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+File: File does not read or write data.It only represents File Path,Directory Path,File Metadata
+----
+For reading/writing use: FileInputStream,FileOutputStream,FileReader,FileWriter,BufferedReader,BufferedWriter
+
+| Method              | Explanation                                       | Most Common Use                    |
+| ------------------- | ------------------------------------------------- | ---------------------------------- |
+| `exists()`          | Checks whether a file or directory exists.        | File validation before processing. |
+| `getAbsolutePath()` | Returns the complete path of a file.              | Locating files in the filesystem.  |
+| `isFile()`          | Checks whether the path refers to a file.         | File validation.                   |
+| `isDirectory()`     | Checks whether the path refers to a directory.    | Directory validation.              |
+| `delete()`          | Deletes a file or empty directory.                | File cleanup operations.           |
+| `createNewFile()`   | Creates a new empty file.                         | File creation.                     |
+| `mkdir()`           | Creates a directory.                              | Directory creation.                |
+| `listFiles()`       | Returns files and directories inside a directory. | Directory traversal.               |
+
+import java.io.File; // Imports File class
+public class FileExample {
+    public static void main(String[] args) {
+        File file = new File("example.txt"); // Creates a File object
+        // Checks whether the file exists
+        if (file.exists()) {
+            System.out.println("File exists.");
+        } else {
+            System.out.println("File does not exist.");
+        }
+        // Gets the absolute path
+        String absolutePath = file.getAbsolutePath();
+        System.out.println("Absolute path: " + absolutePath);
+        // Checks whether it is a file or directory
+        if (file.isFile()) {
+            System.out.println("It's a file.");
+        } else if (file.isDirectory()) {
+            System.out.println("It's a directory.");
+        }
+        // Deletes the file
+        if (file.delete()) {
+            System.out.println("File deleted.");
+        } else {
+            System.out.println("Failed to delete the file.");
+        }
+    }
+}
+
+FileDescriptor: It is NOT a file,NOT a stream. It is a: Low-Level Handle that the operating system uses to identify an open file, socket, or device.
+---------------
+| Method / Field       | Explanation                                           | Most Common Use                  |
+| -------------------- | ----------------------------------------------------- | -------------------------------- |
+| `FileDescriptor.in`  | Represents standard input (keyboard).                 | Reading directly from System.in. |
+| `FileDescriptor.out` | Represents standard output (console).                 | Writing directly to System.out.  |
+| `FileDescriptor.err` | Represents standard error output.                     | Error logging and debugging.     |
+| `getFD()`            | Returns the file descriptor associated with a stream. | Low-level file operations.       |
+
+| Descriptor           | Represents                    |
+| -------------------- | ----------------------------- |
+| `FileDescriptor.in`  | Keyboard Input (`System.in`)  |
+| `FileDescriptor.out` | Console Output (`System.out`) |
+| `FileDescriptor.err` | Error Output (`System.err`)   |
+
+import java.io.FileDescriptor;   // Imports FileDescriptor
+import java.io.FileInputStream;  // Imports FileInputStream
+import java.io.FileOutputStream; // Imports FileOutputStream
+import java.io.IOException;      // Imports IOException
+public class FileDescriptorExample {
+    public static void main(String[] args) {
+        try (FileOutputStream fos =
+                     new FileOutputStream("output.txt");
+             // Accesses System.in using FileDescriptor
+             FileInputStream fis =
+                     new FileInputStream(FileDescriptor.in)) {
+            // Reads data directly from keyboard input
+            byte[] buffer = new byte[10];
+            int bytesRead = fis.read(buffer);
+            System.out.println(
+                    "Read from System.in: "
+                            + new String(buffer, 0, bytesRead));
+            // Gets the file descriptor of output.txt
+            FileDescriptor fd = fos.getFD();
+            // Creates another stream using the same file descriptor
+            FileOutputStream duplicateFos =
+                    new FileOutputStream(fd);
+            duplicateFos.write(
+                    "Hello, FileDescriptor!".getBytes());
+            duplicateFos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+RandomAccessFile: allows reading and writing data at any position within a file using the seek() method, making it ideal for large files and random-access operations.
+----------------
+| Method             | Explanation                                        | Most Common Use                |
+| ------------------ | -------------------------------------------------- | ------------------------------ |
+| `write()`          | Writes data to the file.                           | Updating file content.         |
+| `read()`           | Reads data from the current file pointer position. | Retrieving file content.       |
+| `seek(position)`   | Moves the file pointer to a specified location.    | Random access reading/writing. |
+| `getFilePointer()` | Returns current pointer position.                  | Tracking read/write location.  |
+| `length()`         | Returns file size in bytes.                        | File size validation.          |
+| Mode    | Meaning                                  |
+| ------- | ---------------------------------------- |
+| `"r"`   | Read only                                |
+| `"rw"`  | Read and write                           |
+| `"rws"` | Read/write with synchronous updates      |
+| `"rwd"` | Read/write with synchronous data updates |
+
+import java.io.RandomAccessFile; // Imports RandomAccessFile
+import java.io.IOException;      // Imports IOException
+public class RandomAccessFileExample {
+    public static void main(String[] args) {
+        // Opens file in read-write mode
+        try (RandomAccessFile file =
+                     new RandomAccessFile("data.txt", "rw")) {
+            // Writes data to the file
+            file.write(
+                    "Hello, RandomAccessFile!".getBytes());
+            // Moves file pointer to position 10
+            file.seek(10);
+            // Reads data starting from position 10
+            byte[] buffer = new byte[20];
+            file.read(buffer);
+            System.out.println(
+                    new String(buffer).trim());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Scanner: a utility class used to read and parse primitive data types and strings from input sources such as the keyboard, files, and strings in a convenient manner.
+-------
+| Method            | Return Type | Explanation                                          | Most Common Use                      |
+| ----------------- | ----------- | ---------------------------------------------------- | ------------------------------------ |
+| `nextLine()`      | `String`    | Reads an entire line of text until Enter is pressed. | Reading names, addresses, sentences. |
+| `next()`          | `String`    | Reads a single word (stops at whitespace).           | Reading one token at a time.         |
+| `nextInt()`       | `int`       | Reads an integer value.                              | User input for numeric values.       |
+| `nextDouble()`    | `double`    | Reads a decimal value.                               | Decimal number input.                |
+| `nextFloat()`     | `float`     | Reads a floating-point value.                        | Float number input.                  |
+| `nextLong()`      | `long`      | Reads a long integer value.                          | Large numeric values.                |
+| `nextShort()`     | `short`     | Reads a short integer value.                         | Small numeric values.                |
+| `nextByte()`      | `byte`      | Reads a byte value.                                  | Byte-sized numeric input.            |
+| `nextBoolean()`   | `boolean`   | Reads a boolean value (`true` or `false`).           | True/false input.                    |
+| `hasNext()`       | `boolean`   | Checks if another token is available.                | Input validation before reading.     |
+| `hasNextInt()`    | `boolean`   | Checks if the next token is an integer.              | Preventing `InputMismatchException`. |
+| `hasNextDouble()` | `boolean`   | Checks if the next token is a double.                | Validating decimal input.            |
+| `close()`         | `void`      | Closes the Scanner and releases resources.           | Resource cleanup.                    |
+
+| Feature              | Scanner    | BufferedReader      |
+| -------------------- | ---------- | ------------------- |
+| Easy Parsing         | ✅ Yes      | ❌ No                |
+| Read Primitive Types | ✅ Yes      | ❌ Manual Conversion |
+| Performance          | Slower     | Faster              |
+| Most Common Use      | User Input | Large Text Input    |
+
+import java.util.Scanner; // Imports Scanner class
+public class ScannerExample {
+    public static void main(String[] args) {
+        // Creates Scanner object to read input from keyboard
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Enter your name: ");
+            String name = scanner.nextLine(); // Reads a complete line
+            System.out.println("Hello, " + name + "!");
+            System.out.print("Enter your age: ");
+            int age = scanner.nextInt(); // Reads an integer
+            System.out.println(
+                    "You are " + age + " years old.");
         }
     }
 }
