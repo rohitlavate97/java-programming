@@ -1513,3 +1513,363 @@ Note:1. While using IDE,(Eclipse) --> Use run configuration --> Select program w
 	 
 --OOPs(Object Oriented Programming Language):
 --------------------------------------------
+OOPS (Object Oriented Programming System) is a programming methodology that organizes software using Objects and Classes.
+Programming Languages are divided into 2 types:
+1. Procedural Oriented Programming (POP)
+   Examples:
+   - C
+   - COBOL
+   - Pascal
+2. Object Oriented Programming (OOP)
+   Examples:
+   - Java
+   - C++
+   - Python
+
+POP (Procedural Oriented Programming):
+-------------------------------------
+- Program is divided into functions/procedures.
+- Focus is on functions rather than data.
+- Data is exposed globally.
+- No data security.
+- Difficult to maintain large applications.
+- If functionality increases, more functions need to be added.
+Advantages:
+------------
+- Simple for small applications.
+- Easy to understand.
+Disadvantages:
+---------------
+- Data is not secure.
+- Difficult maintenance.
+- No code reusability.
+
+OOP (Object Oriented Programming)
+--------------------------------
+- Program is developed using Classes and Objects.
+- Focus is on data and behavior.
+- Supports data security.
+- Easy to maintain large projects.
+- Provides code reusability.
+Advantages:
+------------
+1. Code Reusability
+2. Security
+3. Flexibility
+4. Easy Maintenance
+5. Modularity
+
+Note:
+-----
+Simula is considered the first language to support OOP concepts.
+
+OOPS PRINCIPLES:  1. Encapsulation  2. Abstraction  3. Polymorphism  4. Inheritance
+1. ENCAPSULATION: Encapsulation is the process of combining variables (data) and methods (behavior) into a single unit/entity called Class. It provides Data Hiding.
+----------------
+class Employee {
+    private int id;                 //variables
+    private String name;
+    public void setId(int id) {     //methods
+        this.id = id;
+    }
+    public int getId() {
+        return id;
+    }
+}
+
+Benefits:
+---------
+- Data Security
+- Data Hiding
+- Better Control on Data
+
+ABSTRACTION: Abstraction means hiding unnecessary details and showing only essential features to the user.
+-----------
+Laptop, ATM Machine, Mobile Phone. We use the functionality but do not know the internal implementation.
+Achieved Using: 1. Abstract Class 2. Interface
+Advantages:
+- Security
+- Reduced Complexity
+- Easy Maintenance
+
+POLYMORPHISM: Polymorphism means exhibiting multiple forms or behaviors based on the situation.
+------------
+Types:
+1. Compile Time Polymorphism (Method Overloading)
+2. Runtime Polymorphism (Method Overriding)
+Example:
+10 + 20      = 30      (Addition)
+"Hi" + "Hello" = "HiHello"  (Concatenation)
+Here '+' behaves differently based on data type.
+Advantages:
+- Flexibility
+- Reusability
+- Easy Maintenance
+
+INHERITANCE: Inheritance is the process of acquiring properties and behaviors from one class to another class.
+-----------
+class Animal {
+    void eat() {
+        System.out.println("Eating...");
+    }
+}
+
+class Dog extends Animal {
+}
+
+Benefits:
+1. Code Reusability
+2. Easy Maintenance
+3. Reduces Code Duplication
+
+Important Notes:
+----------------
+- Child class inherits properties from Parent.
+- Java does NOT support Multiple Inheritance through Classes, so it makes Java partial Object Oriented Programming Language.
+- One child cannot inherit directly from two parent classes.
+
+CLASS: A Class is a blueprint, template or model used to create objects. It is blue print of object.
+-----
+It is used to declare:
+- Variables
+- Methods
+- Constructors
+
+Example:
+--------
+
+class Student {
+
+    int id;
+    String name;                               //variables 
+
+    void display() {
+        System.out.println(id + " " + name);  //Methods
+    }
+}
+
+Notes:
+------
+- Class is not a real entity.
+- Object is created from a class.
+- A project contains multiple classes.
+- One class can create many objects.
+- Classe will not exists physically
+
+-Object: jse api --> contains class Object
+--------
+Object is a real-world entity and an instance of a class.
+Object exists physically and occupies memory.
+Object Creation: ie Allocating memory in JVM
+ClassName referenceVariable = new ClassName();
+Ex:
+User u1 = new User();
+
+Explanation:
+------------
+User      -> Class Name (Data Type)
+u1        -> Reference Variable
+new       -> Keyword used to create object
+User()    -> Constructor
+
+OBJECT CREATION IN MEMORY:
+User u1 = new User();
+
+Stack Memory                 Heap Memory
+------------                 -----------
+u1  -----------------------> [ Object ]
+
+Reference variable stores the address of object. Object is created in Heap Area.
+
+- Object creation means allocating memory in JVM.(JVM will not provide memory level details)
+- Objects are created at Runtime.
+- Every object has its own memory.
+- Heap Area stores objects.
+- Reference variables store object addresses.
+-Garbage Collection is the process of automatically removing unused objects from Heap Memory. Managed and controlled By JVM, not by programmer.
+JVM --> Allocate Memory, Garbage Collector --> Deallocate Memory ie Inbuilt memory management
+User u1 = new User();
+u1 = null;
+Now the object becomes eligible for Garbage Collection.
+
+Example:
+--------
+
+User u1 = new User();
+
+u1 = null;
+
+Now the object becomes eligible for
+Garbage Collection.
+
+========================================
+MEMORY MANAGEMENT
+========================================
+
+Stack Area:
+-----------
+- Stores local variables.
+- Stores reference variables.
+
+Heap Area:
+----------
+- Stores objects.
+- Managed by JVM.
+
+========================================
+CLASS vs OBJECT
+========================================
+
+| Class                         | Object                      |
+|-------------------------------|-----------------------------|
+| Blueprint / Template          | Instance of Class           |
+| Logical Entity                | Physical Entity             |
+| No Memory Allocated           | Memory Allocated            |
+| Used to Create Objects        | Created from Class          |
+| Example: User                 | Example: u1, u2             |
+
+HASHCODE:
+--------
+HashCode is a unique integer value generated by JVM for an object. It is used to identify objects in memory.
+objectReference.hashCode();
+
+User u1 = new User();
+System.out.println(u1.hashCode());  //12345678   // May vary every execution
+Important Notes:
+- Different objects generally have different hashcodes.
+- Hashcode is generated using a JVM algorithm.
+- Actual value may vary from system to system.
+PROGRAM:
+class User {
+}
+
+class HashCodeDemo {
+
+    public static void main(String[] args) {
+
+        User u1 = new User();
+        User u2 = new User();
+
+        System.out.println(u1.hashCode());    //366712642
+        System.out.println(u2.hashCode());    //1829164700 (Values vary every execution)
+    }
+}
+
+java.lang.Object CLASS
+---------------------
+java.lang.Object is the parent class of all Java classes. Every class in Java directly or indirectly inherits from Object class.
+
+Hierarchy:
+-----------
+Object
+   ↑
+ User
+
+Example:
+class User  Equivalent To class User extends Object
+COMMON OBJECT CLASS METHODS
+| Method         | Purpose                          | Return Type |
+|----------------|----------------------------------|------------|
+| hashCode()     | Returns hashcode of object       | int        |
+| toString()     | Returns string representation    | String     |
+| equals()       | Compares objects                | boolean    |
+| getClass()     | Returns class information        | Class      |
+
+VARIABLES: Variables are used to store data.
+---------
+int a = 10;                 // Primitive data type variable
+User u1 = new User();       // Reference type variable
+TYPES OF VARIABLES:
+1. Instance Variable/Gloabal Variable/Non-Static Variables
+2. Static Variable
+3. Local Variable
+
+INSTANCE VARIABLE: Variables declared inside a class but outside all methods, constructors, and blocks are called Instance Variables.
+-----------------
+- Belong to an object.
+- Memory is allocated when an object is created.
+- Accessible by all methods of the class, so Global variable
+- Also called Object Variables.
+- Stored in Heap Memory as part of the object.
+- Initialization is optional, Can have default values if not initialized.
+Ex:
+class User {
+    int a = 10;     // Instance Variable
+    public static void main(String[] args) {
+        User u = new User();
+        System.out.println(u.a);   // 10
+    }
+}
+INSTANCE VARIABLE WITHOUT INITIALIZATION:
+
+class User {
+    int a;      // Default value = 0
+    public static void main(String[] args) {
+        User u = new User();
+        System.out.println(u.a);   //0
+    }
+}
+
+Default Values:
+---------------
+| Data Type | Default Value |
+|------------|--------------|
+| byte      | 0            |
+| short     | 0            |
+| int       | 0            |
+| long      | 0L           |
+| float     | 0.0f         |
+| double    | 0.0          |
+| char      | '\u0000'     |
+| boolean   | false        |
+| String    | null         |
+| Object    | null         |
+
+IMPORTANT NOTE:1. Instance variables cannot be accessed directly from a static method without creating an object. Also in order to allocate memory also need to 
+create object
+Wrong:
+------
+class User {
+    int a = 10;
+    public static void main(String[] args) {
+        System.out.println(a);   // Compile Time Error
+    }
+}
+Reason: main() is static.Instance variable belongs to an object.No object is created yet, therefore JVM does not know which object's variable should be accessed.
+2. If we create 2 objects, memory will be allocated separately for instance variables of each object. Every object maintains its own copy of instance variables.
+Ex:
+class User {
+    int age;
+    public static void main(String[] args) {
+        User raju = new User();                 //when object created, it will check if we have any instance variable. Then it will create that variable(declare and initialization)
+        raju.age = 20;                          //then we can reinitialize
+        User rani = new User();
+        rani.age = 25;
+
+        System.out.println(raju.age);   // 20
+        System.out.println(rani.age);   // 25
+    }
+}
+Memory Representation:
+
+Heap Memory
+
++-------------+
+| raju object |
+| age = 20    |
++-------------+
+
++-------------+
+| rani object |
+| age = 25    |
++-------------+
+
+class User {
+    int age;
+    public static void main(String[] args) {
+        System.out.println(age);   // Compile Time Error
+    }
+}
+
+-Static Variable:
+----------------
