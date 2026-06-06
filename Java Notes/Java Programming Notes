@@ -1347,3 +1347,84 @@ class InternDemo {
         System.out.println(s2 == s3);      // true
     }
 }
+
+StringBuffer: It is predefined class available in java.lang package, mutable sequence of character
+------------
+-It is used to store group of characters
+-StringBuffer is mutable object (can modify content)
+-It is thread safe (Only one thread can access at a time)
+-string class has concat(), StringBuffer have append() which is overloaded method
+class SBDemo {
+    public static void main(String args[]) {
+        StringBuffer sb = new StringBuffer("Hello");   //String literal stored in SCP
+        sb.append(" Hi");                              //content can be modified as StringBuffer is mutable
+        System.out.println(sb);
+    }
+}
+
+| Method                  | Purpose                               | Example                          | Return Type  |
+|-------------------------|---------------------------------------|----------------------------------|-------------|
+| append()                | Add data at end                       | sb.append("Java");               | StringBuffer|
+| insert()                | Insert data at specified index        | sb.insert(5, "Java");            | StringBuffer|
+| delete()                | Delete characters between indexes     | sb.delete(0, 5);                 | StringBuffer|
+| replace()               | Replace characters                    | sb.replace(0, 5, "Hi");          | StringBuffer|
+| reverse()               | Reverse the StringBuffer              | sb.reverse();                    | StringBuffer|
+| length()                | Returns number of characters          | sb.length();                     | int         |
+| capacity()              | Returns current capacity              | sb.capacity();                   | int         |
+| charAt()                | Returns character at given index      | sb.charAt(1);                    | char        |
+| setCharAt()             | Modify character at given index       | sb.setCharAt(0, 'H');            | void        |
+| indexOf()               | Returns first occurrence index        | sb.indexOf("Java");              | int         |
+| lastIndexOf()           | Returns last occurrence index         | sb.lastIndexOf("Java");          | int         |
+| substring(beginIndex)   | Returns substring from index          | sb.substring(2);                 | String      |
+| substring(begin,end)    | Returns substring between indexes     | sb.substring(1, 4);              | String      |
+| toString()              | Converts StringBuffer to String       | sb.toString();                   | String      |
+
+StringBuilder:It is predefined class available in java.lang package, mutable sequence of character, but not thread-safe
+-------------
+- StringBuilder provides an API compatible with StringBuffer.
+- Unlike StringBuffer, it does not guarantee synchronization.
+- Designed as a drop-in replacement for StringBuffer when only a single thread is used.
+- Recommended over StringBuffer in single-threaded applications because of better performance
+- Available from 1.5v of Java 
+class SBDemo {
+    public static void main(String[] args) {
+
+        StringBuilder sb =
+            new StringBuilder("Hello");
+
+        sb.append(" Java");
+
+        System.out.println(sb);
+    }
+}
+
+| Method                  | Purpose                               | Example                          | Return Type  |
+|-------------------------|---------------------------------------|----------------------------------|-------------|
+| append()                | Add data at end                       | sb.append("Java");               | StringBuilder |
+| insert()                | Insert data at specified index        | sb.insert(5, "Java");            | StringBuilder |
+| delete()                | Delete characters between indexes     | sb.delete(0, 5);                 | StringBuilder |
+| replace()               | Replace characters                    | sb.replace(0, 5, "Hi");          | StringBuilder |
+| reverse()               | Reverse the StringBuilder             | sb.reverse();                    | StringBuilder |
+| length()                | Returns number of characters          | sb.length();                     | int         |
+| capacity()              | Returns current capacity              | sb.capacity();                   | int         |
+| charAt()                | Returns character at given index      | sb.charAt(1);                    | char        |
+| setCharAt()             | Modify character at given index       | sb.setCharAt(0, 'H');            | void        |
+| indexOf()               | Returns first occurrence index        | sb.indexOf("Java");              | int         |
+| lastIndexOf()           | Returns last occurrence index         | sb.lastIndexOf("Java");          | int         |
+| substring(beginIndex)   | Returns substring from index          | sb.substring(2);                 | String      |
+| substring(begin,end)    | Returns substring between indexes     | sb.substring(1, 4);              | String      |
+| toString()              | Converts StringBuilder to String      | sb.toString();                   | String      |
+
+Note:1. We can't do 
+       StringBuilder sb = "Hello";
+	   StringBuffer sb = "Hello";
+	 2. In C language, Header file copied into object, but in Java bytecode, Import statements will not be copied
+	  
+| Feature          | StringBuffer       | StringBuilder      |
+|------------------|-------------------|-------------------|
+| Mutable          | Yes               | Yes               |
+| Thread Safe      | Yes               | No                |
+| Synchronized     | Yes               | No                |
+| Performance      | Slower            | Faster            |
+| Introduced In    | Java 1.0          | Java 1.5          |
+| Best Used In     | Multi-threading   | Single-threading  |
