@@ -1051,3 +1051,299 @@ Note:
   }
 Output: [I@15db9742
         [I@6d06d69c
+		
+-Strings: Referenced data type
+--------
+Classes Related to Strings:
+---------------------------
+1. String
+2. StringBuffer
+3. StringBuilder
+
+All are available in java.lang package. (No need to import this package, importing is optional)
+
+Note: Every Java class can be used as a Reference Data Type.
+-----
+Example:
+class Product {
+    double price;
+    byte rating;
+    int pid;
+}
+
+Product p = new Product();  //Here Product is used as a Reference Data Type.
+
+-String is used to store a group of characters.
+Example: String name = "Akshit";
+         String ch = "A";         //Single character can also be stored:
+-Once a String object is created, it cannot be modified. Any modification creates a new String object.
+-If data is going to change in future, go for StringBuffer or StringBuilder, these are mutable classes
+| Feature          | String        | StringBuffer    | StringBuilder   |
+|------------------|--------------|-----------------|-----------------|
+| Mutable          | No           | Yes             | Yes             |
+| Thread Safe      | N/A          | Yes             | No              |  //Thread Safe --> ie Only one person can access at a time
+| Performance      | Slow         | Medium          | Fastest         |
+| Synchronization  | No           | Yes             | No              |
+
+STRING OBJECT CREATION: Strings can be created in two ways:
+----------------------
+APPROACH 1: String Literal
+String str = "Hi";
+
+- Stored in String Constant Pool (SCP).
+- Memory efficient.
+- Reuses existing objects.
+
+APPROACH 2: Using new Keyword
+String str = new String("Hello");
+
+- Object created in Heap Memory.
+- New object is always created.
+
+MEMORY ALLOCATION:
+-----------------
+JVM Memory Areas: 1. Heap Area  2. String Constant Pool (SCP)
+Diagram:
+
+                HEAP
+        -------------------
+        |                 |
+        |      SCP        |
+        |                 |
+        -------------------
+
+
+STRING CONSTANT POOL (SCP):A special memory area inside Heap used to store String Literal objects.(due to security reasons, so that no one can modify it) 
+-------------------------
+String s1 = "Java";
+String s2 = "Java";
+
+Memory: SCP  --> Both s1 and s2 point to the same object.
+"Java"
+-Before storing, it checks is their any object available with same content. If available then, it points variable to same object. Not allow to create
+duplicate object in scp
+Benefits:
+---------
+1. Memory Optimization
+2. Better Performance
+3. Security  --> Whatsapp message is string, actual and expected results need to match, when send and received by receiver. no modification 
+4. Avoids Duplicate Objects
+
+USING NEW KEYWORD
+
+
+String s1 = new String("Java");
+String s2 = new String("Java");
+
+Memory:
+
+Heap
+-----
+Object1 -> "Java"
+Object2 -> "Java"
+
+Two separate objects are created.
+
+| Feature | String Literal | new String() |
+|----------|---------------|-------------|
+| Memory Location | SCP | Heap |
+| Reuses Object | Yes | No |
+| Memory Efficient | Yes | No |
+| Performance | Faster | Slower |
+| Duplicate Objects | Avoided | Created |
+
+Why Strings are mutable:
+-----------------------
+Strings are widely used in program, if strings are mutable. Strings references are pointing to single object, when you change data by using one 
+reference variable, data effect will be there on second variable also.
+String s1 = "Admin";
+String s2 = s1;
+s1 = "User";
+Then s2 could be affected. 
+To prevent:
+1. Security Issues
+2. Data Corruption
+3. Thread Safety Problems
+Java made String immutable.
+
+STRING MANIPULATION:The String class provides many predefined methods to manipulate String objects.
+-------------------
+| Method               | Purpose                           | Example                         | Output        | Return Type |
+|----------------------|-----------------------------------|---------------------------------|--------------|------------|
+| charAt(index)        | Returns character at given index  | "Hello".charAt(1)              | e            | char       |
+| length()             | Returns length of string          | "Hello".length()               | 5            | int        |
+| equals()             | Compares content (case-sensitive) | "Java".equals("Java")          | true         | boolean    |
+| equalsIgnoreCase()   | Compares content (ignore case)    | "JAVA".equalsIgnoreCase("java")| true         | boolean    |
+| concat()             | Concatenates two strings          | "Hello".concat(" Java")        | Hello Java   | String     |
+| compareTo()          | Lexicographical comparison        | "abc".compareTo("abc")         | 0            | int        |
+| substring(begin)     | Returns substring from index      | "Hello".substring(2)           | llo          | String     |
+| substring(begin,end) | Returns substring between indexes | "Hello".substring(1,4)         | ell          | String     | //exclusive last index
+| replace()            | Replaces characters/strings       | "Java".replace('a','o')        | Jovo         | String     |
+| contains()           | Checks if substring exists        | "Hello".contains("ell")        | true         | boolean    |
+| startsWith()         | Checks starting characters        | "Hello".startsWith("He")       | true         | boolean    |
+| endsWith()           | Checks ending characters          | "Hello".endsWith("lo")         | true         | boolean    |
+| toUpperCase()        | Converts to uppercase             | "java".toUpperCase()           | JAVA         | String     |
+| toLowerCase()        | Converts to lowercase             | "JAVA".toLowerCase()           | java         | String     |
+| trim()               | Removes leading/trailing spaces   | "  Java  ".trim()              | Java         | String     |
+| split()              | Splits string into array          | "A,B,C".split(",")             | [A,B,C]      | String[]   |
+
+String str = "abc";
+Equivalent to: char data[] = {'a','b','c'};
+               String str = new String(data);
+
+Indexes:
+String = "Hello"
+
+Index   0 1 2 3 4
+Chars   H e l l o
+
+concat() METHOD: Used to join two Strings.
+---------------
+Example:
+String str1 = "Hello";
+String str2 = "Hi";
+str1.concat(str2);
+System.out.println(str1);  //Hello  -> String is immutable.concat() creates a new String object, but the returned value is not stored.
+
+Correct usage:
+String str1 = "Hello";
+String str2 = "Hi";
+str1 = str1.concat(str2);
+System.out.println(str1);  //HelloHi
+
+Note: + operator also can be used to concatenation of strings
+
+MEMORY EXAMPLES:
+String s1 = "Rohit";
+String s2 = "Rohit";  //1 Object created
+
+String s1 = new String("Hello");  //2 Objects created  --> String lieteral 'hello'(SCP) + new Operator(Heap)
+String s2 = new String("Hello");  //1 Object crated --> new Operator(Heap), as above line created one in scp
+| Statement                          | Objects Created       |
+| ---------------------------------- | --------------------- |
+| `String s1 = "Hello";`             | 1 (SCP)               |
+| `String s2 = "Hello";`             | 0 (reuses SCP object) |
+| `String s1 = new String("Hello");` | 2 (SCP + Heap)        |
+| `String s2 = new String("Hello");` | 1 (Heap only)         |
+
+
+| Feature          | == Operator                     | equals() Method                |
+|------------------|---------------------------------|--------------------------------|
+| Purpose          | Compares References (Address)   | Compares Contents (Values)     |
+| Used For         | Objects & Primitive Types       | Objects (mainly Strings)       |
+| Return Type      | boolean                         | boolean                        |
+| Memory Check     | Yes                             | No                             |
+| Content Check    | No                              | Yes                            |
+
+class EqualsDemo {
+    public static void main(String[] args) {
+
+        // Example 1: String Literals
+        String s1 = "Hello";
+        String s2 = "Hello";
+
+        System.out.println(s1 == s2);         // true
+        System.out.println(s1.equals(s2));    // true
+
+        // Example 2: Using new Keyword
+        String s3 = new String("Hello");
+        String s4 = new String("Hello");
+
+        System.out.println(s3 == s4);         // false
+        System.out.println(s3.equals(s4));    // true
+
+        // Example 3: Literal vs new String()
+        String s5 = "Java";
+        String s6 = new String("Java");
+
+        System.out.println(s5 == s6);         // false
+        System.out.println(s5.equals(s6));    // true
+    }
+}
+Note: JVM will provide hashcode for address, not address.
+      str.substring(startIndex, lastIndex)  //startIndex -> Inclusive, lastIndex -> exclusive
+	  str.substring(-1, 4)                  //StringIndexOutOfBoundException --> Commonly occurs with: charAt(), substring()
+	  str.lastIndexOf('a')                  //If give char not present in string, it returns -1
+
+import java.util.Arrays;
+
+class StringMethodsDemo {
+    public static void main(String[] args) {
+
+        String str = "Hello";
+        String str1 = "Java";
+        String str2 = "JAVA";
+        String str3 = "  Java  ";
+
+        System.out.println(str.charAt(1));                    // e
+        System.out.println(str.length());                     // 5
+        System.out.println(str1.equals("Java"));              // true
+        System.out.println(str1.equalsIgnoreCase(str2));      // true
+        System.out.println(str.concat(" Java"));              // Hello Java
+        System.out.println("abc".compareTo("abc"));           // 0
+        System.out.println(str.substring(2));                 // llo
+        System.out.println(str.substring(1, 4));              // ell
+        System.out.println(str1.replace('a', 'o'));           // Jovo
+        System.out.println(str.contains("ell"));              // true
+        System.out.println(str.startsWith("He"));             // true
+        System.out.println(str.endsWith("lo"));               // true
+        System.out.println(str1.toUpperCase());               // JAVA
+        System.out.println(str2.toLowerCase());               // java
+        System.out.println(str3.trim());                      // Java
+        System.out.println(Arrays.toString("A,B,C".split(","))); // [A, B, C]
+    }
+}
+
+valueOf(): valueOf() is a static method used to convert primitive data types into String.
+--------
+class ValueOfDemo {
+
+    public static void main(String[] args) {
+
+        int a = 100;
+        double d = 10.5;
+        boolean b = true;
+        char ch = 'A';
+
+        System.out.println(String.valueOf(a));   // 100
+        System.out.println(String.valueOf(d));   // 10.5
+        System.out.println(String.valueOf(b));   // true
+        System.out.println(String.valueOf(ch));  // A
+		int x = 10;
+		int y = 20;
+		System.out.println(String.valueOf(x) + String.valueOf(y));   //1020
+		}
+}
+
+intern() : intern() is a non-static method of String class.
+--------
+Returns a canonical representation of the String from the String Constant Pool (SCP).
+HOW intern() WORKS:
+1. Checks whether the String already exists in SCP.
+2. If present, returns reference of SCP object.
+3. If not present, adds String to SCP and returns its reference.
+
+String s1 = new String("Hello");
+String s2 = s1.intern();
+System.out.println(s1 == s2);      // false
+System.out.println(s1.equals(s2)); // true
+Reason:
+-------
+s1 points to Heap object.
+s2 points to SCP object.
+
+class InternDemo {
+    public static void main(String[] args) {
+
+        String s1 = new String("Hello");
+
+        String s2 = s1.intern();
+
+        System.out.println(s1 == s2);      // false
+        System.out.println(s1.equals(s2)); // true
+
+        String s3 = "Hello";
+
+        System.out.println(s2 == s3);      // true
+    }
+}
