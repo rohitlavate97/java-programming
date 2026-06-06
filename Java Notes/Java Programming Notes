@@ -33,7 +33,7 @@ BackEnd = The hidden part of application, which contains business logic. Bridge 
        Cloud: Give infrastructure for rent it will provide Network, Power, Security, Storage and Setup for project
               AWS, Azure, GCP, Oracle cloud, IBM cloud, VMWare cloud, Alibaba cloud etc
 
--Java Introduction:  Open source
+-Java Introduction:  Open source --> https://docs.oracle.com/javase/8/docs/api/ (jse api documentation)
 -------------------
 -Java language developed by sun microsystem under lead of James gosling in 1991(OAK)
 -The first version of Java came in market in 1995
@@ -473,6 +473,7 @@ Primitive Data Types:
 						   eg: char gender = 'm';
 						       char rank = '1'   --> correct
 							   char rank = '10'  --> Not correct, only one character from 0 to 9.
+							Note: Character is internally numbers only, character is ASCII value
 4. Boolean Data Types --> Used to store only True or False value. Occupies only 1 bit value.
                           A true is represented as 1 , and false as 0 (In binary language)
 						  Default value for boolean is False.
@@ -665,3 +666,388 @@ public class Operators {
 
 -Control Statements:
 -------------------
+-Java program code will execute line by line sequentially(default behavior)
+-In project code should execute based on user operation. To satisfy user requirement, our code should execute based on some conditions.
+-Using control statements, we can control program execution flow
+-Control statements are divided into 3 types
+1. Decision making statements/Conditional statements: if, if-else, if-else ladder, switch
+2. Looping statements: while, do-while, for, for-each loop
+3. Transfer/Branching statements: break, continue, return
+
+Conditional statements:
+----------------------
+/*
+1. if Statement
+   - Executes a block of code only if the condition is true.
+2. if-else Statement
+   - Executes one block if the condition is true,
+     otherwise executes another block.
+3. if-else-if Ladder
+   - Used to check multiple conditions.
+   - The first true condition gets executed.
+4. switch Statement
+   - Used when a variable is compared against multiple fixed values.
+   - More readable than long if-else-if ladders.
+*/
+
+public class ConditionalStatementsDemo {
+    public static void main(String[] args) {
+        // 1. if Statement
+        int age = 20;
+        if (age >= 18) {                                 //age >= 18 --> returns boolean value
+            System.out.println("Eligible to vote");
+        }
+        // 2. if-else Statement
+        int number = 5;
+        if (number % 2 == 0) {
+            System.out.println("Even Number");
+        } else {
+            System.out.println("Odd Number");
+        }
+        // 3. if-else-if Ladder
+        int marks = 75;
+        if (marks >= 90) {
+            System.out.println("Grade A");
+        } else if (marks >= 75) {
+            System.out.println("Grade B");
+        } else if (marks >= 60) {
+            System.out.println("Grade C");
+        } else {
+            System.out.println("Fail");
+        }
+        // 4. switch Statement
+        int day = 3;
+        switch (day) {
+            case 1:                                 //what is type of variable i.e here day is integer, that should be datatype of case(case 1, is corect), otherwise error
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            case 3:
+                System.out.println("Wednesday");
+                break;
+            default:
+                System.out.println("Invalid Day");
+        } 
+    }
+}
+
+Note: 1. switch (2.1) {
+            case 1.1:                                
+                System.out.println("Hi");
+                break;
+            case 2.1:
+                System.out.println("Hello");
+                break;
+		This program will output as Error, incomplete types: possible lossy conversion from double to int
+		switch (2.1f) {
+            case 1.1f:                                
+                System.out.println("Hi");
+                break;
+            case 2.1f:
+                System.out.println("Hello");
+                break;
+				Make these changes, for correct output.
+				
+	  2. As character is internally ASCII value
+	      switch ('a') {
+            case 1: System.out.println("Hi");    break;      //ouput = Hi --> as a=1 in ASCII
+            case 2: System.out.println("Hello"); break;      //if case ab ---> this will fail on this line, as string can not be converted to char
+
+Conclusions:
+1. "If" accepts only boolean value (or) boolean expression
+2. "switch" accepts number,char, string(added in v1.7)
+3. "switch" will not accept boolean and decimal values
+4. "switch" case type should be same type
+5. "switch" case data type and switch case input value should belongs to same datatype
+6. "default" case is optional in switch
+7. "break" keyword is optional
+
+Note: How to read data from keyboard
+      1. BufferedReader(java.io package): BufferedReader can't read data from file directly, we need to connect StreamReader with BufferedReader,
+	     There is class, InputStreamReader act as assistance. It will Read input and output to BufferedReader.
+		 In bufferedReader we have object reader and also have methods --> read() (read single characters), readLine() (Reads multiple character)
++--------------------------------------+
+|           BufferedReader             |
+|                                      |
+|   +------------------------------+   |
+|   |      InputStreamReader       |   |
+|   |                              |   |
+|   |      +------------------+    |   |
+|   |      |    System.in     |    |   |
+|   |      +------------------+    |   |
+|   +------------------------------+   |
++--------------------------------------+
+	  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));  //System.in represents input from system
+      String name = br.readLine();
+	  int age = Integer.parseInt(br.readLine())
+	  2. Scanner(java.util):
+	  Scanner sc = new Scanner(System.in);
+      String name = sc.nextLine();
+      int age = sc.nextInt();
+	  double salary = sc.nextDouble();
+	  3. Commandline Arguments(input for main method):
+	   public static void main(String[] args) {
+       String name = args[0];
+       int age = Integer.parseInt(args[1]);
+
+       System.out.println("Name: " + name);
+       System.out.println("Age: " + age);
+      }
+| Method                     | Package / Input Source              | Fast Performance | Reads Numbers Directly   | Exception Handling | Used For                                    |
+| -------------------------- | ----------------------------------- | ---------------- | ------------------------ | ------------------ | ------------------------------------------- |
+| **BufferedReader**         | `java.io`                           | Yes              | No                       | Required           | Fast text input from keyboard               |
+| **Scanner**                | `java.util`                         | Moderate         | Yes                      | Not Required       | Easy keyboard input of different data types |
+| **Command Line Arguments** | Runtime Arguments (`String[] args`) | Fast             | No (conversion required) | Not Required       | Passing values during program execution     |
+
+Looping statements: Loops are used to execute statements repeatedly
+------------------
+| Loop         | Syntax                                                                  |
+| ------------ | ----------------------------------------------------------------------- |
+| **while**    | `while(condition) { // statements }`                                    |
+| **do-while** | `do { // statements } while(condition);`                                |
+| **for**      | `for(initialization; condition; increment/decrement) { // statements }` |
+| **for-each** | `for(dataType variable : array/collection) { // statements }`           |
+
+| Loop         | Syntax                         | Entry/Exit Controlled | Executes Minimum Times | Best Used When                                                        |
+| ------------ | ------------------------------ | --------------------- | ---------------------- | ----------------------------------------------------------------------|
+| **while**    | `while(condition)`             | Entry Controlled      | 0                      | Number of iterations is unknown,executed until condition is true      |
+| **do-while** | `do { } while(condition);`     | Exit Controlled       | 1                      | Loop body must execute at least once                                  |
+| **for**      | `for(init; condition; update)` | Entry Controlled      | 0                      | Number of iterations is known, Range based                            |
+| **for-each** | `for(type var : collection)`   | Entry Controlled      | 0                      | Traversing arrays or collections                                      |
+
+| Loop         | Example                                           |
+| ------------ | ------------------------------------------------- |
+| **while**    | `while(i<=5){ System.out.println(i); i++; }`      |
+| **do-while** | `do{ System.out.println(i); i++; }while(i<=5);`   |
+| **for**      | `for(int i=1;i<=5;i++){ System.out.println(i); }` |
+| **for-each** | `for(int n : arr){ System.out.println(n); }`      |
+
+Note:
+-while(true){ System.out.println(i); }    --> Infinite loop
+-There can also be Nested loops too.
+-print() -> used to print the statement and keeps cursor on the same line.
+-println() -> used to print the statement and move cursor to next line.
+
+Branching statements: break, continue, return
+--------------------
+| Branching Statement | Purpose                                                                 | Syntax                       | Effect                                               |
+| ------------------- | ----------------------------------------------------------------------- | ---------------------------- | ---------------------------------------------------- |
+| **break**           | Terminates the loop or switch statement immediately                     | `break;`                     | Control moves to the statement after the loop/switch |
+| **continue**        | Skips the current iteration and moves to the next iteration of the loop | `continue;`                  | Remaining statements in the loop body are skipped    |
+| **return**          | Exits the current method and optionally returns a value                 | `return;` or `return value;` | Control returns to the calling method                |
+
+public class BranchingDemo {
+    public static void main(String[] args) {
+        for (int i = 1; i <= 10; i++) {
+            if (i == 3)
+                continue;   // Skip 3
+            if (i == 7)
+                break;      // Stop loop at 7
+            System.out.println(i);
+        }
+        System.out.println("After Loop");
+        return;             // Exit main method
+    }
+}
+
+Practice program:
+----------------
+import java.io.*;
+
+class Marriage {
+    public static void main(String args[]) throws Exception {
+
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(isr);
+
+        System.out.println("Enter your age:");
+        String str1 = br.readLine();
+        int age = Integer.parseInt(str1);
+
+        System.out.println("Enter your salary:");
+        String str2 = br.readLine();
+        double salary = Double.parseDouble(str2);
+
+        if (age < 30 && salary > 100000) {
+            System.out.println("You are eligible for marriage");
+        } else {
+            System.out.println("You are not eligible for marriage");
+        }
+    }
+}
+
+
+int a = 10;
+if(a) {                        //Compilation Error
+    System.out.println("Hi");
+} else {
+    System.out.println("Hello");
+}
+
+int a = 10;
+if(a = 20) {                  //Compilation Error
+    System.out.println("Hi");
+} else {
+    System.out.println("Hello");
+}
+
+| Code                                                                                                                                            | Output                         | Reason                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------- |
+| `int a=20; switch(a){ case 1:... case 2:... default:...}`                                                                                       | **Bye**                        | `a` does not match case `1` or `2`, so `default` executes.      |
+| `int a=1; switch(a){ case 1: System.out.println("Hi"); case 2: System.out.println("Hello"); default: System.out.println("Bye"); }` *(no break)* | **Hi**Hello****Bye**           | Without `break`, control falls through to all subsequent cases. |
+| `while(true){ System.out.println("Hi"); } System.out.println("Hello");`                                                                         | **Hi** printed infinitely      | Infinite loop; `Hello` is never reached.                        |
+| `while(false){ System.out.println("Hi"); } System.out.println("Hello");`                                                                        | **Compilation Error**          | `while(false)` creates unreachable code in Java.                |
+
+
+-Arrays: Array is container, which used to store collection of elements with same type. (ie same data type)
+-------
+| Type                     | Syntax                                  |
+| ------------------------ | --------------------------------------- |
+| Single Dimensional Array | `int arr[] = new int[5];`               |
+| Multidimensional Array   | `int arr[][] = new int[rows][columns];` |
+
+-It is referenced data type
+-It is used to store multiple values.
+-In Arrays, size is fixed(We can't change size in runtime)
+-Arrays supports homogeneous elements (Same type of elements)
+
+Syntax: datatype[] variableName;
+        dataType[] variableName = new dataType[size];   //Array Creation Syntax/Initialization
+Example: int[] arr = new int[5];
+         Array:  [100] [101] [102] [103] [104]
+         Index:    0     1     2     3     4
+Array Initialization:		 
+		 arr[0] = 100;    //If you don't initialize, it will store default value.
+         arr[1] = 101;
+         arr[2] = 102;
+ArrayIndexOutOfBoundsException: While compilation no error, as compiler don't know the size of the array, array creation happens in Runtime.
+                               System.out.println(arr[5]);
+							   arr[5] = 105;
+							   
+Ways of Array Initialization in Java:
+| Method                                             | Syntax                             | Example                            |
+| -------------------------------------------------- | ---------------------------------- | ---------------------------------- |
+| **1. Using `new` keyword + individual assignment** | `int[] arr = new int[3];`          | `arr[0]=10; arr[1]=20; arr[2]=30;` |
+| **2. Array Literal (Shortcut Initialization)**     | `int[] arr = {10,20,30};`          | `int[] arr = {10,20,30};`          |
+| **3. Using `new` keyword with values**             | `int[] arr = new int[]{10,20,30};` | `int[] arr = new int[]{10,20,30};` |
+| **4. Using Loop**                                  | Assign values inside loop          | `for(int i=0;i<5;i++) arr[i]=i+1;` |
+| **5. User Input (Scanner)**                        | Read values from keyboard          | `arr[i]=sc.nextInt();`             |
+
+| Term                                | Meaning                                                | Example       |
+| ----------------------------------- | ------------------------------------------------------ | ------------- |
+| **Initialization**                  | Assigning a value to a variable when it is declared.   | `int a = 10;` |
+| **Reinitialization (Reassignment)** | Changing the value of an already initialized variable. | `a = 20;`     |
+
+Notes:
+int arr[] = new int[4.02];   // Error --> incompatible types, possible lossy conversion from double to int 
+int arr[] = new int[-4];     // Error --> java.lang.NegativeArraySizeException
+-Array size should be positive integer only
+-Decimal value can't be used for array size
+-Negative value also can't be used for array size
+-Float array
+float arr[] = new float[3];
+arr[0] = 4.25f;
+System.out.println(arr[0]);
+-To print array -> for loop
+                   foreach loop
+				   toString()
+
+Reverse Array:
+class ArrayReverse {
+    public static void main(String[] args) {
+        int arr[] = {10, 20, 30, 40, 50};
+        int start = 0;
+        int end = arr.length - 1;
+        while(start < end) {
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
+        for(int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+        }
+    }
+}
+
+| Method           | Purpose                           | Example                          |
+| ---------------- | --------------------------------- | -------------------------------- |
+| `sort()`         | Sort array in ascending order     | `Arrays.sort(arr);`              |
+| `binarySearch()` | Search an element in sorted array | `Arrays.binarySearch(arr, 20);`  |
+| `toString()`     | Convert array to String           | `Arrays.toString(arr);`          |
+| `equals()`       | Compare two arrays                | `Arrays.equals(arr1, arr2);`     |
+| `fill()`         | Fill array with same value        | `Arrays.fill(arr, 100);`         |
+| `copyOf()`       | Copy array with specified length  | `Arrays.copyOf(arr, 5);`         |
+| `copyOfRange()`  | Copy part of array                | `Arrays.copyOfRange(arr, 1, 4);` |
+| `deepEquals()`   | Compare multidimensional arrays   | `Arrays.deepEquals(arr1, arr2);` |
+| `deepToString()` | Print multidimensional arrays     | `Arrays.deepToString(arr);`      |
+| `stream()`       | Convert array to Stream           | `Arrays.stream(arr);`            |
+
+class NonRepeatedElements {
+    public static void main(String[] args) {
+        int arr[] = {1, 2, 3, 2, 4, 5, 1};
+        System.out.println("Non-Repeated Elements:");
+        for(int i = 0; i < arr.length; i++) {
+            int count = 0;
+            for(int j = 0; j < arr.length; j++) {
+                if(arr[i] == arr[j] && i != j) {
+                    count++;
+                }
+            }
+            if(count == 0) {
+                System.out.print(arr[i] + " ");
+            }
+        }
+    }
+}
+
+2D Array Representation:
+      Col0  Col1
+
+Row0   100   200
+Row1   300   400
+
+Creating and Initializing 2D Array:
+int arr[][] = new int[rowsize][columnsize];
+int arr[][] = new int[2][2];
+arr[0][0] = 100;
+arr[0][1] = 200;
+arr[1][0] = 300;
+arr[1][1] = 400;
+2D Array Literal Initialization:
+int arr[][] = {
+    {100, 200},
+    {300, 400}
+};
+
+Using Arrays.deepToString():
+import java.util.Arrays;
+System.out.println(Arrays.deepToString(arr));
+
+Enhanced For Loop (for-each):
+1. for(int[] row : arr) {
+     for(int num : row) {
+         System.out.print(num + " ");
+     }
+     System.out.println();
+  }
+
+2. for(int[] row : arr) {
+     System.out.println(Arrays.toString(row));
+   }
+   
+Note:
+1. int arr[][] = new int[2][];
+   System.out.println(arr[0][0]);  //NullPointerException
+2. int arr[][] = {
+    {100, 200},
+    {300, 400}
+  };
+  for(int i = 0; i < arr.length; i++) {
+     System.out.println(arr[i]);         //prints in object format, same for Arrays.toString(arr)  --. object representation
+  }
+Output: [I@15db9742
+        [I@6d06d69c
