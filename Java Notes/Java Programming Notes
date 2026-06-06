@@ -1419,8 +1419,9 @@ Note:1. We can't do
        StringBuilder sb = "Hello";
 	   StringBuffer sb = "Hello";
 	 2. In C language, Header file copied into object, but in Java bytecode, Import statements will not be copied
+	 3. Only JVM control garbage collection. Normal object if you request, it may come, may not come.
 	  
-| Feature          | StringBuffer       | StringBuilder      |
+| Feature          | StringBuffer       | StringBuilder    |
 |------------------|-------------------|-------------------|
 | Mutable          | Yes               | Yes               |
 | Thread Safe      | Yes               | No                |
@@ -1428,3 +1429,87 @@ Note:1. We can't do
 | Performance      | Slower            | Faster            |
 | Introduced In    | Java 1.0          | Java 1.5          |
 | Best Used In     | Multi-threading   | Single-threading  |
+
+Note:  System.out.println();
+       System --> Class
+	   out    --> static variable in System class, datatype is PrintStream
+	   println -> method of PrintStream class
+	   
+Command Line Arguments: To supply input (dynamic values) for java program
+----------------------
+-cmd args will be received by main method
+-main() takes String array as input --> default data type of cmd args
+-we can pass multiple cmd args, they will be stored into one array
+class Sum {
+    public static void main(String[] args) {
+        int a = Integer.parseInt(args[0]);
+        int b = Integer.parseInt(args[1]);
+        System.out.println(a + b);
+    }
+}
+Note: If we not pass value after executing program --> IndexOutOfBoundException
+
+Anagram String:
+"listen"  & "silent"   // Anagram
+"heart"   & "earth"    // Anagram
+"java"    & "avaj"     // Anagram
+"hello"   & "world"    // Not Anagram
+
+import java.util.Arrays;
+class AnagramDemo {
+    public static void main(String[] args) {
+        String s1 = "listen";
+        String s2 = "silent";
+        // Convert to lowercase
+        s1 = s1.toLowerCase();
+        s2 = s2.toLowerCase();
+        // Check length
+        if(s1.length() != s2.length()) {
+            System.out.println("Not Anagram");
+            return;
+        }
+        // Convert String to char array
+        char[] arr1 = s1.toCharArray();
+        char[] arr2 = s2.toCharArray();
+        // Sort arrays
+        Arrays.sort(arr1);
+        Arrays.sort(arr2);
+        // Compare arrays
+        if(Arrays.equals(arr1, arr2)) {
+            System.out.println("Anagram");
+        } else {
+            System.out.println("Not Anagram");
+        }
+    }
+}
+
+class RemoveVowelsFromString {
+    public static void main(String[] args) {
+
+        String str = "Hello Java Programming";
+
+        String result = str.replaceAll("[aeiouAEIOU]", "");
+
+        System.out.println(result);
+    }
+}
+
+class WordCount {
+    public static void main(String[] args) {
+        String str = "Hello Java Programming";
+        String words[] = str.trim().split("\\s+");
+        System.out.println("Number of Words = " + words.length);
+    }
+}
+
+Note:1. While using IDE,(Eclipse) --> Use run configuration --> Select program we are runnng
+        Arguments -> Program arguments
+	                VM Arguments(JVM/cmd)
+				    Click on apply, and click on RUN
+	 2. To pass commandline arguments also in IDE
+	    Right click on program -> Run as -> Run Configurations
+		->Arguments->Program Arguments->Enter variables with space->Apply->Finish
+	 3. CTRL + SHIFT + O --> For unused imports
+	 
+--OOPs(Object Oriented Programming Language):
+--------------------------------------------
