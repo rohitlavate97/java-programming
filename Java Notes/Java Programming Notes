@@ -2499,3 +2499,385 @@ class Employee {
         Employee e3 = new Employee(101, "Raju");
     }
 }
+
+-Access Specifier/Modifiers: Access Modifiers are used to specify accessibility (visibility) for classes, variables, methods and constructors.
+---------------------------
+Java provides 4 access modifiers:
+
+1) public
+2) private
+3) protected
+4) default (package-private)
+
+public : Global access for classes, variables, methods and constructors
+------
+- Accessible from anywhere.
+- Can be applied to classes, variables, methods, and constructors.
+private: It is used to specify local access
+-------
+- Accessible only within the same class.
+- Cannot be accessed outside the class directly.
+- Used for data hiding.
+Note: By using Reflection API, we can access private data members
+protected: 
+---------
+- Accessible within the same package.
+- Accessible in subclasses (inheritance) even if they are in different packages.
+default (package-private)
+-------------------------
+- No modifier is specified.
+- Accessible only within the same package.
+
+IMPORTANT RULES:
+===============
+1. A Java file can contain multiple classes.
+2. Only one class can be public.
+3. If a class is public, file name must be the same as the public class name.
+
+Example:
+public class Employee { }
+
+File Name:
+Employee.java
+
+==================================================
+PROGRAM
+==================================================
+*/
+
+public class Employee {
+
+    // Constructor
+    public Employee() {
+        System.out.println("Employee Constructor Called");
+    }
+
+    // Public Method
+    public void m1() {
+        System.out.println("I am from Employee m1() method");
+    }
+
+    // Private Method
+    private void m2() {
+        System.out.println("I am from Employee m2() method");
+    }
+
+    // Protected Method
+    protected void m3() {
+        System.out.println("I am from Employee m3() method");
+    }
+
+    // Default Method
+    void m4() {
+        System.out.println("I am from Employee m4() method");
+    }
+
+    public static void main(String[] args) {
+
+        Employee emp = new Employee();
+
+        emp.m1();   // public
+        emp.m2();   // private (same class)
+        emp.m3();   // protected
+        emp.m4();   // default
+    }
+}
+
+/*
+==================================================
+OUTPUT
+==================================================
+
+Employee Constructor Called
+I am from Employee m1() method
+I am from Employee m2() method
+I am from Employee m3() method
+I am from Employee m4() method
+
+==================================================
+ACCESS MODIFIER SUMMARY
+==================================================
+
+Modifier      Same Class   Same Package   Subclass   Anywhere
+-------------------------------------------------------------
+public            YES           YES          YES        YES
+private           YES           NO           NO         NO
+protected         YES           YES          YES        NO
+default           YES           YES          NO         NO
+
+| Member Type     | private       | protected     | default   | public    |
+| --------------- | ------------- | ------------- | --------- | --------- |
+| Variable        | ✅ Allowed     | ✅ Allowed     | ✅ Allowed | ✅ Allowed |
+| Method          | ✅ Allowed     | ✅ Allowed     | ✅ Allowed | ✅ Allowed |
+| Constructor     | ✅ Allowed     | ✅ Allowed     | ✅ Allowed | ✅ Allowed |
+| Top-Level Class | ❌ Not Allowed | ❌ Not Allowed | ✅ Allowed | ✅ Allowed |
+
+Note:
+----
+1. private members can be accessed only inside the same class.
+2. A private method can be called from another method of the same class.
+3. private is allowed for:
+   - Variables
+   - Methods
+   - Constructors (Singleton)
+4. private is NOT allowed for top-level classes.
+5. A class can have only:
+   - public access
+   - default access
+6. protected is also NOT allowed for top-level classes.
+
+public class Employee {
+    int id;
+    String name;
+    // Private Constructor
+    private Employee() {
+        System.out.println("Employee Constructor Called");
+    }
+    // Private Method
+    private void m1() {
+        System.out.println("I am from Employee m1() method");
+    }
+    // Public Method
+    public void m2() {
+        Employee e = new Employee();
+        e.id = 101;
+        e.name = "Raju";
+        // Calling private method
+        m1();
+    }
+
+    public static void main(String[] args) {
+        Employee e = new Employee();
+        // Valid
+        e.m2();
+        e.m1();   
+    }
+}
+
+Note:1. If we use 'public' for class name then, class name and file name should be same. We should have only one public class in the file
+     2. To make our Java class a singleton, we will use private constructor. The Java class which is having only one object is called as Singleton class.
+
+-Object Oriented Programming:
+-----------------------------
+1. Encapsulation
+2. Abstraction
+3. Inheritance
+4. Polymorphism
+
+ENCAPSULATION: Combining variables and methods into a single unit and restricting direct access to data. Used for data hiding.
+==============
+Java class is the best example of encapsulation
+1. Declare variables as private. So that no one can access and modify data in variable.
+2. Access variables using Getter and Setter methods.(Reusability)
+
+Ex:
+class Student {
+    private int id;
+    private String name;
+    // Setter Method
+    public void setId(int id) {
+        this.id = id;
+    }
+    // Getter Method
+    public int getId() {
+        return id;
+    }
+    // Setter Method
+    public void setName(String name) {
+        this.name = name;
+    }
+    // Getter Method
+    public String getName() {
+        return name;
+    }
+}
+
+class Test {
+    public static void main(String[] args) {
+        Student obj = new Student();             //Object -> it will create own copy of instance variable. -> Not modifying variable
+
+        obj.setId(101);
+        obj.setName("Raju");
+
+        System.out.println(obj.getId());
+        System.out.println(obj.getName());
+    }
+}
+
+GETTER METHOD: Used to read variable value.
+-------------
+public datatype getVariableName() {
+    return variable;
+}
+
+SETTER METHOD: Used to assign/update variable value.
+-------------
+public void setVariableName(datatype value) {
+    this.variable = value;
+}
+
+Note: 1. You are modifying the variable value, but you're doing it in a controlled way.
+      2. The purpose of encapsulation is not to prevent modification completely, but to prevent direct and uncontrolled modification.
+Without Encapsulation:
+----------------------
+class Student {
+    public int id;
+}
+
+public class Test {
+    public static void main(String[] args) {
+
+        Student s = new Student();
+
+        s.id = 101;    // Direct access
+        s.id = -500;   // Also allowed
+        s.id = 99999;  // Also allowed
+    }
+}
+With Encapsulation:
+------------------
+class Student {
+
+    private int id;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+}
+
+Student s = new Student();
+s.id = 101;    // Compile Time Error
+The only way to modify it is through: s.setId(101);
+
+If setter modifies the variable, then how is encapsulation achieved?
+Ans: Encapsulation does not stop modification of data. It restricts direct access to data. Variables are made private, 
+and controlled access is provided through getter and setter methods where validation, security, and business rules can be applied before modifying the data.
+
+
+INHERITANCE: The process of extending the properties and methods from one class to another class is called Inheritance.
+-----------
+class ChildClass extends ParentClass {   //We use extends keyword
+}
+
+Parent Class  = Super Class = Base Class  -> From the class, we are extending properties.
+Child Class   = Sub Class = Derived Class -> Class which is extending properties.
+
+Advantages:
+1. Code Reusability
+2. Avoids Duplicate Code
+3. Easy Maintenance
+4. Establishes IS-A Relationship
+
+public class User {
+
+    int id;
+    String name;
+
+    void m1() {
+        System.out.println("I am Parent Method");
+    }
+}
+
+public class Student extends User {
+
+    int marks;
+
+    public static void main(String[] args) {
+        Student s = new Student();
+        s.id = 101;         // Parent Property -> Initializing parent class property using child object
+        s.name = "Raju";    // Parent Property
+        s.marks = 90;       // Child Property
+
+        s.m1();             // Parent Method
+    }
+}
+
+-----------------------------------------
+Parent Reference -> Parent Object
+-----------------------------------------
+User u = new User();
+Can Access:
+✓ Parent Properties
+✓ Parent Methods
+-----------------------------------------
+Child Reference -> Child Object
+-----------------------------------------
+Student s = new Student();
+Can Access:
+✓ Parent Properties
+✓ Parent Methods
+✓ Child Properties
+✓ Child Methods
+
+Constructor and Inheritance: Whenever a Child class object is created, Parent class constructor executes first.
+----------------------------
+class User {
+    User() {
+        System.out.println("Parent Constructor Called");
+    }
+}
+
+class Employee extends User {
+    Employee() {
+        System.out.println("Child Constructor Called");
+    }
+
+    public static void main(String[] args) {
+        Employee e = new Employee();
+    }
+}
+Output:
+--------
+Parent Constructor Called
+Child Constructor Called
+
+Reason:
+--------
+When a Child class object is created, JVM first executes the Parent class constructor. This ensures that the Parent class instance variables are initialized and become part 
+of the object before the Child class constructor executes. After the Parent constructor completes, the Child constructor executes and initializes the Child class instance variables.
+
+Parent Constructor with Parameters: Always it will call default constructor of parent. If you want to call parameterized constructor, you should call with super keyword.
+----------------------------------
+class User {
+
+    User(int id, String name, double salary) {
+        System.out.println("Parent Constructor Called");
+    }
+}
+
+class Employee extends User {
+    Employee() {
+        super(101, "Raju", 50000);
+        System.out.println("Child Constructor Called");
+    }
+}
+
+super(): super() is used to call Parent Class Constructor.
+-------
+1. super() must be the first statement.
+2. It calls Parent Constructor.
+3. Used only inside Child Constructor.
+Ex:
+class User {
+    User() {
+        System.out.println("User Constructor");
+    }
+}
+
+class Employee extends User {
+    Employee() {
+        super();                                    //If we remove this,child class will not compile
+        System.out.println("Employee Constructor");
+    }
+}
+
+Important Notes:
+1. Child class inherits all non-private members of Parent class.
+2. Constructors are NOT inherited.
+3. Private members cannot be accessed directly in Child class.
+4. Java does not support Multiple Inheritance using classes.
+5. Every class directly or indirectly extends Object class.
