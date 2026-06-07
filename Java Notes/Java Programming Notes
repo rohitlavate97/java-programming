@@ -1871,5 +1871,631 @@ class User {
     }
 }
 
--Static Variable:
+-Static Variable: Variables declared inside a class and outside the method using the static keyword are called Static Variables.
 ----------------
+1. Static variables belong to the class, not to objects.
+2. Also called Class Variables.
+3. Memory is allocated only once.
+4. Memory is allocated when the class is loaded into JVM.(Classloader subsystem ->Loads class ->Immediately JVM checks their is any static variable available
+in the class and then allocate the memory)
+5. All objects share the same copy of a static variable.
+6. Can be accessed using:
+   - Class Name (Recommended)
+   - Object Reference
+
+| Instance Variable              | Static Variable               |
+|--------------------------------|-------------------------------|
+| Belongs to Object              | Belongs to Class              |
+| Memory per Object              | One Memory for Entire Class   |
+| Stored in Object               | Stored at Class Level         |
+| Different Value per Object     | Same Value Shared by Objects  |
+| Created when Object Created    | Created when Class Loaded     |
+
+WHY STATIC VARIABLES?:Use static variables when data is common for all objects.
+Examples:
+---------
+- Company Name
+- College Name
+- Institute Name
+- Country Name
+- Interest Rate
+These values are shared by all objects.
+EX:
+class User {
+    static String institute = "ABC Institute";
+    public static void main(String[] args) {
+        User u1 = new User();
+        User u2 = new User();
+
+        System.out.println(u1.institute); //ABC Institute
+        System.out.println(u2.institute); //ABC Institute
+    }
+}
+Memory:
+-------
+
+Class Area
+
+institute = "ABC Institute"
+
+u1 ----\
+        \
+         -> Shared by all objects
+        /
+u2 ----/
+
+Only one copy exists.
+
+
+Reason:
+-------
+Both objects share the same static variable.
+
+
+class Student {
+
+    String name;                 // Instance Variable
+    String email;                // Instance Variable
+    long phone;                  // Instance Variable
+
+    static String institute;     // Static Variable
+}
+
+To call static variable/modify/assign --> Student.institue = "IIT";
+
+                     STUDENT CLASS
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│           static String institute = null;                   │
+│                   (ONE COPY ONLY)                           │
+│                                                              │
+│                                                              │
+│   Ankit Object                          Gautam Object        │
+│  ┌──────────────────┐               ┌──────────────────┐     │
+│  │ name  = null     │               │ name  = null     │     │
+│  │ email = null     │               │ email = null     │     │
+│  │ phno  = 0        │               │ phno  = 0        │     │
+│  └──────────────────┘               └──────────────────┘     │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+MEMORY REPRESENTATION
+
+                    ┌─────────────────────┐
+                    │ institute = null    │
+                    │ (Static Variable)   │
+                    └──────────┬──────────┘
+                               │
+               Shared by all Student objects
+                               │
+        ┌──────────────────────┴──────────────────────┐
+        │                                             │
+        ▼                                             ▼
+
+┌─────────────────────┐                 ┌─────────────────────┐
+│     Ankit Object    │                 │    Gautam Object    │
+├─────────────────────┤                 ├─────────────────────┤
+│ name  = null        │                 │ name  = null        │
+│ email = null        │                 │ email = null        │
+│ phone = 0           │                 │ phone = 0           │
+└─────────────────────┘                 └─────────────────────┘
+Reason:
+-------
+Every student has different:
+- name
+- email
+- phone
+
+But institute name is common for all students, therefore it should be static.
+
+Note: When you want to declare same data which is common for all objects, go for static variables. when you want declare data which
+      is specific to every object, go for instance variable.
+	  At start static variable created with default value, when class is loaded after that it is going to execute main() ie static method
+	  main method is static that's why JVM is calling it by default.
+	
+Local Variable:
+--------------
+-A variable declared inside a method, constructor, or block is called a local variable.
+-Local variables can be accessed only within the method/block where they are declared.
+-The static keyword cannot be used with local variables.
+-Local variables must be initialized before use; otherwise, a compile-time error occurs.ie Initialization is mandatory
+-Memory for local variables is allocated when the method is invoked (executed).After the method execution completes, local variables are destroyed and their memory is released.
+
+-Methods: A method is a block of code used to perform a specific task. Methods help in code reusability and modular programming.
+--------
+-Method declaration(Signature) --> Return Type + Name + List of parameter
+-Method Definition (Body) --> logic
+returnType methodName(parameter1, parameter2, ...) {         // method declaration. -> declaration of Method name, Input Parameters, Return type
+    // logic
+    return value;   // only if return type is not void
+}
+
+returnType  -> Type of value returned by method -> can be any primitive type/array type/reference type
+methodName  -> Name of the method   -> to identify and access the method
+parameters  -> Input values to method -> on which method will perform action, it is optional to specify
+return      -> Sends value back to caller
+
+METHOD BODY / METHOD DEFINITION /METHOD IMPLEMENTATION: The block of code written inside the curly braces {} of a method is called Method Body, Method Definition,
+                                                        or Method Implementation.
+returnType methodName(parameters) {
+    // Method Body / Definition / Implementation
+}
+| Term                    | Meaning                            |
+|-------------------------|------------------------------------|
+| Method Declaration      | Method header without body         |
+| Method Signature        | Method name + parameter list       |
+| Method Body             | Code inside {}                     |
+| Method Definition       | Complete method with body          |
+| Method Implementation   | Actual logic written inside method |
+
+1. Return type is mandatory.
+2. Method name is mandatory.
+3. Parameters are optional.
+4. If method has return type other than void, it must return a value.
+5. Return statement should be the last executable statement of the method.
+6. JVM always looks for main() method first.
+
+EXAMPLES:
+
+int add(int a, int b) {
+    int c = a + b;
+    return c;
+}
+
+void hello() {
+    System.out.println("Hello My Friend");
+}
+
+TYPES OF METHODS:
+1. Instance Methods
+-------------------
+- Belong to objects.
+- Need object creation to call.
+- Can access instance and static variables.
+Example:
+class Student {
+    void display() {
+        System.out.println("Instance Method");
+    }
+    public static void main(String[] args) {
+        Student s = new Student();
+        s.display();                             //Instance Method
+    }
+}
+
+2. Static Methods
+-----------------
+- Belong to class.
+- Called using class name.
+- Can access only static members directly.
+- No object creation required.
+Example:
+class Student {
+    static void hello() {
+        System.out.println("Hello");
+    }
+    public static void main(String[] args) {
+        Student.hello();                          //Hello
+    }
+}
+
+| Feature              | Instance Method       | Static Method         |
+|----------------------|----------------------|----------------------|
+| Belongs To           | Object               | Class                |
+| Object Required      | Yes                  | No                   |
+| Call Using           | Object Reference     | Class Name           |
+| Access Instance Data | Yes                  | No (Directly)        |
+| Access Static Data   | Yes                  | Yes                  |
+| Memory Allocation    | With Object          | When Class Loads     |
+
+public static void main(String[] args)
+
+Explanation:
+------------
+public  -> Accessible by JVM
+static  -> JVM can call without object
+void    -> Returns nothing
+main    -> Entry point of program
+String[] args -> Command Line Arguments
+
+FLOW OF EXECUTION: When we write method in Java class, by default JVM will not execute them.
+==================
+JVM
+ ↓
+main()                     --> Entry point for JVM Execution, as JVM will start our program execution from main().
+ ↓
+Method Calls
+ ↓
+Execution
+ ↓
+Return Values (if any)
+
+Invalid:
+-------
+String void m1() {          --> 2 return types
+    return "Hi";
+}
+
+boolean void m2() {          
+    return true or false;  --> At a time we can return only one value
+}
+
+-Working with methods using Objects:
+-----------------------------------
+-Objects created with new operator and stored in heap area. For every object JVM will assign one unique hashcode.
+-In Real time projects, data will be represented in form of objects only. Data will play major role.
+-In Real time projects, our methods will deal with Objects only.
+
+class Student {                                             //Class loaded in Method Area
+    int id;
+    String name;
+
+    public static void main(String[] args) {
+        Student s1 = new Student();                        //Local Variable, as it is inside method. when this line executed, memory allocated in JVM for instance variable
+
+        s1.id = 101;                                       //Every object maintain own copy of instance variable
+        s1.name = "Raju";
+        System.out.println(s1.id + " " + s1.name);
+
+        Student s2 = new Student();                       //Objects created in heap area
+        System.out.println(s2.id + " " + s2.name);
+    }
+}
+
+class Employee {
+
+    int id;
+    double salary;
+}
+
+public class Driver {
+
+    static void display(Employee e) {
+        System.out.println("Employee Id     : " + e.id);
+        System.out.println("Employee Salary : " + e.salary);
+    }
+
+    public static void main(String[] args) {
+
+        Employee e = new Employee();
+
+        e.id = 101;
+        e.salary = 15000.0;
+
+        display(e);   // Passing Employee object
+    }
+}
+
+Employee e = new Employee();
+Employee  -> Class Name (Reference Type)
+e         -> Reference Variable
+new       -> Object Creation Operator
+Employee() -> Constructor
+Reference variable 'e' points to the Employee object created in Heap Memory.
+
+Stack Memory                    Heap Memory
+────────────                    ───────────
+
+e  ───────────────────────────► Employee Object
+                                ┌─────────────┐
+                                │ empId = 0   │
+                                │ name = null │
+                                │ salary = 0  │
+                                └─────────────┘
+
+                           JVM MEMORY
+┌──────────────────────────────────────────────────────────────────────┐
+│                           METHOD AREA                               │
+│                                                                      │  //when JVM load class, it will load all dependent classes also.
+│  ┌──────────────────────────────┐                                   │
+│  │ Employee.class               │                                   │
+│  │------------------------------│                                   │
+│  │ int empId                    │                                   │
+│  │ String name                  │                                   │
+│  │ double salary                │                                   │
+│  │ static String company        │                                   │
+│  └──────────────────────────────┘                                   │
+│                                                                      │
+│  ┌──────────────────────────────┐                                   │
+│  │ Driver.class                 │                                   │
+│  │------------------------------│                                   │
+│  │ main(String[] args)          │                                   │
+│  │ display(Employee e)          │                                   │
+│  └──────────────────────────────┘                                   │
+├──────────────────────────────────────────────────────────────────────┤
+│                            HEAP AREA                                │
+│                                                                      │
+│  e1 ─────► ┌──────────────────────┐                                 │
+│            │ Employee Object      │                                 │
+│            │----------------------│                                 │
+│            │ empId  = 101         │                                 │
+│            │ name   = "Rohit"     │                                 │
+│            │ salary = 75000       │                                 │
+│            └──────────────────────┘                                 │
+│                                                                      │
+│  e2 ─────► ┌──────────────────────┐                                 │
+│            │ Employee Object      │                                 │
+│            │----------------------│                                 │
+│            │ empId  = 102         │                                 │
+│            │ name   = "Amit"      │                                 │
+│            │ salary = 65000       │                                 │
+│            └──────────────────────┘                                 │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+Driver.main()
+      │
+      └──► Employee e1 = new Employee()
+                   │
+                   └──► Object Created in Heap Area
+                                │
+                                └──► Values Assigned
+                                       (empId=101,
+                                        name="Rohit",
+                                        salary=75000)
+                                             │
+                                             └──► display(e1)
+                                                          │
+                                                          └──► display() Receives Employee Reference
+                                                                       │
+                                                                       └──► Prints empId, name, salary and company
+--------------------------------
+class Person {
+    int id;
+    String name;
+    int age;
+}
+
+class Driver {
+
+    Person getPerson() {
+
+        Person p = new Person();
+
+        p.id = 101;
+        p.name = "Raju";
+        p.age = 20;
+
+        return p;
+    }
+
+    public static void main(String[] args) {
+
+        Driver d = new Driver();
+
+        Person p = d.getPerson();
+
+        System.out.println(p.id);
+        System.out.println(p.name);
+        System.out.println(p.age);
+    }
+}
+1. Java source file (.java) is compiled by javac and converted into bytecode (.class).
+2. JVM loads Person.class and Driver.class into Method Area.
+3. JVM identifies the main() method and starts execution.
+4. A stack frame for main() is created in the Java Stack.
+5. Driver d = new Driver();
+   - Driver object is created in Heap Memory.
+   - Reference variable d is created in Stack Memory.(Since local variables belong to methods, they are stored in the Stack Memory.)
+STACK                         HEAP
+───────                       ────────────
+d ─────────────────────────► Driver Object
+   - d stores the reference (address) of the Driver object.
+   - Object gets a hashcode.
+6. Person p = d.getPerson();
+   Control transfers from main() to getPerson().
+7. A stack frame for getPerson() is created.
+8. Person p = new Person();
+   - Person object is created in Heap Memory.
+   - Instance variables are allocated memory.
+   - Default values are assigned:
+        id   = 0
+        name = null
+        age  = 0
+9. Variables are reinitialized:
+        p.id   = 101;
+        p.name = "Raju";
+        p.age  = 20;
+10. return p;
+    - Reference of Person object is returned.
+    - Object itself is not copied.
+    - Returned reference is assigned to p in main().
+11. getPerson() execution completes.
+    - Stack frame of getPerson() is removed.
+    - Person object remains in Heap because main() still has
+      reference p.
+12. main() prints:
+        101
+        Raju
+        20
+13. main() execution completes.
+14. Stack frame of main() is removed.
+15. JVM terminates.
+16. Heap objects become eligible for Garbage Collection
+    when no references point to them.
+In short:
+Class Loading → Stack Frame Creation → Object Creation in Heap → Default Initialization → Explicit Initialization → Method Call → Return Reference → Program Termination.
+
+Program: Write a Java method which will take id as input based on id, return person data.
+class Person {
+    int id;
+    String name;
+    int age;
+}
+
+class Driver {
+    Person m1(int id) {
+        Person p = new Person();
+        if (id == 101) {
+            p.id = 101;
+            p.name = "Raju";
+            p.age = 30;
+        }
+        else if (id == 102) {
+            p.id = 102;
+            p.name = "Ravi";
+            p.age = 32;
+        }
+        return p;
+    }
+
+    public static void main(String[] args) {
+        Driver d = new Driver();
+        Person p = d.m1(101);
+
+        System.out.println(p.id);    // 101
+        System.out.println(p.name);  // Raju
+        System.out.println(p.age);   // 30
+    }
+}
+
+Program: Write a Java method which will take 2 Person as input
+class Person {
+
+    int id;
+    String name;
+
+    void m1(Person p1, Person p2) {
+
+        System.out.println(p1.id + " " + p1.name);
+        System.out.println(p2.id + " " + p2.name);
+    }
+
+    public static void main(String[] args) {
+
+        Person p = new Person();
+
+        Person p1 = new Person();
+        p1.id = 101;
+        p1.name = "Raju";
+
+        Person p2 = new Person();
+        p2.id = 102;
+        p2.name = "Ravi";
+
+        p.m1(p1, p2);
+    }
+}
+
+- Consider we have, 700 objects --> 700 times required to initialize instance variable. so to reduce that effort, we have constructor.
+
+-Constructors: It is special method in Java, which is used to initialize current class instance variables.
+-------------
+-Constructor name should be same as class name.
+-Constructor will not have any return type (not even void)
+-Constructor is called automatically when an object is created. Constructor execute during object creation (ie nothing but calling constructor)
+-Constructors are used to initialize object data.
+-A constructor can be overloaded.
+-Constructors cannot be inherited.
+Note:1.  If we write return type for the constructor then, it will become method.
+     2. If we don't add constructor, compiler will add default constuctor to our class. If we add constructor, then compiler will not add default constructor.
+	    We can check default constructor using command --> javaP className
+	 3. Instance variable from object will initialized by constructor after JVM notifies it.
+class Student {
+    Student() {
+        System.out.println("Default Constructor");
+    }
+
+    public static void main(String[] args) {
+
+        Student s = new Student();
+    }
+}
+
+-Cosntructors divided into 2 types:
+----------------------------------
+1. Zero parameterized constructor/Default Constructor.  -> Constructor without parameter
+2. Parameterized Constructor. -> Constructor which contains one or more parameter.
+
+class Student {
+    Student() {                                             //Zero param constructor
+        System.out.println("Default Constructor");
+    }
+
+    public static void main(String[] args) {
+        Student s = new Student();
+    }
+}
+
+class Employee {
+
+    String name;
+    float salary;
+
+    Employee() {                                          //without initialization of instance variable, so default values assigned to them 
+        System.out.println(name + " " + salary);
+    }
+
+    public static void main(String[] args) {
+        Employee emp = new Employee();
+    }
+}
+
+-'this' Keyword: this is a predefined keyword in Java. It refers to the current class object
+----------------
+It is used to differentiate instance variables from local variables.
+
+class Employee {
+    String name;
+    float salary;
+
+    public Employee(String name, float salary) {       //Constructor Initializing Variables
+        this.name = name;
+        this.salary = salary;
+        System.out.println(name);
+        System.out.println(salary);
+    }
+
+    public static void main(String[] args) {
+        Employee emp1 = new Employee("Raju", 15000.0f);
+        Employee emp2 = new Employee("Ramu", 25000.0f);
+    }
+}
+
+class Student {
+    int id;
+    String name;
+    int age;
+    String gender;
+
+    Student(int id, String name, int age, String gender) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+
+        System.out.println(
+            this.id + " " +
+            this.name + " " +
+            this.age + " " +
+            this.gender
+        );
+    }
+
+    public static void main(String[] args) {
+        Student s =
+            new Student(101, "Raju", 20, "Male");
+    }
+}
+
+-Constructor Overloading: Writing multiple constructors in the same class with different parameter lists is called Constructor Overloading.
+------------------------
+-For object with multiple behavior ie Polymorphism
+class Employee {
+    Employee(int id) {
+        System.out.println("ID Constructor");
+    }
+
+    Employee(String name) {
+        System.out.println("Name Constructor");
+    }
+
+    Employee(int id, String name) {
+        System.out.println("ID and Name Constructor");
+    }
+
+    public static void main(String[] args) {
+        Employee e1 = new Employee(101);
+        Employee e2 = new Employee("Raju");
+        Employee e3 = new Employee(101, "Raju");
+    }
+}
