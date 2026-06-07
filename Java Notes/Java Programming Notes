@@ -2786,7 +2786,7 @@ public class Student extends User {
 
     int marks;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { 
         Student s = new Student();
         s.id = 101;         // Parent Property -> Initializing parent class property using child object
         s.name = "Raju";    // Parent Property
@@ -2881,3 +2881,313 @@ Important Notes:
 3. Private members cannot be accessed directly in Child class.
 4. Java does not support Multiple Inheritance using classes.
 5. Every class directly or indirectly extends Object class.
+
+TYPES OF INHERITANCE IN JAVA:
+----------------------------
+1. SINGLE INHERITANCE: One Child class extends one Parent class. 
+---------------------
+class A {
+}
+
+class B extends A {
+}
+
+Diagram:
+
+    A
+    ↑
+    B
+
+2. MULTILEVEL INHERITANCE: Inheritance chain of more than one level.
+-------------------------
+class A {
+}
+
+class B extends A {
+}
+
+class C extends B {
+}
+
+Diagram:
+
+    A
+    ↑
+    B
+    ↑
+    C
+
+3. HIERARCHICAL INHERITANCE: Multiple Child classes inherit from the same Parent class.
+---------------------------
+class A {
+}
+
+class B extends A {
+}
+
+class C extends A {
+}
+
+class D extends A {
+}
+
+Diagram:
+
+        A
+      / | \
+     B  C  D
+
+4. MULTIPLE INHERITANCE: One Child class inherits from multiple Parent classes.
+-----------------------
+Java does NOT support Multiple Inheritance using classes because of the Diamond Problem (ambiguity).
+Diagram:
+
+    A      B
+     \    /
+      \  /
+       C
+
+Example (NOT ALLOWED IN JAVA):
+
+class A {
+}
+
+class B {
+}
+
+// Invalid
+class C extends A, B {
+}
+
+WHY JAVA DOES NOT SUPPORT MULTIPLE INHERITANCE?
+Example:
+
+class Student {
+    int id;
+}
+
+class User {
+    int id;
+}
+
+// Invalid
+class Employee extends User, Student {      //Problem: Employee gets two copies of 'id'.
+                                            //Employee.id belongs to User or Student?. This creates ambiguity.
+}
+5. HYBRID INHERITANCE: Combination of Multiple and Hierarchical Inheritance.
+---------------------
+Java does NOT support Hybrid Inheritance using classes because it contains Multiple Inheritance.
+
+CYCLIC INHERITANCE: A class cannot inherit itself directly or indirectly.
+------------------
+Invalid:
+
+class User extends User {
+}
+
+or
+
+class User extends Employee {
+}
+
+class Employee extends User {
+}
+
+Reason:
+-------
+JVM cannot determine the parent class hierarchy.
+
+PARENT REFERENCE & CHILD OBJECT:
+--------------------------------
+Parent p = new Child();
+Example:
+
+class Parent {
+    void m1() {
+        System.out.println("Parent Method");
+    }
+}
+
+class Child extends Parent {
+    void m2() {
+        System.out.println("Child Method");
+    }
+}
+
+class Test {
+
+    public static void main(String[] args) {
+        Parent p = new Child();
+        p.m1();      // Valid
+        // p.m2();   // Compile Time Error  -> while executing, JVM will first check if method exists or not. then check if it has any parent class, if parent not available
+    }                //then it go for Object class. eg. p.hashcode()
+}
+
+Explanation:
+------------
+Reference type decides what members can be accessed.
+Parent reference can access only Parent class members.
+Even though the object is Child, the reference type is Parent.
+
+CHILD REFERENCE & CHILD OBJECT:
+-------------------------------
+Child c = new Child();
+c.m1();    // Parent Method
+c.m2();    // Child Method   --> first checks child, if child don't have these methods then it checks in the parent.
+Child reference can access:
+✓ Parent Members
+✓ Child Members
+
+Note:
+1. Every Java class extends Object class.
+2. Constructors are NOT inherited.
+3. Private members are NOT inherited.
+4. If our does not have any parent class, then java.lang.Object will become parent directly and if class having parent, then java.lang.Object becomel
+   parent indirectly. So every java class can access methods available in Object class(11 methods)
+5. If both parent and child have m1(), then with child class object m2() from child class will be executed. ie When we call method using object, first it 
+   will check current class for that method. If available, it will call that method directly. If method not available in current class, then it will check
+   in parent class (direct parent/indirect parent). If parent have that method, it will call. Otherwise throws Exception.
+6. In Inheritance, always priority will be given for child/sub class object. If child class doesn't contain that method then priority will be given to parent
+   class method.
+class Parent {
+    void m1() {
+        System.out.println("Parent m1()");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void m1() {
+        System.out.println("Child m1()");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+
+        Child c = new Child();
+
+        c.m1();   // Child m1()
+    }
+}
+
+Even with Parent Reference:
+Parent p = new Child();
+p.m1();                     //Child m1()
+
+POLYMORPHISM: Poly  = Many, Morph = Forms
+============
+If an object exhibits multiple behaviors based on the situation,it is called Polymorphism.
+Polymorphism is divided into 2 types:
+1) Static Polymorphism (Compile-Time Polymorphism): Behavior decide at compile time ie at start.
+   Example:
+   - Method Overloading
+   - Constructor Overloading
+2) Dynamic Polymorphism (Run-Time Polymorphism)
+   Example:
+   - Method Overriding
+
+METHOD OVERLOADING: The process of writing more than one method with the same name but different parameters is called Method Overloading.
+-------------------
+Advantages:
+- Improves readability
+- Increases code reusability
+- Compile-time polymorphism
+- Same operation can be performed with different inputs
+
+class Calculator {
+    void add(int a, int b) {
+        System.out.println("Sum = " + (a + b));
+    }
+
+    void add(int a, int b, int c) {
+        System.out.println("Sum = " + (a + b + c));
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Calculator c = new Calculator();
+        c.add(10, 20);       // Calls add(int,int)
+        c.add(10, 20, 30);   // Calls add(int,int,int)
+    }
+}
+HOW COMPILER DECIDES?: Compiler decides at compile time which overloaded method should be executed.
+Method selection is based on:
+1. Method Name
+2. Number of Parameters
+3. Data Type of Parameters
+4. Order of Parameters
+
+-If method performing same operation on different number of parameter, so action is same then method name is same 
+ substring(int start)
+ substring(int start, int end)
+
+METHOD OVERRIDING: Method Overriding is the process of writing the same method in both Parent and Child classes with the same signature.
+-----------------
+When a child class does not want to use the parent's implementation, it can provide its own implementation. At runtime JVM decides which method to execute.
+Object will decide which method to call at RunTime.
+Conditions:
+✓ Same method name
+✓ Same parameters
+✓ Parent-Child relationship required
+
+class Parent {
+    void m1() {
+        System.out.println("Parent class m1() called");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void m1() {
+        System.out.println("Child class m1() called");
+    }
+
+    public static void main(String[] args) {
+        Child c = new Child();
+        c.m1();
+    }
+}
+Output:
+Child class m1() called
+
+STRING CLASS OVERRIDES equals():
+--------------------------------
+String s1 = new String("Aniket");
+String s2 = new String("Aniket");
+System.out.println(s1.equals(s2)); //true
+
+As String class overrides equals() method and compares content instead of memory addresses.
+
+Default Object.equals()
+        ↓
+Compares Address
+
+String.equals()
+        ↓
+Compares Content
+
+Note: Overriding is not possible for static method. (For static method -> method hiding)
+      Earlier people used static block, but now not recommended.
+1. Static members are loaded when the class is loaded.
+2. Static methods can be called directly using the class name.
+3. Non-static methods belong to an object.
+4. To call a non-static method from a static method, object creation is mandatory.
+
+Example:
+
+public class Product {
+    void m1() {
+        System.out.println("Non-Static Method");
+    }
+
+    static void m2() {
+        Product p = new Product(); // Object Creation
+        p.m1(); // Calling Non-Static Method
+    }
+
+    public static void main(String[] args) {
+        m2();
+    }
+}
