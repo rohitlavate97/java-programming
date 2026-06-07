@@ -3191,3 +3191,641 @@ public class Product {
         m2();
     }
 }
+
+TYPES OF RELATIONSHIP IN JAVA:
+------------------------------
+Java supports mainly two types of relationships:
+1. IS-A Relationship (Inheritance)
+2. HAS-A Relationship (Composition / Aggregation)
+
+1. IS-A RELATIONSHIP (INHERITANCE): When one class acquires the properties and behaviors of another class using the extends keyword, it is called an IS-A relationship.
+-----------------------------------
+If we want to use all the properties of one class in the another class
+              User
+                ↑
+      -------------------
+      ↑        ↑        ↑
+   Student   Person   Employee
+
+Student IS-A User
+Person  IS-A User
+Employee IS-A User
+
+Code Example:
+
+class User {
+
+    int id;
+    String name;
+
+    void speak() {
+        System.out.println(
+            "Hi, My Id is : " + id +
+            " My Name is : " + name
+        );
+    }
+}
+
+class Student extends User {
+
+    public static void main(String[] args) {
+
+        Student s = new Student();
+
+        s.id = 101;
+        s.name = "Raju";
+
+        s.speak();
+    }
+}
+Advantages:
+✓ Code Reusability
+✓ Reduces Duplicate Code
+✓ Easy Maintenance
+
+2. HAS-A RELATIONSHIP (COMPOSITION): If one class contains an object of another class, it is called a HAS-A relationship.
+-----------------------------------
+If we want to use some properties.
+Car HAS-A Engine
+
+      Car  -------->  Engine
+
+Here Car uses Engine functionality, but Car is not an Engine.
+
+class Engine {
+    void start() {
+        System.out.println("Engine Started");
+    }
+}
+
+class Car {
+    Engine e = new Engine();   // HAS-A Relationship
+    void drive() {
+        e.start();
+        System.out.println("Driving Started");
+    }
+    public static void main(String[] args) {
+        Car c = new Car();
+        c.drive();
+    }
+}
+Advantages:
+✓ Reuse only required functionality
+✓ Loose Coupling
+✓ Better Flexibility
+✓ Better Maintainability
+
+Use IS-A when: Child class needs ALL properties and methods of Parent class.
+Example:
+Student extends User
+Student requires:
+✓ id
+✓ name
+✓ speak()
+
+Use HAS-A when: One class only needs some functionality of another class. (Composition is example of HAS-A)
+Car has an Engine
+Car only needs:
+✓ start()
+Car does not need to become an Engine.
+
+-'final' Keyword: It is reserved keyword in Java.
+----------------
+-We can use the keyword at 3 places.
+ 1. Class level    --> class becomes immutable, also can't extend eg: String class
+ 2. Variable
+ 3. method
+-final classes can not be inherited. final classes are immutable.
+-final variable are nothing but constants. final variables values can't be modified (can't reinitialize)
+-final method can't overriden.
+
+-ABSTRACTION & INTERFACES:
+-------------------------
+ABSTRACTION: Abstraction is the process of hiding unnecessary implementation details and showing only essential features to the user.
+-----------
+When we use ATM, we only know operations like Withdraw, Deposit, and Check Balance. We don't know the internal logic.
+We can achieve abstraction using:
+1. Abstract Class
+2. Interface
+
+TYPES OF METHODS IN JAVA:
+1. Concrete Method
+2. Abstract Method
+
+1. CONCRETE METHOD: A method that contains implementation/body is called a Concrete Method.
+-------------------
+public void m1() {
+    System.out.println("Concrete Method");
+}
+
+2. ABSTRACT METHOD:
+------------------
+A method that does not contain a body is called an Abstract Method.
+public abstract void m2();
+OR
+abstract void m2();
+
+Note:
+✓ Abstract methods must be declared using the abstract keyword.
+✓ Abstract methods can exist only inside an abstract class or interface.
+
+ABSTRACT CLASS: A class declared with the abstract keyword is called an Abstract Class.
+--------------
+abstract class Bank {
+
+    abstract void loan();
+
+    void display() {
+        System.out.println("Common Bank Logic");
+    }
+}
+
+Important Points:
+✓ Can contain abstract methods.
+✓ Can contain concrete methods.
+✓ Cannot create objects directly.
+✓ Used when some common implementation is available.
+
+Invalid:
+Bank b = new Bank(); // Compile Time Error
+
+INTERFACE: An Interface is a blueprint of a class that contains abstract behavior which must be implemented by classes. Hides unneccessary data.
+---------
+Interfaces are mainly used for:
+✓ Abstraction
+✓ Loose Coupling
+✓ Multiple Inheritance
+
+WHY INTERFACE?: Without Interface:
+Class A -----> Class B
+Both classes become tightly coupled. Changes in one class may affect another class.
+
+With Interface:
+Class A --> Interface <-- Class B
+Classes depend on interface, not implementation.
+This reduces dependency and increases flexibility.
+
+INTERFACE RULES:
+Before Java 8: ✓ All methods were public and abstract by default.
+
+interface Bank {
+
+    void m1();         //abstract keyword is optional in interface.
+}
+Compiler internally converts it to:
+interface Bank {
+
+    public abstract void m1();
+}
+
+After Java 8: Interface can contain: ✓ Abstract Methods ✓ Default Methods ✓ Static Methods
+
+After Java 9: Interface can also contain: ✓ Private Methods
+
+IMPORTANT POINTS:
+1. We cannot create objects of an Interface.
+Invalid: Bank b = new Bank();                 //Compile Time Error
+2. Constructors are not allowed in Interfaces.
+Reason: Interfaces do not have objects of their own.
+3. A class uses "implements" keyword to implement Interface. And overrides abstract methods from interface.
+class HDFCBank implements Bank {
+
+}
+4. A class implementing an interface must provide implementation for all abstract methods.
+
+------------------------------------------------------------
+REAL TIME EXAMPLE
+------------------------------------------------------------
+
+Interface:
+
+interface Bank {   //interface will tell you what operation, it is not telling you how should it work.
+
+    void moneyTransfer();
+
+    void checkBalance();
+}
+
+------------------------------------------------------------
+
+Implementation Class:
+
+class HDFCBank implements Bank {
+
+    @Override
+    public void moneyTransfer() {
+        System.out.println("Money Transfer from HDFC");
+    }
+
+    @Override
+    public void checkBalance() {
+        System.out.println("Checking Balance in HDFC");
+    }
+}
+
+------------------------------------------------------------
+
+Another Implementation:
+
+class AxisBank implements Bank {
+
+    @Override
+    public void moneyTransfer() {
+        System.out.println("Money Transfer from Axis");
+    }
+
+    @Override
+    public void checkBalance() {
+        System.out.println("Checking Balance in Axis");
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Bank b = new HDFCBank();
+
+        b.moneyTransfer();
+        b.checkBalance();
+    }
+}
+
+Bank b = new HDFCBank();   //✓ VALID
+Explanation:
+✓ Interface reference variable can hold object of any implementation class.
+✓ Similar to: Parent p = new Child();
+✓ Runtime decides which implementation to execute.
+
+Bank b;
+b = new HDFCBank();      // Valid
+b = new AxisBank();      // Valid
+Bank b = new Bank();     // Invalid  --> Interface object creation is not allowed.
+
+Feature                 Abstract Class          Interface
+--------------------------------------------------------------
+Object Creation         Not Allowed             Not Allowed
+Abstract Methods        Yes                     Yes
+Concrete Methods        Yes                     Yes (Java 8+)
+Constructors            Yes                     No
+Variables               Instance Variables      public static final
+Inheritance Keyword     extends                 implements
+Multiple Inheritance    No                      Yes
+
+Note: One Java class can implement multiple interface at a time.
+
+1. INTERFACE REFERENCE VARIABLE:
+interface Bank {
+    void moneyTransfer();
+    void checkBalance();
+}
+
+class AxisBank implements Bank {
+
+    public void moneyTransfer() {
+        System.out.println("Money Transferred");
+    }
+
+    public void checkBalance() {
+        System.out.println("Balance Checked");
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        // Bank b = new Bank(); // INVALID
+
+        Bank b = new AxisBank(); // VALID
+
+        b.moneyTransfer();
+        b.checkBalance();
+    }
+}
+
+Points:
+1. We cannot create object of interface.
+2. Interface reference variable can hold implementation class object. Promotes loose coupling.
+3. If interface doesn't contain anyy method, then that interface is called as 'marker interface' ie identity interface.
+   If class implement pre-defined marker interface, JVM will understand this is special class, I have to provide special functionality.
+   eg: inerface Clonable() -> clone()
+   User defined marker interface -> JVM can't understand it, as it don't know about it.
+4. In Java 1.8v, they introduced Functional Interface, which contains only one methodd ie abstract method. Functional interfaces are introduced to called
+   'Lambda experesssions'
+5. In Java 1.8v , variables in interfaces are by default public,static and final
+6. One interface cannot implement another interface.
+7. In interface, we can declare variables also. by default they are public,static,final.
+
+2. INTERFACE AS METHOD PARAMETER:
+
+interface Bank {
+    void moneyTransfer();
+}
+
+class HDFCBank implements Bank {
+    public void moneyTransfer() {
+        System.out.println("HDFC Transfer");
+    }
+}
+
+class PaymentService {
+    public void process(Bank bank) {
+        bank.moneyTransfer();
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+
+        PaymentService ps = new PaymentService();
+
+        ps.process(new HDFCBank());
+    }
+}
+
+Method accepts interface type. Any implementation class object can be passed.
+
+3. INTERFACE AS RETURN TYPE:
+interface Bank {
+    void moneyTransfer();
+}
+
+class AxisBank implements Bank {
+
+    public void moneyTransfer() {
+        System.out.println("Axis Transfer");
+    }
+}
+
+class Factory {
+
+    public Bank getBank() {
+
+        return new AxisBank();
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Factory f = new Factory();
+
+        Bank b = f.getBank();
+
+        b.moneyTransfer();
+    }
+}
+
+If return type is interface, method should return implementation object.
+
+4. DEFAULT METHOD (JAVA 8):
+interface Bank {
+    default void checkBalance() {
+        System.out.println("Checking Balance");
+    }
+}
+
+class HDFCBank implements Bank {
+
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        HDFCBank h = new HDFCBank();
+
+        h.checkBalance();
+    }
+}
+Default method contains implementation. Implementing class may or may not override it.
+
+5. OVERRIDING DEFAULT METHOD:
+interface Bank {
+    default void checkBalance() {
+        System.out.println("Interface Balance");
+    }
+}
+
+class HDFCBank implements Bank {
+
+    @Override
+    public void checkBalance() {
+        System.out.println("HDFC Balance");
+    }
+}
+Default methods can be overridden.
+
+6. CALLING INTERFACE DEFAULT METHOD:
+interface Bank {
+
+    default void checkBalance() {
+        System.out.println("Interface Balance");
+    }
+}
+
+class HDFCBank implements Bank {
+
+    @Override
+    public void checkBalance() {
+
+        Bank.super.checkBalance();
+
+        System.out.println("HDFC Balance");
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        HDFCBank h = new HDFCBank();
+
+        h.checkBalance();
+    }
+}
+Syntax: InterfaceName.super.methodName();
+
+7. STATIC METHOD IN INTERFACE:
+interface Bank {
+    static void bankInfo() {
+        System.out.println("Bank Information");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Bank.bankInfo();
+    }
+}
+Static interface methods are called using InterfaceName.methodName()
+
+8. INTERFACE INHERITING INTERFACE:
+interface RBIBank {
+    void loan();
+}
+
+interface Bank extends RBIBank {
+    void account();
+}
+
+class HDFCBank implements Bank {
+
+    public void loan() {
+        System.out.println("Loan");
+    }
+
+    public void account() {
+        System.out.println("Account");
+    }
+}
+Interface can extend another interface.
+
+ABSTRACT CLASS:
+------------------
+abstract class Machine {
+    public void start() {
+        System.out.println("Machine Started");
+    }
+    public abstract void fillFuel();
+}
+
+Abstract class can contain:
+1. Concrete methods
+2. Abstract methods
+3. Constructors
+4. Variables
+
+Note: From Java 8, no demand for abstract classes, after default and static method in interface
+
+ABSTRACT CLASS OBJECT CREATION
+----------------------------------
+abstract class Machine {
+
+    abstract void start();
+}
+
+public class Test {
+    public static void main(String[] args) {
+        // Machine m = new Machine(); // INVALID
+    }
+}
+
+Object creation of abstract class is not allowed. For Abstract class sub class is mandatory. When we execute object for sub class, then
+super class constructor will be executed.
+
+ABSTRACT CLASS CONSTRUCTOR:
+--------------------------
+abstract class Machine {
+    Machine() {
+        System.out.println("Machine Constructor");
+    }
+}
+
+class DieselMachine extends Machine {
+    DieselMachine() {
+        System.out.println("Diesel Constructor");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        DieselMachine d = new DieselMachine();
+    }
+}
+
+/*
+Output:
+Machine Constructor
+Diesel Constructor
+
+Abstract class can have constructor. Abstract class constructor will be executed when we create object for child class.
+*/
+
+PARTIAL ABSTRACTION:
+abstract class Machine {
+    public void start() {
+        System.out.println("Machine Started");
+    }
+    public abstract void fillFuel();
+}
+
+Concrete Method  -> start()
+Abstract Method  -> fillFuel()
+
+This is Partial Abstraction.
+
+ABSTRACT AND FINAL:
+abstract class A {
+
+    public abstract final void m1(); // Compile-time Error
+}
+abstract → Method has no implementation and must be overridden by a child class.
+final → Method cannot be overridden by a child class.
+These two keywords contradict each other.
+Compiler Error: illegal combination of modifiers: abstract and final
+
+
+TYPES OF BLOCKS IN JAVA: Block means some part or some piece of information or some piece of code
+------------------------
+1. Static Block
+2. Instance Block
+
+INSTANCE BLOCK: If you want to execute some piece of code when object is created, then we will go for instance block.
+--------------
+class Demo {
+    {
+        System.out.println("Instance Block");
+    }
+    Demo() {
+        System.out.println("Constructor");
+    }
+    public static void main(String[] args) {
+
+        new Demo();
+    }
+}
+
+Output:
+Instance Block
+Constructor
+-Instance block executes before constructor execution.
+
+STATIC BLOCK: If you want some piece of code, when class is loaded then we will go for static block. 
+------------
+- static block will execute before main() execution.
+class Demo {
+    static {
+
+        System.out.println("Static Block");
+    }
+    public static void main(String[] args) {
+
+        System.out.println("Main Method");
+    }
+}
+
+Output:
+
+Static Block
+Main Method
+*/
+
+/*=========================================================
+STATIC BLOCK VS INSTANCE BLOCK
+=========================================================*/
+STATIC BLOCK
+------------
+1. Executes when class loads.
+2. Executes only once.
+3. Executes before main().
+4. Used for class initialization.
+
+INSTANCE BLOCK
+--------------
+1. Executes during object creation.
+2. Executes every object creation.
+3. Executes before constructor.
+4. Used for object initialization.
