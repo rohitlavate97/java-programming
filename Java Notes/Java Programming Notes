@@ -4431,6 +4431,8 @@ public class Demo {
 
 TRY WITH RESOURCES (JAVA 7): Automatically closes resources. No need to explicitly close resource.
 ---------------------------
+Try-With-Resources is a feature introduced in Java 7 that automatically closes resources after use, eliminating the need to explicitly close them inside a finally block.
+To avoid finally block
 try(FileReader fr =
       new FileReader("abc.txt")) {
 
@@ -4439,7 +4441,7 @@ catch(Exception e) {
 
 }
 
-13. throw KEYWORD: Used to create and throw exception manually. ie throw exceptions programmatically.(Programmatic exception generation.)
+throw KEYWORD: Used to create and throw exception manually. ie throw exceptions programmatically.(Programmatic exception generation.)
 ------------------
 throw new Exception("Message");
 
@@ -4464,7 +4466,7 @@ public static void main(String[] args) throws Exception {
 
 Class.forName(" ");         //throws ClassNotFoundException
 
-15. throw VS throws:
+throw VS throws:
 -------------------
 +----------------------+----------------------+
 | throw                | throws               |
@@ -4589,3 +4591,202 @@ common Java predefined exceptions:
 
 Method Stack:
 ------------
+// User Defined Checked Exception
+// Since it extends Exception, it becomes a Checked Exception
+class InvalidNumberException extends Exception {
+    // Constructor
+    InvalidNumberException(String msg) {
+        // Calling parent Exception constructor
+        // to store custom error message
+        super(msg);
+    }
+}
+
+public class Demo {
+    // Method-2
+    // Declares that it may throw InvalidNumberException
+    void m2(int a, int b) throws InvalidNumberException {
+        System.out.println("m2() started");
+        try {
+            // Risky code
+            // If b = 0, ArithmeticException occurs
+            int c = a / b;
+            System.out.println("Result = " + c);
+
+            // Business Validation
+            // Throw user-defined exception if result is negative
+            if (c < 0) {
+                throw new InvalidNumberException(
+                        "Negative value not allowed");
+            }
+        }
+        catch (ArithmeticException e) {
+            System.out.println(
+                    "Arithmetic Exception Occurred");
+            // Rethrowing exception
+            // Send exception to caller method
+            throw e;
+        }
+        finally {
+            // Executes whether exception occurs or not
+            System.out.println(
+                    "m2() finally block executed");
+        }
+        // Executes only if no exception occurs
+        System.out.println("m2() ended");
+    }
+
+    // Method-1
+    // Again propagating exception to caller
+    void m1(int a, int b)
+            throws InvalidNumberException {
+        System.out.println("m1() started");
+        // Calling m2()
+        m2(a, b);
+        // Executes only if m2() completes successfully
+        System.out.println("m1() ended");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("main() started");
+        try {
+            Demo d = new Demo();
+            // Calling m1()
+            d.m1(10, 0);
+        }
+
+        // Handles User Defined Exception
+        catch (InvalidNumberException e) {
+            System.out.println(
+                    "User Defined Exception : "
+                            + e.getMessage());
+        }
+        // Handles all remaining exceptions
+        catch (Exception e) {
+            System.out.println(
+                    "Exception Handled In Main");
+            // Prints complete stack trace
+            e.printStackTrace();
+        }
+        System.out.println("main() ended");
+    }
+}
+
+Exception Propagation means:
+When a method does not handle an exception, JVM automatically passes (propagates) the exception to its caller method until some method handles it or the program terminates.
+Ex:
+java.lang.ArithmeticException: / by zero
+    at Demo.m2(Demo.java:20)
+    at Demo.m1(Demo.java:48)
+    at Demo.main(Demo.java:67)
+┌─────────────┐
+│   main()    │
+├─────────────┤
+│    m1()     │
+├─────────────┤
+│    m2()     │
+├─────────────┤
+│   10 / 0    │  ← Exception Occurs Here
+└─────────────┘
+
+Exception travels upward:
+
+m2()  →  m1()  →  main()
+
+main()
+  │
+  ├── calls m1()
+  │
+  ├── m1() calls m2()
+  │
+  ├── m2() executes 10/0    //Uncached exception, so need to handle with try catch block.
+  │
+  ├── ArithmeticException occurs
+  │
+  ├── catch block catches it
+  │
+  ├── throw e; rethrows exception
+  │
+  ├── finally block executes
+  │
+  ├── Exception goes back to m1()
+  │
+  ├── m1() doesn't handle it
+  │
+  ├── Exception goes back to main()
+  │
+  ├── main() catches exception
+  │
+  ├── printStackTrace() prints stack information
+  │
+  └── Program continues and ends normally
+
+Note: Instead of e.printStackTrace() --> System.err.println("Exception occurred"+e); --> Throwable class contains toString() --> overridden method.
+      Also insted of e, we can use e.getMessage()
+	  
+-Static Imports: Static imports are used to access static members (variables and methods) directly without using the class name
+----------------
+Introduced in: Java 5
+Syntax: import static packageName.ClassName.memberName;  /  import static packageName.ClassName.*;
+
+Benefits:
+1. Reduces code length.
+2. Improves readability.
+3. No need to write class name repeatedly.
+
+//import static java.lang.Math.sqrt;   --> to import single static member.
+import static java.lang.Math.*;
+public class Test {
+    public static void main(String[] args) {
+        System.out.println(sqrt(25));                  //instead of Math.sqrt()
+        System.out.println(max(10, 20));
+        System.out.println(PI);
+    }
+}
+
+Can Import:
+✓ Static Variables
+✓ Static Methods
+
+Cannot Import:
+✗ Instance Variables
+✗ Instance Methods
+✗ Constructors
+
+Normal Import  → Class Access
+Static Import  → Static Member Access
+
+Variable Arguments/Var-Args: Variable Arguments (Var-Args) allow a method to accept any number of arguments of the same type.
+---------------------------
+No lengthy class with so many methods.
+Introduced In: Java 5
+Syntax: datatype... variableName     --> we can call method with 2, 3, 4 .... parameters
+        ... is called elipses        --> only 3 ellipses are allowed. 
+		
+ex:
+void m1(int... a)  ----> Compiler treats it as: void m1(int[] a) --> Var-Args are internally converted into arrays.
+
+Meaning:
+The method can accept:
+m1();
+m1(10);
+m1(10,20);
+m1(10,20,30);
+m1(10,20,30,40);
+All are valid.
+
+Rule 1: Only one var-arg parameter allowed.
+        void m1(int... a)              //Valid:
+        void m1(int... a, int... b)    //Compile Time Error
+
+Rule 2: Var-arg must be last parameter.
+        void m1(int id, String name, int... marks)    //Valid
+        void m1(int... marks, String name)            //Invalid  --> Compile Time Error
+
+Rule 3: Can mix normal parameters with var-args.
+        void m1(String name, int... marks)
+
+Note: In main() --> String[] args == String... args == String args[]
+
+-Wrapper Classes:
+-----------------
