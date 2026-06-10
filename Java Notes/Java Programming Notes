@@ -4790,3 +4790,248 @@ Note: In main() --> String[] args == String... args == String args[]
 
 -Wrapper Classes:
 -----------------
+-Java is an Object-Oriented Programming Language. Everything is represented in object format.
+-Primitive data types are not objects. To represent primitive values as objects, Java provides Wrapper Classes.
+
+Primitive Type    Wrapper Class
+--------------------------------
+byte              Byte
+short             Short
+int               Integer               ---> public final class Integer extends Number implements Comparator<Integer>  --> can't extend.
+long              Long
+float             Float
+double            Double
+char              Character
+boolean           Boolean
+
+All Wrapper Classes belong to java.lang package.
+Why Wrapper Classes?:
+1. Collections store objects only.
+2. Required for Generics.
+3. Provides utility methods.
+4. Supports Boxing and Unboxing.
+Ex: 
+byte b = 20;
+System.out.println(b);      // 20
+Byte b1 = new Byte(b);
+System.out.println(b1);     // 20
+
+BOXING: Converting a primitive data type into its corresponding Wrapper Object is called Boxing.
+------
+int i = 10;
+Integer obj = new Integer(i);
+System.out.println(obj);       //10
+
+AUTO BOXING (Java 5): Automatic conversion of primitive type into wrapper object.
+--------------------
+int i = 10;
+Integer obj = i;          // Auto Boxing
+System.out.println(obj);  //10
+
+Internally:  Integer obj = Integer.valueOf(i);
+
+UNBOXING: Converting a Wrapper Object into primitive data type is called Unboxing.
+---------
+Integer obj = new Integer(10);
+int i = obj;
+System.out.println(i);         //10
+
+5. AUTO UNBOXING (Java 5): Automatic conversion of Wrapper Object into primitive type.
+--------------------------
+Integer obj = 100;
+int i = obj;      // Auto Unboxing
+System.out.println(i);   //100
+
+Internally: int i = obj.intValue();
+
+
+Primitive
+    |
+    V
+Auto Boxing
+    |
+    V
+Wrapper Object
+    |
+    V
+Auto Unboxing
+    |
+    V
+Primitive
+
+Integer i1 = new Integer(20);             //2 constructors --> one accept int
+Integer i2 = new Integer("30");           //Other accpets --> String 
+Integer i3 = i1 + i2;
+System.out.println(i3);         //50
+
+Explanation:
+------------
+Auto Unboxing occurs before addition.
+
+i1.intValue() + i2.intValue()
+
+Object
+   |
+   V
+ Number
+   |
+   +---- Byte
+   +---- Short
+   +---- Integer
+   +---- Long
+   +---- Float
+   +---- Double
+
+Character
+Boolean
+
+CHARACTER WRAPPER CLASS: Character accepts only a single character.
+------------------------
+Character c1 = new Character('A');      //Valid:
+Character c2 = 'A';
+
+Character c3 = new Character("A");  //Invalid // Compile Time Error
+
+TYPE CASTING: Converting one data type into another data type is called Type Casting.
+-------------
+Types:
+1. Widening (Up Casting)
+2. Narrowing (Down Casting)
+
+WIDENING (UP CASTING): Converting lower data type into higher data type.
+----------------------
+
+Features:
+---------
+1. Automatic Conversion
+2. No Explicit Cast Required
+3. No Data Loss
+
+Example:
+---------
+byte b = 20;
+
+int i = b;
+
+System.out.println(i);
+
+Output:
+-------
+20
+
+More Examples:
+--------------
+int i = 100;
+
+long l = i;
+
+float f = l;
+
+double d = f;
+
+
+Widening Flow:
+--------------
+byte → short → int → long → float → double
+
+
+=========================================================
+NARROWING (DOWN CASTING)
+---------------------------------------------------------
+Definition:
+Converting higher data type into lower data type.
+
+Features:
+---------
+1. Explicit Cast Required
+2. Manual Conversion
+3. Data Loss Possible
+
+Example:
+---------
+double d = 100.75;
+
+int i = (int)d;
+
+System.out.println(i);
+
+Output:
+-------
+100
+
+Decimal value lost.
+
+Example:
+---------
+long l = 100;
+
+short s = (short) l;
+
+Without Cast:
+-------------
+short s = l;      // Compile Time Error
+
+
+Narrowing Flow:
+---------------
+double → float → long → int → short → byte
+
+
+=========================================================
+DATA LOSS EXAMPLE
+---------------------------------------------------------
+
+int i = 130;
+
+byte b = (byte)i;
+
+System.out.println(b);
+
+Output:
+-------
+-126
+
+Reason:
+-------
+Byte range = -128 to 127
+
+Overflow occurs.
+
+
+=========================================================
+AUTO BOXING & AUTO UNBOXING EXAMPLE
+---------------------------------------------------------
+
+Integer i1 = 10;      // Auto Boxing
+
+System.out.println(i1);
+
+int x = i1;           // Auto Unboxing
+
+System.out.println(x);
+
+Output:
+-------
+10
+10
+
+
+
+
+=========================================================
+MEMORY SHORTCUT
+---------------------------------------------------------
+
+Primitive → Object   = Boxing
+
+Object → Primitive   = Unboxing
+
+Automatic Conversion = Auto Boxing / Auto Unboxing
+
+Lower → Higher       = Widening
+
+Higher → Lower       = Narrowing
+
+Manual Cast          = Narrowing
+
+=========================================================
