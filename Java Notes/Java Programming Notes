@@ -3829,3 +3829,384 @@ INSTANCE BLOCK
 2. Executes every object creation.
 3. Executes before constructor.
 4. Used for object initialization.
+
+Note: 1. When we run java program JVM will check for static members ie static variables, static methods, static block(JVM will allocate memory to them
+         in same sequence). Once memory allocated for static members, then it will start execution in order as Static block, static method(if we call
+	     ie only main() will execute automatically by JVM), static variable. This is static control flow.
+	  2. Non-static fields cannot be accessed in static area. For accessing non-static variable we need to create object and then we can access instance
+	     variable into static area.
+	  3. Instance controll flow will begin when object is created, memory will be allocated for instance variable, instance methods and instance blocks.
+	     Once memory allocation completed then, execution will happen in order like Instace block, constructor, instance method (If we call)
+	  4. Static members can be acceessed directly in instance areas because for static members, memory already allocated at the time of class loading.
+	     Static variables can be accessed directly in static block.
+
+ex:
+public class ControlFlowDemo {
+
+    // Static Variable
+    static int a = initializeStaticVariable();
+
+    // Static Block 1
+    static {
+        System.out.println("Static Block 1");
+    }
+
+    // Static Block 2
+    static {
+        System.out.println("Static Block 2");
+    }
+
+    // Instance Variable
+    int b = initializeInstanceVariable();
+
+    // Instance Block 1
+    {
+        System.out.println("Instance Block 1");
+    }
+
+    // Instance Block 2
+    {
+        System.out.println("Instance Block 2");
+    }
+
+    // Constructor
+    public ControlFlowDemo() {
+        System.out.println("Constructor");
+    }
+
+    // Static Method
+    static void staticMethod() {
+        System.out.println("Static Method");
+
+        // Cannot directly access non-static variable
+        // System.out.println(b); // Compile Error
+
+        ControlFlowDemo obj = new ControlFlowDemo();
+        System.out.println("Accessing Instance Variable in Static Method: " + obj.b);
+    }
+
+    // Instance Method
+    void instanceMethod() {
+        System.out.println("Instance Method");
+    }
+
+    static int initializeStaticVariable() {
+        System.out.println("Static Variable Initialization");
+        return 10;
+    }
+
+    int initializeInstanceVariable() {
+        System.out.println("Instance Variable Initialization");
+        return 20;
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println("Main Method Started");
+
+        staticMethod();
+
+        System.out.println("\nCreating Object...");
+
+        ControlFlowDemo obj = new ControlFlowDemo();
+
+        obj.instanceMethod();
+
+        System.out.println("Main Method Ended");
+    }
+}
+
+Output:
+Static Variable Initialization
+Static Block 1
+Static Block 2
+Main Method Started
+
+Static Method
+
+Instance Variable Initialization
+Instance Block 1
+Instance Block 2
+Constructor
+Accessing Instance Variable in Static Method: 20
+
+Creating Object...
+
+Instance Variable Initialization
+Instance Block 1
+Instance Block 2
+Constructor
+Instance Method
+Main Method Ended
+
+
+OBJECT CLASS:
+------------
+java.lang.Object
+- Root class of Java.
+- Every class directly or indirectly extends Object.
+- If a class does not extend any class explicitly,compiler automatically extends Object class.
+IMPORTANT METHODS OF OBJECT CLASS:
+| Method               | Return Type | Purpose                                      | Default Behavior                                           |
+| -------------------- | ----------- | -------------------------------------------- | ---------------------------------------------------------- |
+| `toString()`         | `String`    | Returns string representation of an object   | Returns `ClassName@HexHashCode`                            |
+| `hashCode()`         | `int`       | Returns unique hash code value for an object | Generates hash based on object's memory representation     |
+| `equals(Object obj)` | `boolean`   | Compares two objects                         | Compares object references (addresses)                     |
+| `getClass()`         | `Class<?>`  | Returns runtime class information            | Returns the `Class` object representing the object's class |
+| `clone()`            | `Object`    | Creates duplicate copy of an object          | Creates shallow copy (requires `Cloneable`)                |
+| `finalize()`         | `void`      | Called before garbage collection             | Executed by GC before object destruction (Deprecated)      |
+| `wait()`             | `void`      | Makes current thread wait                    | Releases monitor lock and waits for notification           |
+| `notify()`           | `void`      | Wakes up one waiting thread                  | Notifies one thread waiting on the object's monitor        |
+| `notifyAll()`        | `void`      | Wakes up all waiting threads                 | Notifies all threads waiting on the object's monitor       |
+
+| Method        | Can Override?       | Common Usage                         |
+| ------------- | ------------------- | ------------------------------------ |
+| `toString()`  | ✅ Yes               | Logging, debugging, printing objects |
+| `hashCode()`  | ✅ Yes               | HashMap, HashSet, Hashtable          |
+| `equals()`    | ✅ Yes               | Content comparison                   |
+| `getClass()`  | ❌ No (`final`)      | Reflection                           |
+| `clone()`     | ✅ Yes (`protected`) | Object copying                       |
+| `finalize()`  | ✅ Yes               | Not recommended (Deprecated)         |
+| `wait()`      | ❌ No (`final`)      | Multithreading                       |
+| `notify()`    | ❌ No (`final`)      | Multithreading                       |
+| `notifyAll()` | ❌ No (`final`)      | Multithreading                       |
+
+DEFAULT toString() IMPLEMENTATION:
+-Method is used to represent object in string format, when we print any object or when we call toString() by default it will call Object class toString()
+class Student {
+    int id = 101;
+    String name = "Rohit";
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s = new Student();
+        System.out.println(s);            //Student@15db9742  --> ClassName@HexadecimalHashCode
+    }
+}
+
+Internally: System.out.println(s); --> calls --> System.out.println(s.toString());
+
+OVERRIDING toString():
+
+class Student {
+    int id;
+    String name;
+    Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    @Override
+    public String toString() {
+        return "Student{id=" + id +
+                ", name='" + name + "'}";
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s =
+                new Student(101, "Rohit");
+        System.out.println(s);                 //Student{id=101, name='Rohit'} --> Represent object in readable String format.
+    }
+}
+
+Note: STRING CLASS ALREADY OVERRIDES toString()
+
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        String s = new String("Hello");
+
+        System.out.println(s);               //Hello
+    }
+}
+
+hashCode():
+---------
+-When we create object for a class, JVM will assign one unique hashcode for every object.
+-Using hashCode(),we can get hashCode() of object. If we don't want to execute object class hashcode(), then we can override hasCode()
+ method of our class.
+class Student {
+
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s = new Student();
+        System.out.println(s.hashCode()); //Returns integer hash code.
+    }
+}
+
+equals(Object obj): compares addresses, not content.
+----------------------
+class Student {
+    int id;
+    String name;
+    Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s1 =
+                new Student(101, "John");
+        Student s2 =
+                new Student(101, "John");
+        System.out.println(s1.equals(s2));   //false
+    }
+}
+
+Note:STRING equals(): String overrides equals() to compare content.
+ex:
+class Student {
+    int id;
+    String name;
+    Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Student s = (Student) obj;
+        return this.id == s.id &&
+               this.name.equals(s.name);
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s1 =
+                new Student(101, "John");
+        Student s2 =
+                new Student(101, "John");
+        System.out.println(s1.equals(s2));  //true
+    }
+}
+
+getClass(): To get Runtime instance of class (from object we will get class) ie used to get runtime class information.
+----------
+class Student {
+
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s = new Student();
+        Class<?> c = s.getClass();
+        System.out.println(c.getName()); //Student
+		//Object obj = c.newInstance();     //Second approach for creating object.
+		Object obj = c.getDeclaredConstructor().newInstance();  //Creates object dynamically.(Modern replacement for newInstance())
+        System.out.println(obj);
+    }
+}
+
+clone(): Creates duplicate object, Class must implement Cloneable.(Marker Interface) then only JVM will allow to clone the Object.
+-------
+class Student
+        implements Cloneable {
+    int id = 101;
+    @Override
+    protected Object clone()
+            throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+
+public class Test {
+    public static void main(String[] args)
+            throws Exception {
+        Student s1 = new Student();
+        Student s2 =
+                (Student) s1.clone();
+
+        System.out.println(s1.id);
+        System.out.println(s2.id);
+    }
+}
+WAYS TO CREATE OBJECT:
+1. Using new keyword
+   Student s = new Student();
+2. Using Reflection
+   Class.forName(...)
+   getDeclaredConstructor()
+   .newInstance();
+3. Using clone()
+   Student s2 = (Student)s1.clone();
+4. Using Deserialization
+
+finalize():Called by Garbage Collector before removing object.Deprecated in modern Java. Avoid using finalize().
+----------
+class Student {
+    @Override
+    protected void finalize()
+            throws Throwable {
+        System.out.println("Finalize Called");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Student s = new Student();
+        s = null;
+        System.gc();
+    }
+}
+
+wait(), notify(), notifyAll(): Used in Multithreading.
+-----------------------------
+wait() -> Current thread waits
+notify()-> Wakes one waiting thread
+notifyAll()-> Wakes all waiting threads
+
+super KEYWORD:
+-------------
+Used to access parent class:
+1. Variables
+2. Methods
+3. Constructors
+super Keyword Example
+1. super()       -> Calls Parent Constructor
+2. super.x       -> Access Parent Variable
+3. super.m1()    -> Call Parent Method
+
+class Parent {
+    int x = 10;
+    Parent() {
+        System.out.println("Parent Constructor");
+    }
+    void m1() {
+        System.out.println("Parent m1()");
+    }
+}
+
+class Child extends Parent {
+    int x = 20;
+    Child() {
+        super(); // Calls Parent Constructor
+        System.out.println("Child Constructor");
+    }
+    void m1() {
+        super.m1(); // Calls Parent Method
+        System.out.println("Child m1()");
+    }
+    void display() {
+        System.out.println("Parent x = " + super.x); // Parent variable
+        System.out.println("Child x = " + this.x);   // Child variable
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Child c = new Child();
+        System.out.println();
+        c.display();
+        System.out.println();
+        c.m1();
+    }
+}
