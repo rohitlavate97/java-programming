@@ -4210,3 +4210,382 @@ public class Test {
         c.m1();
     }
 }
+
+-Packages: packages are used to group classes and interfaces, exceptions and errors.
+----------
+ex: java.lang --> Regular Java Classes.(Default package available for all Java Classes)
+    java.io   --> Input output.
+	java.util --> Utility classes etc
+-If we want to use any pre-defined class, which is not part of java.lang package then, we have to import that class using 'import' keyword.
+User-Defined package: package statement should be first line.
+---------------------
+-In project, we will create our own package to organize project related classes and interfaces.
+-sample package name: companyname.projectname.modulename
+Note: In project, we can create 2 classes with same name in 2 different packages.
+
+-JAVA EXCEPTION HANDLING:
+------------------------
+WHAT IS EXCEPTION?:
+An Exception is an unexpected and unwanted event that occurs during program execution and disturbs the normal flow of the program.(Program terminates abnormally)
+Example:
+---------
+int a = 10/0;   // ArithmeticException
+
+Graceful Termination: Program ends successfully.
+Abnormal Termination: Program terminates in the middle due to exception.
+Purpose of Exception Handling: To achieve graceful termination of the program.
+
+Benefits:
+1. Prevent abnormal termination.
+2. Maintain normal program flow.
+3. Improve application reliability.
+4. Handle runtime problems gracefully.
+
+EXCEPTION HIERARCHY:
+
+                           Object
+                              │
+                              ▼
+                         Throwable
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+             ▼                                 ▼
+         Exception                           Error
+             │                                 │
+             │                                 ├── VirtualMachineError
+             │                                 ├── OutOfMemoryError
+             │                                 └── StackOverflowError
+             │
+      ┌──────┴──────┐
+      │             │
+      ▼             ▼
+Checked        RuntimeException(Unchecked)
+Exception          │
+      │            │
+      │            ├── ArithmeticException
+      │            ├── NullPointerException
+      │            ├── ArrayIndexOutOfBoundsException
+      │            ├── NumberFormatException
+      │            └── ClassCastException
+      │
+      ├── IOException
+      ├── SQLException
+      ├── FileNotFoundException
+      └── ClassNotFoundException
+	  
+Object
+   │
+Throwable
+   │
+   ├── Exception
+   │     ├── Checked Exception
+   │     │     ├── IOException
+   │     │     ├── SQLException
+   │     │     └── FileNotFoundException
+   │     │
+   │     └── Unchecked Exception
+   │           (RuntimeException)
+   │             ├── ArithmeticException
+   │             ├── NullPointerException
+   │             ├── NumberFormatException
+   │             └── ArrayIndexOutOfBoundsException
+   │
+   └── Error
+         ├── OutOfMemoryError
+         ├── StackOverflowError
+         └── VirtualMachineError
+
+EXCEPTION VS ERROR:
++----------------------+----------------------+
+| Exception            | Error                |
++----------------------+----------------------+
+| Can be handled       | Cannot be handled    |
+| Application issue    | JVM/System issue     |
+| Recoverable          | Generally fatal      |
++----------------------+----------------------+
+CHECKED EXCEPTIONS: Exceptions checked by compiler during compilation.Compiler forces handling.
+eg:IOException,SQLException,FileNotFoundException
+FileReader fr = new FileReader("abc.txt");     //Compile Time Error if not handled.
+
+UNCHECKED EXCEPTIONS: Exceptions checked at runtime. Compiler does not force handling.
+eg:ArithmeticException,NullPointerException,ArrayIndexOutOfBoundsException,NumberFormatException
+String s = null;
+System.out.println(s.length());   //NullPointerException
+
+EXCEPTION HANDLING KEYWORDS:
+---------------------------
+1. try
+2. catch
+3. finally
+4. throw
+5. throws
+
+try BLOCK: Used to write risky code.
+----------
+try {
+    // risky code
+}
+
+Valid Combinations:
+-------------------
+try-catch
+try-finally
+try-catch-finally
+Invalid: Only try block.
+--------
+try {                      //Compiler Error
+}
+
+catch BLOCK: Used to handle exceptions occurring in try block.
+-----------
+-If Exception occur in try block then only catch block will execute, otherwise catch block will not execute.
+try {
+    // risky code
+}
+catch(Exception e) {
+    // handling code
+}
+
+Example:
+---------
+try {
+    String s = null;
+    System.out.println(s.length());
+}
+catch(Exception e) {
+    System.out.println("Handled");
+}
+
+MULTIPLE CATCH BLOCKS:
+---------------------
+
+Example:
+---------
+try {
+    int a = 10/0;
+}
+catch(ArithmeticException e) {
+}
+catch(NullPointerException e) {
+}
+catch(Exception e) {
+}
+
+Rule:
+-----
+Child exception first.
+Parent exception later.
+
+Invalid:
+---------
+catch(Exception e) {
+}
+catch(ArithmeticException e) {
+}
+
+Compiler Error:
+---------------
+Unreachable Catch Block
+
+finally BLOCK: Used to write cleanup code. Always executes whether exception occurs or not.
+--------------
+try {
+}
+catch(Exception e) {
+}
+finally {
+    // cleanup code
+}
+
+Uses:
+1. Close files
+2. Close DB connections
+3. Release resources
+
+import java.io.FileReader;
+public class Demo {
+    public static void main(String[] args) {
+        FileReader fr = null;
+        try {
+            System.out.println("Main method started");
+            fr = new FileReader("abc.txt");               //until this program is reading file, no other program can access it. so after work finish, close link.
+            int result = fr.read();
+            System.out.println("Data = " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("Inside finally block");
+            try {
+                if (fr != null) {
+                    fr.close();      // Resource cleanup
+                    System.out.println("File closed");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Main method ended");
+    }
+}
+
+TRY WITH RESOURCES (JAVA 7): Automatically closes resources. No need to explicitly close resource.
+---------------------------
+try(FileReader fr =
+      new FileReader("abc.txt")) {
+
+}
+catch(Exception e) {
+
+}
+
+13. throw KEYWORD: Used to create and throw exception manually. ie throw exceptions programmatically.(Programmatic exception generation.)
+------------------
+throw new Exception("Message");
+
+Example:
+---------
+if(id != 100) {
+    throw new Exception(
+        "Invalid Id");
+}
+
+throws KEYWORD: Used to delegate exception handling responsibility to caller method.Compiler allows checked exception.
+--------------
+We can ignore all checked Exception.
+Ignoring Exception during Compile time but, occuring at runtime.
+void m1() throws Exception {
+
+}
+
+public static void main(String[] args) throws Exception {
+    FileReader fr = new FileReader("abc.txt");
+}
+
+Class.forName(" ");         //throws ClassNotFoundException
+
+15. throw VS throws:
+-------------------
++----------------------+----------------------+
+| throw                | throws               |
++----------------------+----------------------+
+| Used to throw        | Used to declare      |
+| one exception        | exceptions           |
+| Inside method        | Method signature     |
++----------------------+----------------------+
+
+throw new Exception();
+
+public void m1() throws Exception {
+
+}
+eg:
+public class Demo {
+    static String getName(int id) {
+        if(id == 100) {
+            return "Rohit";
+        }
+        throw new RuntimeException("Invalid Id");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getName(100));
+        System.out.println(getName(200));
+    }
+}
+
+STACK TRACE: Useful for debugging.
+------------
+Stack Trace provides information about:
+1. Exception type
+2. Line number
+3. Method call sequence
+
+Example:
+---------
+java.lang.ArithmeticException
+    at Demo.m1(Demo.java:10)
+    at Demo.main(Demo.java:20)
+
+public class Demo {
+    void m1() {
+        m2();
+    }
+    void m2() {
+        m1();
+    }
+    public static void main(String[] args) {
+        try {
+            Demo d = new Demo();
+            d.m1();
+          }catch (StackOverflowError e) {            //We can use Error e/Throwable e
+            System.out.println("StackOverflowError Handled");
+            e.printStackTrace();
+        }
+        System.out.println("Program Ended Gracefully");;
+    }
+}
+
+Why is it called StackOverflowError?
+Every method call creates a stack frame.Infinite method calls keep adding stack frames. Stack memory gets exhausted (overflowed).
+JVM throws StackOverflowError.
+
+USER DEFINED EXCEPTION: Custom exception created by programmer.Usually extends RuntimeException.
+----------------------
+A user-defined exception can extend either:
+Exception → Creates a Checked Exception
+RuntimeException → Creates an Unchecked Exception
+
+| Extend             | Type                | Handling Required? |
+| ------------------ | ------------------- | ------------------ |
+| `Exception`        | Checked Exception   | Yes                |
+| `RuntimeException` | Unchecked Exception | No                 |
+
+In enterprise applications (Spring Boot, Java backend), business validation exceptions often extend RuntimeException, while recoverable conditions may extend Exception.
+
+class NoDataFoundException extends RuntimeException {
+    public NoDataFoundException(
+        String msg) {
+        super(msg);
+    }
+}
+
+
+class Demo {
+    String getName(int id) {
+        if(id == 100)
+            return "Raju";
+        throw new NoDataFoundException(
+            "Invalid Id");
+    }
+}
+
+common Java predefined exceptions:
+| Exception                           | Type      | Cause                                            | Example                                    |
+| ----------------------------------- | --------- | ------------------------------------------------ | ------------------------------------------ |
+| **ArithmeticException**             | Unchecked | Divide by zero                                   | `int a = 10/0;`                            |
+| **NullPointerException**            | Unchecked | Accessing member on null reference               | `String s = null; s.length();`             |
+| **ArrayIndexOutOfBoundsException**  | Unchecked | Invalid array index                              | `int[] arr={1,2}; arr[5];`                 |
+| **StringIndexOutOfBoundsException** | Unchecked | Invalid string index                             | `"Java".charAt(10);`                       |
+| **NumberFormatException**           | Unchecked | Invalid string-to-number conversion              | `Integer.parseInt("abc");`                 |
+| **ClassCastException**              | Unchecked | Invalid object casting                           | `(String)new Object();`                    |
+| **IllegalArgumentException**        | Unchecked | Invalid argument passed to method                | `Thread.sleep(-100);`                      |
+| **IllegalStateException**           | Unchecked | Method called at wrong state                     | Using a closed Scanner                     |
+| **NegativeArraySizeException**      | Unchecked | Array size is negative                           | `new int[-5];`                             |
+| **ArrayStoreException**             | Unchecked | Wrong type stored in array                       | `Object[] a=new String[5]; a[0]=10;`       |
+| **InputMismatchException**          | Unchecked | Wrong input type from Scanner                    | `scanner.nextInt();` when user enters text |
+| **NoSuchElementException**          | Unchecked | Element not found                                | `Iterator.next()` when no elements exist   |
+| **UnsupportedOperationException**   | Unchecked | Unsupported operation                            | Adding to immutable list                   |
+| **ConcurrentModificationException** | Unchecked | Collection modified during iteration             | Modify List inside for-each loop           |
+| **ClassNotFoundException**          | Checked   | Class not found at runtime                       | `Class.forName("ABC");`                    |
+| **FileNotFoundException**           | Checked   | File does not exist                              | `new FileReader("abc.txt");`               |
+| **IOException**                     | Checked   | Input/Output operation failure                   | File read/write issues                     |
+| **SQLException**                    | Checked   | Database-related problem                         | JDBC operations                            |
+| **InterruptedException**            | Checked   | Thread interrupted during sleep/wait             | `Thread.sleep(1000);`                      |
+| **ParseException**                  | Checked   | Invalid parsing of date/string                   | `SimpleDateFormat.parse()`                 |
+| **CloneNotSupportedException**      | Checked   | Object cloning not supported                     | Calling `clone()` without `Cloneable`      |
+| **InstantiationException**          | Checked   | Cannot create object of abstract class/interface | Reflection APIs                            |
+| **MalformedURLException**           | Checked   | Invalid URL format                               | `new URL("htp://abc");`                    |
+
+Method Stack:
+------------
