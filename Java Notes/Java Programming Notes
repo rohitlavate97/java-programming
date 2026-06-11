@@ -5283,7 +5283,7 @@ public class Demo {
     }
 }
 
-DELETE FILE:
+DELETE FILE: To delete file or directory.
 
 import java.io.File;
 import java.io.IOException;
@@ -5299,21 +5299,17 @@ public class Demo {
 Method:
 boolean delete()  --> true  -> Deleted Successfully, false -> File Not Found / Unable To Deletell
 
-----------------------------------------------------------------------------------------
-JAVA I/O STREAMS
-----------------------------------------------------------------------------------------
+JAVA I/O STREAMS: To perform Read and Write operations Java uses Streams.
+----------------
+-Using I/O sream, we can establish link between Java Program and File(Physical File)
+Java Program  <------ Stream ------>  Physical File      --> stream is pipe to transfer data.
+Stream: A communication channel between Java Program and File.
+        2 types: 
+		ByteStream:      To read/write binary data(images, audios, videos, pdfs etc) 
+		CharacterStream: To read/write character data (ie text files).
 
-To perform Read and Write operations Java uses Streams.
-
-Java Program  <------ Stream ------>  Physical File
-
-Stream:
-A communication channel between Java Program and File.
-
-----------------------------------------------------------------------------------------
 TYPES OF STREAMS
-----------------------------------------------------------------------------------------
-
+-----------------
                          I/O STREAMS
                               |
                --------------------------------
@@ -5325,12 +5321,9 @@ TYPES OF STREAMS
  Input Stream    Output Stream       Reader          Writer
 (Read Binary)   (Write Binary)   (Read Text)    (Write Text)
 
-----------------------------------------------------------------------------------------
 BYTE STREAM
-----------------------------------------------------------------------------------------
-
+-----------
 Used for Binary Data:
-
 Examples:
 - Images
 - Audio Files
@@ -5338,105 +5331,21 @@ Examples:
 - PDF Files
 
 Classes:
-
-1. InputStream
-2. OutputStream
+1. InputStream:  Input Stream related classes.
+2. OutputStream: Output Stream related classes.
 
 Examples:
-
 FileInputStream
 FileOutputStream
 
-----------------------------------------------------------------------------------------
-CHARACTER STREAM
-----------------------------------------------------------------------------------------
-
+CHARACTER STREAM:
+-----------------
 Used for Text Data.
 
 Classes:
-
 1. Reader
 2. Writer
 
 Examples:
-
 FileReader
 FileWriter
-
-----------------------------------------------------------------------------------------
-FILE VS DIRECTORY CHECK
-----------------------------------------------------------------------------------------
-
-import java.io.File;
-
-public class Demo {
-
-    public static void main(String[] args) {
-
-        File f = new File("data");
-
-        if(f.isFile()) {
-            System.out.println("It is a File");
-        }
-
-        if(f.isDirectory()) {
-            System.out.println("It is a Directory");
-        }
-    }
-}
-
-----------------------------------------------------------------------------------------
-DISPLAY FILES AND DIRECTORIES SEPARATELY
-----------------------------------------------------------------------------------------
-
-import java.io.File;
-
-public class Demo {
-
-    public static void main(String[] args) {
-
-        File f = new File("C:\\Users\\Admin\\Desktop");
-
-        String[] arr = f.list();
-
-        for(String name : arr) {
-
-            File temp = new File(f, name);
-
-            if(temp.isFile()) {
-
-                System.out.println("File : " + name);
-
-            } else if(temp.isDirectory()) {
-
-                System.out.println("Directory : " + name);
-            }
-        }
-    }
-}
-
-----------------------------------------------------------------------------------------
-SUMMARY
-----------------------------------------------------------------------------------------
-
-File Class Methods:
-
-createNewFile()  -> Create File
-mkdir()          -> Create Directory
-delete()         -> Delete File/Directory
-list()           -> Get Directory Contents
-isFile()         -> Check File
-isDirectory()    -> Check Directory
-
-Byte Stream:
-InputStream
-OutputStream
-
-Character Stream:
-Reader
-Writer
-
-Binary Data  -> Byte Stream
-Text Data    -> Character Stream
-
-****************************************************************************************/
