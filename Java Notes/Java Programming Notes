@@ -4900,138 +4900,543 @@ Types:
 
 WIDENING (UP CASTING): Converting lower data type into higher data type.
 ----------------------
-
 Features:
----------
 1. Automatic Conversion
 2. No Explicit Cast Required
 3. No Data Loss
 
-Example:
----------
 byte b = 20;
-
 int i = b;
+System.out.println(i);   //20
 
-System.out.println(i);
+Widening Flow:  byte → short → int → long → float → double
 
-Output:
--------
-20
-
-More Examples:
---------------
-int i = 100;
-
-long l = i;
-
-float f = l;
-
-double d = f;
-
-
-Widening Flow:
---------------
-byte → short → int → long → float → double
-
-
-=========================================================
-NARROWING (DOWN CASTING)
----------------------------------------------------------
-Definition:
-Converting higher data type into lower data type.
-
+NARROWING (DOWN CASTING): Converting higher data type into lower data type.
+------------------------
 Features:
----------
 1. Explicit Cast Required
 2. Manual Conversion
 3. Data Loss Possible
 
-Example:
----------
 double d = 100.75;
+int i = (int)d;          //Need to specify typecasting manually/explicitly, otherwise program can't compile.
+System.out.println(i); //100  --> Decimal value lost.
 
-int i = (int)d;
+Without Cast:  short s = l;      // Compile Time Error
+Narrowing Flow:   double → float → long → int → short → byte
 
-System.out.println(i);
-
-Output:
--------
-100
-
-Decimal value lost.
-
-Example:
----------
-long l = 100;
-
-short s = (short) l;
-
-Without Cast:
--------------
-short s = l;      // Compile Time Error
-
-
-Narrowing Flow:
----------------
-double → float → long → int → short → byte
-
-
-=========================================================
-DATA LOSS EXAMPLE
----------------------------------------------------------
-
+DATA LOSS EXAMPLE:
+-----------------
 int i = 130;
-
 byte b = (byte)i;
+System.out.println(b); //-126   --> Byte range = -128 to 127 --> Overflow occurs.
 
-System.out.println(b);
-
-Output:
--------
--126
-
-Reason:
--------
-Byte range = -128 to 127
-
-Overflow occurs.
-
-
-=========================================================
-AUTO BOXING & AUTO UNBOXING EXAMPLE
----------------------------------------------------------
-
+AUTO BOXING & AUTO UNBOXING EXAMPLE:
+-----------------------------------
 Integer i1 = 10;      // Auto Boxing
-
-System.out.println(i1);
-
+System.out.println(i1);  //10
 int x = i1;           // Auto Unboxing
+System.out.println(x);  //10
 
-System.out.println(x);
+-Working with String Type:
+------------------------
+
+COMMAND LINE ARGUMENTS: Command Line Arguments are values passed while running a Java program from the command prompt.
+----------------------
+public class Calculator {
+
+    public static void main(String[] args) {
+
+        String s1 = args[0];             //10
+        String s2 = args[1];             //20
+        System.out.println(s1 + s2);     //1020
+    }
+}
+
+Command line arguments are always received as Strings. Therefore String concatenation occurs.
+
+-To perform arithmetic operations, convert String into int.   --> int variable = Integer.parseInt(String);  -> static method in Integer class.
+
+        int i = Integer.parseInt(s1);
+        int j = Integer.parseInt(s2);
+		
+NUMBER FORMAT EXCEPTION: If the String does not contain a valid number, parseInt() throws NumberFormatException.
+                         String s = "Hello";
+                         int i = Integer.parseInt(s);   --> Exception in thread "main" java.lang.NumberFormatException
+                                                            Type: Unchecked Exception(Runtime Exception)
+
+STRING TO OTHER PRIMITIVE TYPES:
+
+String s1 = "10";
+byte b = Byte.parseByte(s1);
+short s = Short.parseShort(s1);
+long l = Long.parseLong(s1);
+float f = Float.parseFloat(s1);
+double d = Double.parseDouble(s1);
+boolean flag = Boolean.parseBoolean("true");
+
+CONVERTING PRIMITIVE TO STRING: String.valueOf() converts any primitive value into String.
+String.valueOf(value);
+Ex:
+int i = 10;
+int j = 20;
+
+String s1 = String.valueOf(i);
+String s2 = String.valueOf(j);
+
+System.out.println(s1 + s2);  //1020
+
+valueOf() METHODS:
+------------------
+String.valueOf(10);        // "10"
+String.valueOf(10.5);      // "10.5"
+String.valueOf(true);      // "true"
+String.valueOf('A');       // "A"
+
+-Type Casting with respect to Reference Types: Parent class object can be converted to child class
+---------------------------------------------
+clone() method belongs to Object class.
+
+Important:
+1. clone() returns Object type.
+2. Class must implement Cloneable interface.
+3. clone() throws CloneNotSupportedException.
+
+class Demo implements Cloneable {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Demo d = new Demo();
+        Object obj = d.clone();      // Upcasting   --> Child object stored in Parent reference.
+        Demo d1 = (Demo)obj;         // Downcasting --> Parent reference converted back to Child reference.
+        System.out.println("Clone Success");
+    }
+}
+
+Invalid Downcasting:
+Object obj = new Object();
+Demo d = (Demo)obj;         //ClassCastException
+
+Programs:
+--------
+class Demo {
+    // Static Block
+    static {
+        System.out.println("I am Static Block (SB)");
+    }
+    // Instance / Non-Static Block
+    {
+        System.out.println("I am Non-Static Block (NSB)");
+    }
+    // Constructor
+    Demo() {
+        System.out.println("I am Constructor");
+    }
+    void test() {
+        System.out.println("We are best friends");
+    }
+    public static void main(String[] args) {
+        Demo d = new Demo();
+        System.out.println("I am from main()");
+        d.test();
+    }
+}
+
+Output
+I am Static Block (SB)
+I am Non-Static Block (NSB)
+I am Constructor
+I am from main()
+We are best friends
+-------------
+class Demo {
+    int i;
+    static void test1(Demo d1) {
+        d1.i = 20;
+    }
+
+    public static void main(String[] args) {
+        Demo d1 = new Demo();
+        d1.i = 30;
+        System.out.println("A : " + d1.i);
+        Demo d2 = new Demo();
+        test1(d1);
+        System.out.println("B : " + d1.i);
+        test1(d2);
+        System.out.println("C : " + d1.i);
+    }
+}
+
+Output: Objects are passed by value of reference.
+A : 30
+B : 20
+C : 20
+----------------
+class E {
+
+    E(int i) {
+
+        System.out.println("Constructor Started");
+    }
+
+    E(int i, int j) {
+
+        this(i);
+
+        System.out.println("Yes, Started");
+    }
+
+    public static void main(String[] args) {
+
+        E obj = new E(10, 100);
+    }
+}
 
 Output:
--------
-10
-10
+Constructor Started
+Yes, Started
+---------------------
+class T {
+    T() {
+        System.out.println("T()");
+    }
+    T(int i) {
+        T t1 = new T();
+        System.out.println("T(int)");
+    }
+    public static void main(String[] args) {
+        T obj1 = new T();
+        System.out.println("-------------");
+        T obj2 = new T(10);
+    }
+}
 
+Output: CONSTRUCTOR CALLING CONSTRUCTOR
+T()
 
+T()
+T(int)
+----------------------
+class Demo {
+    int i;
+    static Demo test() {
+        Demo t1 = new Demo();
+        return t1;
+    }
+    public static void main(String[] args) {
+        Demo obj = test();
+        System.out.println(obj.i);
+    }
+}
 
+Output: RETURNING OBJECTS
+0
+---------------------
+class R {
+    public static void main(String[] args) {
+        try {
+            System.out.println(1);
+            String s = null;
+            System.out.println(s.length());
+            System.out.println(2);
+        } catch (NullPointerException ex) {
+            System.out.println(4);
+            System.out.println(5);
+        }
+        System.out.println(6);
+    }
+}
+Output:
+1
+4
+5
+6
+--------------------
+class R {                         //RETURN INSIDE TRY & FINALLY
+    public static int test() {
+        try {
+            return 20;           //Even if return executes, finally block executes before method returns.
+        } finally {
+            System.out.println("Inside Finally");
+        }
+    }
+    public static void main(String[] args) {
+        System.out.println(test());
+    }
+}
 
-=========================================================
-MEMORY SHORTCUT
----------------------------------------------------------
+Output: 
+Inside Finally
+20
+-----------------------
+class InvalidAgeException extends Exception {        //CUSTOM EXCEPTION FROM CONSTRUCTOR
+    InvalidAgeException(String msg) {
+        super(msg);
+    }
+}
 
-Primitive → Object   = Boxing
+class Person {
+    Person(int age)
+            throws InvalidAgeException {
+        if(age < 18) {
+            throw new InvalidAgeException(
+                    "Age must be 18+");
+        }
+    }
+}
 
-Object → Primitive   = Unboxing
+File Handling: File Handling is used to perform operations on files and directories.
+---------------
+Common File Operations:
+1. Create a File
+2. Write Data into File
+3. Read Data from File
+4. Delete File
+5. Create Directory
+6. Read Directory Contents
 
-Automatic Conversion = Auto Boxing / Auto Unboxing
+Java provides: java.io.File class   --> Using this class, we can create directories and File also.
+Package: java.io  --> Contains set of classes and interfaces to perform input and output operations.
 
-Lower → Higher       = Widening
+Import Statements:
+import java.io.File;
+import java.io.IOException;
 
-Higher → Lower       = Narrowing
+FILE CLASS:
+-----------
+File f = new File("abc.txt");
 
-Manual Cast          = Narrowing
+Here:
+File      -> Predefined Java Class
+f         -> Reference Variable
+abc.txt   -> Physical File Name
 
-=========================================================
+CREATE FILE:
+import java.io.File;
+import java.io.IOException;
+
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        File f = new File("abc.txt");                               //Logical file created.
+        boolean status = f.createNewFile();                         //with help of File object, new file gets created.
+        System.out.println(status);
+    }
+}
+
+Method:
+boolean createNewFile()    --> true  -> File created, false -> File already exists
+
+CREATE DIRECTORY:
+File f = new File("myFolder");
+boolean status = f.mkdir();
+System.out.println(status);
+
+Method:
+boolean mkdir() --> true  -> Directory created, false -> Directory already exists
+
+CREATE FILE INSIDE DIRECTORY:
+File dir = new File("data");
+dir.mkdir();
+File file = new File("data/test.txt");
+file.createNewFile();
+
+| Method            | Return Type | Purpose                                                                         | Example                                                 |
+| ----------------- | ----------- | ------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `createNewFile()` | `boolean`   | Creates a new empty file. Returns `true` if file is created, otherwise `false`. | `File f = new File("abc.txt");`<br>`f.createNewFile();` |
+| `mkdir()`         | `boolean`   | Creates a new directory (folder). Returns `true` if created successfully.       | `File f = new File("data");`<br>`f.mkdir();`            |
+| `delete()`        | `boolean`   | Deletes an existing file or empty directory.                                    | `File f = new File("abc.txt");`<br>`f.delete();`        |
+| `list()`          | `String[]`  | Returns the names of all files and directories inside a directory.              | `String[] arr = f.list();`                              |
+| `isFile()`        | `boolean`   | Checks whether the given path represents a file.                                | `if(f.isFile()) { ... }`                                |
+| `isDirectory()`   | `boolean`   | Checks whether the given path represents a directory.                           | `if(f.isDirectory()) { ... }`                           |
+
+READ DIRECTORY CONTENTS:
+File f = new File("data");
+String[] arr = f.list();
+for(String name : arr) {
+    System.out.println(name);
+}
+
+Method:
+String[] list()
+
+ASSIGNMENT:
+----------
+Requirement: Display
+
+File : abc.txt
+Directory : data
+
+Program:
+import java.io.File;
+import java.io.IOException;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        File f = new File("data");
+        String[] arr = f.list();
+        for(String name : arr) {
+            File temp = new File(f, name);
+            if(temp.isFile()) {
+                System.out.println("File : " + name);
+            }
+            else if(temp.isDirectory()) {
+                System.out.println("Directory : " + name);
+            }
+        }
+    }
+}
+
+DELETE FILE:
+
+import java.io.File;
+import java.io.IOException;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        File f = new File("abc.txt");
+        f.createNewFile();
+        boolean status = f.delete();
+        System.out.println(status);
+    }
+}
+
+Method:
+boolean delete()  --> true  -> Deleted Successfully, false -> File Not Found / Unable To Deletell
+
+----------------------------------------------------------------------------------------
+JAVA I/O STREAMS
+----------------------------------------------------------------------------------------
+
+To perform Read and Write operations Java uses Streams.
+
+Java Program  <------ Stream ------>  Physical File
+
+Stream:
+A communication channel between Java Program and File.
+
+----------------------------------------------------------------------------------------
+TYPES OF STREAMS
+----------------------------------------------------------------------------------------
+
+                         I/O STREAMS
+                              |
+               --------------------------------
+               |                              |
+          BYTE STREAM                  CHARACTER STREAM
+               |                              |
+      ------------------              ------------------
+      |                |              |                |
+ Input Stream    Output Stream       Reader          Writer
+(Read Binary)   (Write Binary)   (Read Text)    (Write Text)
+
+----------------------------------------------------------------------------------------
+BYTE STREAM
+----------------------------------------------------------------------------------------
+
+Used for Binary Data:
+
+Examples:
+- Images
+- Audio Files
+- Video Files
+- PDF Files
+
+Classes:
+
+1. InputStream
+2. OutputStream
+
+Examples:
+
+FileInputStream
+FileOutputStream
+
+----------------------------------------------------------------------------------------
+CHARACTER STREAM
+----------------------------------------------------------------------------------------
+
+Used for Text Data.
+
+Classes:
+
+1. Reader
+2. Writer
+
+Examples:
+
+FileReader
+FileWriter
+
+----------------------------------------------------------------------------------------
+FILE VS DIRECTORY CHECK
+----------------------------------------------------------------------------------------
+
+import java.io.File;
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        File f = new File("data");
+
+        if(f.isFile()) {
+            System.out.println("It is a File");
+        }
+
+        if(f.isDirectory()) {
+            System.out.println("It is a Directory");
+        }
+    }
+}
+
+----------------------------------------------------------------------------------------
+DISPLAY FILES AND DIRECTORIES SEPARATELY
+----------------------------------------------------------------------------------------
+
+import java.io.File;
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        File f = new File("C:\\Users\\Admin\\Desktop");
+
+        String[] arr = f.list();
+
+        for(String name : arr) {
+
+            File temp = new File(f, name);
+
+            if(temp.isFile()) {
+
+                System.out.println("File : " + name);
+
+            } else if(temp.isDirectory()) {
+
+                System.out.println("Directory : " + name);
+            }
+        }
+    }
+}
+
+----------------------------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------------------------
+
+File Class Methods:
+
+createNewFile()  -> Create File
+mkdir()          -> Create Directory
+delete()         -> Delete File/Directory
+list()           -> Get Directory Contents
+isFile()         -> Check File
+isDirectory()    -> Check Directory
+
+Byte Stream:
+InputStream
+OutputStream
+
+Character Stream:
+Reader
+Writer
+
+Binary Data  -> Byte Stream
+Text Data    -> Character Stream
+
+****************************************************************************************/
