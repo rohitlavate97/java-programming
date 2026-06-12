@@ -5349,3 +5349,151 @@ Classes:
 Examples:
 FileReader
 FileWriter
+
+FILEWRITER: FileWriter is used to write character data into a file.
+----------
+Package: import java.io.*;
+Syntax: FileWriter fw = new FileWriter("abc.txt");
+
+If file is available: -> Opens file and writes data.
+If file is not available: -> Creates file and writes data.
+
+import java.io.*;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        FileWriter fw = new FileWriter("abc.txt");
+        fw.write('A');
+		fw.write("\n");
+		fw.write("Hi Good Evening");               --> overloaded method, it can write string.
+        fw.flush();      // Transfers data from buffer to file, mandatory after write() operation. --> Sends data forcefully to file.
+        fw.close();      // Closes stream
+    }
+}
+
+Output in File:
+A
+
+SPECIAL CHARACTERS
+
+'\n'  -> New Line
+'\t'  -> Tab Space
+
+Example: fw.write("Hi Good Morning");
+         fw.write("\n");
+         fw.write("How are you?");
+
+FILEWRITER IMPORTANT METHODS:
+| Method      | Purpose                                    |
+|-------------|--------------------------------------------|
+| write()     | Writes data into file                      |
+| flush()     | Sends buffered data into file immediately  |
+| close()     | Closes stream and releases resources       |
+
+FILEREADER: FileReader is used to read character data from a file.
+----------
+Package: import java.io.*;
+Syntax: FileReader fr = new FileReader("data.txt");
+
+import java.io.*;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        FileReader fr = new FileReader("data.txt");
+        int i = fr.read();               --> read() returns ASCII / Unicode value of character.
+        System.out.println(i);
+        System.out.println((char)i);
+        fr.close();
+    }
+}
+
+Suppose file contains:
+H
+
+Output:
+72
+H
+
+READ ALL CHARACTERS: With FileWriter, we will read character by character. Performance wise slow. When file is empty it will give you -1 or when
+                     it reaches at end of file.
+
+import java.io.*;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        FileReader fr = new FileReader("data.txt");
+        int i;
+        while((i = fr.read()) != -1) {
+            System.out.print((char)i);
+        }
+        fr.close();                      //Remove/close connection, so that other programs can use same file object.
+    }
+}
+
+Output: Reads complete file character by character.(Slow performance) --> For large files, Performance becomes slow. --> Use BufferedReader.
+
+IMPORTANT NOTE:
+read() Method Return Values:
+Character Available: read() returns ASCII/Unicode value.
+End Of File (EOF): read() returns -1.
+
+BUFFEREDREADER: BufferedReader reads data efficiently using an internal buffer.
+--------------
+Java Program  ───►  BufferedReader  ───►  FileReader  ───►  File
+                     (Fast Read)         (Character Stream)
+
+READ SINGLE LINE USING BUFFEREDREADER:
+
+import java.io.*;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        FileReader fr = new FileReader("data.txt");
+        BufferedReader br = new BufferedReader(fr);
+        String line = br.readLine();
+        System.out.println(line);
+        br.close();
+    }
+}
+
+Output: Entire line is read at once.
+
+READ COMPLETE FILE USING BUFFEREDREADER:
+---------------------------------------
+
+import java.io.*;
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        FileReader fr = new FileReader("data.txt");
+        BufferedReader br = new BufferedReader(fr);
+        String line;
+        while((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
+        br.close();
+    }
+}
+
+Alternate:
+       String line;
+        while((line!= null) {
+            System.out.println(line);
+			line = br.readLine())
+        }
+
+BUFFEREDREADER IMPORTANT METHODS:
+---------------------------------
+| Method       | Purpose                                      |
+|--------------|----------------------------------------------|
+| readLine()   | Reads one complete line from file            |
+| close()      | Closes stream                                |
+
+IMPORTANT NOTE: 
+BufferedReader internally uses a buffer.
+Advantages:
+1. Faster than FileReader.
+2. Reads complete line at once.
+3. Better performance for large files.
+
+| FileReader                         | BufferedReader                     |
+|-----------------------------------|------------------------------------|
+| Reads character by character      | Reads complete line               |
+| Slower                            | Faster                            |
+| Suitable for small files          | Suitable for large files          |
+| Uses read()                       | Uses readLine()                   |
