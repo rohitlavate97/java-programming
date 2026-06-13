@@ -5497,3 +5497,216 @@ Advantages:
 | Slower                            | Faster                            |
 | Suitable for small files          | Suitable for large files          |
 | Uses read()                       | Uses readLine()                   |
+
+PRINTWRITER CLASS:
+-----------------
+PrintWriter is used to write character data to: 1) Console   2) File
+
+Package: import java.io.PrintWriter;
+
+Important Methods:
+print()      -> Prints data                             --> ie Internally using PrintWriter.
+println()    -> Prints data with new line
+write()      -> Writes character/string data
+flush()      -> Forces data to be written immediately
+close()      -> Closes the stream
+
+Writing to Console:
+
+import java.io.PrintWriter;
+public class Demo {
+    public static void main(String[] args) {
+        PrintWriter pw = new PrintWriter(System.out);
+        pw.print("Hi");
+        pw.println(" Hello");
+
+        pw.flush();
+        pw.close();
+    }
+}
+
+Writing to File:
+
+import java.io.PrintWriter;
+import java.io.IOException;
+
+public class Demo {
+    public static void main(String[] args) throws IOException {
+        PrintWriter pw = new PrintWriter("data.txt");
+        pw.write("This is my file data");
+
+        pw.flush();
+        pw.close();
+    }
+}
+
+Notes:
+1) PrintWriter can write to console and file.
+2) There is PrintWriter class.
+3) There is NO PrintReader class.
+
+-SERIALIZATION AND DESERIALIZATION:
+----------------------------------
+Problem:
+--------
+Objects are stored in JVM memory.
+
+Program Ends
+     ↓
+JVM Shutdown
+     ↓
+Heap Memory Cleared
+     ↓
+Object Lost
+
+To store object data permanently we use Serialization.
+
+SERIALIZATION: Converting Java Object into Byte Stream and storing it into a file. (as bits and bytes)
+-------------
+Java Object --> ObjectOutputStream --> FileOutputStream --> File
+
+DESERIALIZATION: Converting stored byte stream back into Java Object.
+---------------
+File --> FileInputStream --> ObjectInputStream --> Java Object
+
+SERIALIZABLE INTERFACE(Marker Interface): To perform Serialization and Deserialization, the class must implement: java.io.Serializable
+-----------------------------------------
+import java.io.*;
+
+class Person implements Serializable {
+    int id;
+    String name;
+}
+
+public class SerializationDemo {
+    public static void main(String[] args) throws Exception {
+        Person p = new Person();
+        p.id = 100;
+        p.name = "Raju";
+        FileOutputStream fos =
+                new FileOutputStream("person.ser");
+        ObjectOutputStream oos =
+                new ObjectOutputStream(fos);
+        oos.writeObject(p);
+        oos.flush();
+        oos.close();
+        System.out.println("Serialization Completed");
+    }
+}
+
+Created File: person.ser
+
+SERIALIZATION HIERARCHY: Java Object --> ObjectOutputStream --> FileOutputStream --> person.ser
+
+DESERIALIZATION PROGRAM:
+-----------------------
+import java.io.*;
+class Person implements Serializable {
+    int id;
+    String name;
+}
+
+public class DeserializationDemo {
+    public static void main(String[] args) throws Exception {
+        FileInputStream fis =
+                new FileInputStream("person.ser");
+        ObjectInputStream ois =
+                new ObjectInputStream(fis);
+        Object obj = ois.readObject();
+        Person p = (Person) obj;      // Narrowing
+        System.out.println("Id   : " + p.id);
+        System.out.println("Name : " + p.name);
+        ois.close();
+        System.out.println("Deserialization Completed");
+    }
+}
+
+DESERIALIZATION HIERARCHY: person.ser --> FileInputStream --> ObjectInputStream --> Java Object
+
+Note:1. When we deserialize JVM will compare serialized file UID and .class file UID. If both ids are matching then only deserialization
+        will happen, otherwise it will throw InvalidClassException. To overcome this problem, we can write our own SerialVersionUID, then
+		JVM will not assign that.
+     2. In real world, we do not use Serialization and Deserialization , we go for database as it is not secured.
+	 3. Static variables are not part of an object's state, so they do not participate in serialization. If you need to persist a static value, 
+	    you must write it separately (e.g., to a file, database, or custom serialization logic).
+	 
+SERIAL VERSION UID:
+------------------
+During Deserialization, JVM compares:
+
+1) SerialVersionUID stored inside serialized file (.ser)
+2) SerialVersionUID of current .class file
+
+If both UIDs match: ✓ Deserialization succeeds
+If UIDs do not match: ✗ java.io.InvalidClassException is thrown
+When class structure changes after serialization (add/remove fields, methods, etc.), JVM may generate a different UID. To avoid this problem, explicitly define your own UID:
+
+import java.io.Serializable;
+class Person implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    int id;
+    String name;
+}
+Benefits:
+1) Prevents automatic UID generation by JVM.
+2) Maintains version compatibility.
+3) Avoids InvalidClassException during deserialization.
+In real projects, it is considered a best practice to explicitly declare serialVersionUID in every serializable class.
+
+
+TRANSIENT KEYWORD IN SERIALIZATION: transient keyword is used to exclude a variable from the serialization process.
+----------------------------------
+Problem: Sometimes a class contains sensitive information such as:
+1) Password
+2) OTP
+3) Credit Card Number
+4) Bank Details
+5) Security Tokens
+We do NOT want these fields to be stored in the serialized file.
+
+Solution: Use the transient keyword. Transient variables do not participate in serialization.
+
+Syntax:  transient datatype variableName;
+
+import java.io.Serializable;
+public class Person implements Serializable {
+    private static final long serialVersionUID = 100L;
+    int id;
+    String name;
+    String email;
+
+    transient String password;
+}
+
+USAGE:
+
+Person p = new Person();
+p.id = 100;
+p.name = "Raju";
+p.email = "raju@gmail.com";
+p.password = "raju@123";
+
+If the above object is serialized:
+Serialized: ✓ id  ✓ name  ✓ email
+Not Serialized: ✗ password
+
+Before Serialization:
+id       = 100
+name     = Raju
+email    = raju@gmail.com
+password = raju@123
+
+After Deserialization:
+id       = 100
+name     = Raju
+email    = raju@gmail.com
+password = null               //transient variable data is not stored in the serialized file. For reference variables:String/Object -> null(default value)
+                              //After deserialization, transient variables get default values.
+							  //serialVersionUID and transient are commonly used together
+| Variable Type      | Serialized? |
+| ------------------ | ----------- |
+| Instance Variable  | ✅ Yes       |
+| Static Variable    | ❌ No        |
+| Transient Variable | ❌ No        |
+| Static + Transient | ❌ No        |
