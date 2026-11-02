@@ -5710,3 +5710,550 @@ password = null               //transient variable data is not stored in the ser
 | Static Variable    | ❌ No        |
 | Transient Variable | ❌ No        |
 | Static + Transient | ❌ No        |
+
+
+# Session 58 – Java Multithreading
+
+## 1. Introduction to Multithreading
+
+### What is a Task?
+
+A task is a unit of work that needs to be performed by a computer program.
+
+Examples:
+- Sending an email.
+- Generating a report.
+- Processing customer transactions.
+- Fetching data from a database.
+- Uploading a file.
+
+### Single Tasking
+
+Performing only one task at a time is called **single tasking**.
+
+Example:
+
+Suppose we have three tasks:
+1. Explaining a topic.
+2. Creating notes.
+3. Answering questions.
+
+In single tasking, the program completes one task before starting the next task.
+
+### Multitasking
+
+Performing multiple tasks during the same period is called **multitasking**.
+
+Examples:
+- Listening to music while browsing.
+- Downloading a file while watching a video.
+- Sending emails while processing other requests.
+
+Multitasking allows a computer system to handle multiple activities efficiently.
+
+## 2. What is Multithreading?
+
+**Multithreading is the ability of a program to execute multiple threads concurrently within the same process.**
+
+A thread is the smallest unit of execution that can be scheduled by the operating system or runtime.
+
+The main objective of multithreading is to execute multiple independent tasks efficiently, improving application responsiveness and resource utilization.
+
+### Real-world example: Banking application
+
+Suppose a banking application has 1,00,000 customers.
+
+Multiple customers may perform operations simultaneously:
+- Customer A checks account balance.
+- Customer B transfers money.
+- Customer C downloads a statement.
+- Customer D checks transaction history.
+
+Instead of making every request wait for the previous request to finish, the application can process multiple requests concurrently using threads.
+
+**Important:** Modern applications commonly use thread pools rather than creating a brand-new thread for every customer request.
+
+## 3. Process-Based vs Thread-Based Multitasking
+
+Multitasking can be achieved in two major ways.
+
+### A. Process-Based Multitasking
+
+Executing multiple independent processes concurrently is called process-based multitasking.
+
+Examples:
+- Running Google Chrome.
+- Running IntelliJ IDEA.
+- Running a database server.
+- Running a music player.
+
+Each process has its own memory space and resources.
+
+### B. Thread-Based Multitasking
+
+Executing multiple threads within a single process concurrently is called thread-based multitasking.
+
+Example:
+
+A Java application can execute multiple threads:
+
+- Thread 1: Fetch customer information.
+- Thread 2: Generate reports.
+- Thread 3: Send notifications.
+
+All these threads belong to the same Java process and share its heap memory.
+
+### Difference between Process and Thread
+
+| Process | Thread |
+|---|---|
+| Independent execution unit | Execution unit within a process |
+| Has its own memory space | Shares process memory |
+| Generally more resource-intensive | Generally lightweight |
+| Communication requires IPC mechanisms | Threads can communicate through shared memory |
+| Has independent resources | Shares many process resources |
+
+**Note:** Each thread has its own stack, program counter and execution state, even though threads share the process heap.
+
+## 4. How to Implement Multithreading in Java
+
+Java supports multithreading through the `java.lang.Thread` class and the `java.lang.Runnable` interface.
+
+There are two traditional ways to create a thread:
+
+1. By extending the Thread class.
+2. By implementing the Runnable interface.
+
+### Approach 1: Extending the Thread Class
+
+Steps:
+
+1. Create a class that extends `Thread`.
+2. Override the `run()` method.
+3. Write the task logic inside `run()`.
+4. Create an object of the class.
+5. Call `start()` to start a new thread.
+
+Example:
+
+```java
+class Demo extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println(
+            "Child thread is running"
+        );
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        d.start();
+
+        System.out.println(
+            "Main thread completed"
+        );
+    }
+}
+```
+
+Possible output:
+
+```text
+Main thread completed
+Child thread is running
+```
+
+The output order is not guaranteed. The child thread might print first.
+
+### Understanding the Execution
+
+- JVM starts the main thread automatically when the Java program starts.
+- The main thread creates the `Demo` object.
+- Calling `d.start()` requests the JVM to start a new thread.
+- The new thread executes the `run()` method.
+- Meanwhile, the main thread continues its execution.
+
+Both threads can execute concurrently.
+
+### Important: start() vs run()
+
+**start():**
+- Starts a new thread.
+- JVM schedules the new thread.
+- The new thread executes the `run()` method.
+
+**run():**
+- Contains the task logic.
+- Calling it directly does not create a new thread.
+- It executes like a normal method on the calling thread.
+
+Example:
+
+```java
+Demo d = new Demo();
+
+d.start(); // Executes using a new thread
+
+d.run();   // Executes like a normal method
+```
+
+Remember: Always call `start()` when you want a new thread.
+
+## 5. Understanding the Main Thread
+
+Every Java application starts with a main thread.
+
+The JVM creates this thread and executes the `main()` method.
+
+We can access the currently executing thread using:
+
+```java
+Thread.currentThread()
+```
+
+Example:
+
+```java
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Thread t = Thread.currentThread();
+
+        System.out.println(t);
+        System.out.println(t.getName());
+    }
+}
+```
+
+Typical output:
+
+```text
+Thread[main,5,main]
+main
+```
+
+The output represents:
+- Thread name: main
+- Priority: 5
+- Thread group: main
+
+### Important Methods
+
+```java
+Thread.currentThread()
+```
+
+Returns the currently executing thread.
+
+```java
+getName()
+```
+
+Returns the thread name.
+
+```java
+setName("MyThread")
+```
+
+Changes the thread name.
+
+```java
+getPriority()
+```
+
+Returns thread priority.
+
+```java
+setPriority(8)
+```
+
+Sets thread priority.
+
+## 6. Thread Class – Internal Structure
+
+The `Thread` class belongs to the `java.lang` package.
+
+Conceptually:
+
+```java
+public class Thread extends Object
+        implements Runnable {
+    // Thread implementation
+}
+```
+
+Important points:
+
+- Thread is a predefined class in Java.
+- It extends the Object class.
+- It implements the Runnable interface.
+- It provides methods to create, start and manage threads.
+- Its `run()` method represents the task executed by the thread.
+
+## 7. Important Thread Constructors
+
+Some commonly used constructors are:
+
+```java
+Thread()
+```
+
+Creates a thread with a default name.
+
+```java
+Thread(String name)
+```
+
+Creates a thread with a specified name.
+
+```java
+Thread(Runnable target)
+```
+
+Creates a thread that executes the supplied Runnable task.
+
+```java
+Thread(Runnable target, String name)
+```
+
+Creates a thread with a Runnable task and a specified name.
+
+Example:
+
+```java
+Runnable task = () -> {
+    System.out.println("Task executing");
+};
+
+Thread t = new Thread(task, "Worker-1");
+
+t.start();
+```
+
+## 8. Approach 2: Implementing the Runnable Interface
+
+Another way to implement multithreading is by implementing the `Runnable` interface.
+
+Steps:
+
+1. Create a class that implements Runnable.
+2. Override the `run()` method.
+3. Write the task logic inside `run()`.
+4. Create an object of the implementation class.
+5. Pass that object to the Thread constructor.
+6. Call `start()`.
+
+Example:
+
+```java
+class Demo implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println(
+            "Child thread is running"
+        );
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        Thread t = new Thread(d);
+
+        t.start();
+
+        System.out.println(
+            "Main thread completed"
+        );
+    }
+}
+```
+
+### Understanding the Execution
+
+- `Demo` implements Runnable.
+- `Demo` provides the implementation of `run()`.
+- `new Thread(d)` creates a Thread object and associates the Runnable task with it.
+- `t.start()` starts a new thread.
+- The new thread executes `d.run()`.
+
+### Important Concept
+
+Runnable represents a task, whereas Thread represents the execution mechanism.
+
+This separation makes the application more flexible.
+
+## 9. Extending Thread vs Implementing Runnable
+
+| Extending Thread | Implementing Runnable |
+|---|---|
+| Extend Thread class | Implement Runnable interface |
+| Override run() | Override run() |
+| Create object of child class | Pass Runnable object to Thread |
+| Call start() | Call start() on Thread |
+| Cannot extend another class | Can extend another class |
+| Tightly couples task and thread | Separates task from execution |
+
+### Which approach is recommended?
+
+Generally, implementing `Runnable` is preferred over extending `Thread`.
+
+Reasons:
+- Java supports single inheritance.
+- We can extend another class.
+- Task logic is separated from thread management.
+- It works naturally with ExecutorService and thread pools.
+
+## 10. Executing Multiple Threads
+
+Let's create a practical example where two threads execute independently.
+
+```java
+class Demo extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println(
+            Thread.currentThread().getName()
+            + " started"
+        );
+
+        System.out.println(
+            Thread.currentThread().getName()
+            + " completed"
+        );
+    }
+
+    public static void main(String[] args) {
+
+        Demo d1 = new Demo();
+        Demo d2 = new Demo();
+
+        d1.setName("Thread-1");
+        d2.setName("Thread-2");
+
+        d1.start();
+        d2.start();
+
+        System.out.println("Main completed");
+    }
+}
+```
+
+Possible output:
+
+```text
+Main completed
+Thread-1 started
+Thread-2 started
+Thread-1 completed
+Thread-2 completed
+```
+
+The actual output may differ on each execution.
+
+**Why?**
+
+Because thread scheduling is controlled by the JVM and operating system. We cannot guarantee the execution order simply by calling `start()` one after another.
+
+## 11. Important Thread Methods
+
+| Method | Description |
+|---|---|
+| `start()` | Starts a new thread |
+| `run()` | Contains the task logic |
+| `sleep()` | Pauses the current thread temporarily |
+| `join()` | Waits for another thread to complete |
+| `yield()` | Hints that the current thread is willing to yield CPU time |
+| `interrupt()` | Interrupts a thread or signals interruption |
+| `isAlive()` | Checks whether a thread has started and not yet terminated |
+| `currentThread()` | Returns the currently executing thread |
+| `getName()` | Gets the thread name |
+| `setName()` | Sets the thread name |
+| `getPriority()` | Gets thread priority |
+| `setPriority()` | Sets thread priority |
+
+Note: `sleep()` and `yield()` are static methods of Thread. `join()` is an instance method.
+
+## 12. Thread Life Cycle
+
+A Java thread can have the following states:
+
+1. NEW
+2. RUNNABLE
+3. BLOCKED
+4. WAITING
+5. TIMED_WAITING
+6. TERMINATED
+
+Simplified flow:
+
+```text
+       NEW
+        |
+      start()
+        |
+     RUNNABLE
+        |
+   CPU scheduling
+        |
+   Running execution
+        |
+   Waiting / Blocking
+        |
+    RUNNABLE again
+        |
+    TERMINATED
+```
+
+Important: Java's official `Thread.State` enum does not contain a separate RUNNING state. Running threads are included in RUNNABLE.
+
+## 13. Important Real-World Use Cases
+
+Multithreading is commonly used in:
+
+1. Banking applications – Processing concurrent customer requests.
+2. E-commerce applications – Handling multiple user requests.
+3. Email services – Sending notifications asynchronously.
+4. File processing – Reading and processing large files.
+5. Report generation – Generating reports in the background.
+6. Web applications – Handling multiple incoming requests.
+7. Background jobs – Performing scheduled or asynchronous tasks.
+
+## 14. Key Takeaways
+
+- Multitasking means handling multiple tasks during the same period.
+- Multithreading means executing multiple threads within a process.
+- A Java application starts with a main thread.
+- Java supports multithreading through Thread and Runnable.
+- There are two traditional ways to create threads.
+- `start()` starts a new thread.
+- `run()` contains the task logic.
+- Calling `run()` directly does not create a new thread.
+- Thread execution order is not guaranteed.
+- Runnable is generally preferred over extending Thread.
+- Threads share heap memory but have individual stacks.
+
+---
+
+## 15. Next Topics to Learn
+
+After understanding basic thread creation, continue with:
+
+1. Thread Synchronization
+2. Race Conditions
+3. Critical Sections
+4. Synchronized Methods and Blocks
+5. Inter-thread Communication (`wait()`, `notify()`, `notifyAll()`)
+6. Deadlock
+7. Volatile Keyword
+8. ExecutorService and Thread Pools
+9. Callable and Future
+10. CompletableFuture
+11. Concurrent Collections
+12. Java Concurrency Utilities
