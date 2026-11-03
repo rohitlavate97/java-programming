@@ -12236,3 +12236,606 @@ Enumeration<Integer> e = v.elements();
 while (e.hasMoreElements()) {
     System.out.println(e.nextElement());
 }
+
+                      MAP INTERFACE
+============================================================
+
+
+1. INTRODUCTION TO MAP
+----------------------
+
+- Map is an interface available in java.util package.
+- Map is used to store data in KEY-VALUE pair format.
+- One key-value pair is called an Entry.
+- One Map object can contain multiple entries.
+- Keys must be unique.
+- Values can be duplicated.
+- A Map cannot contain duplicate keys.
+- If we insert an existing key again, its old value
+  will be replaced with the new value.
+- We can store keys and values of different data types
+  using appropriate generics.
+
+Example:
+
+    Key       Value
+    ----------------
+    101       John
+    102       Smith
+    103       David
+
+    101 = Key
+    John = Value
+
+    101 -> John = One Entry
+
+
+2. MAP SYNTAX
+-------------
+
+Map<K, V> map = new HashMap<>();
+
+K = Key
+V = Value
+
+Example:
+
+Map<Integer, String> map = new HashMap<>();
+
+
+3. IMPORTANT CHARACTERISTICS
+----------------------------
+
+1. Map stores data in key-value pair format.
+2. Keys must be unique.
+3. Values can be duplicated.
+4. Duplicate keys are not allowed.
+5. Inserting an existing key replaces its old value.
+6. One Map can contain multiple entries.
+7. Map does not extend the Collection interface.
+8. Map is a separate part of the Java Collections Framework.
+
+
+4. MAP IMPLEMENTATION CLASSES
+-----------------------------
+
+Map interface has several implementation classes:
+
+1. HashMap
+2. LinkedHashMap
+3. TreeMap
+4. Hashtable
+5. IdentityHashMap
+6. WeakHashMap
+
+
+HASHMAP
+-------
+
+- Implementation class of Map interface.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+- One null key is allowed.
+- Multiple null values are allowed.
+- Insertion order is not maintained.
+- Internal data structure = Hash Table.
+- Default initial capacity = 16.
+- Default load factor = 0.75.
+- Not synchronized.
+- Allows one null key and multiple null values.
+
+LINKEDHASHMAP
+-------------
+
+- Implementation class of Map interface.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+- One null key is allowed.
+- Multiple null values are allowed.
+- Insertion order is maintained.
+- Internal data structure = Hash Table + Doubly Linked List.
+- Not synchronized.
+
+TREEMAP
+-------
+
+- Implementation class of Map interface.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+- Null keys are not allowed with natural ordering.
+- Null values are allowed.
+- Keys are maintained in sorted order.
+- Internal data structure = Red-Black Tree.
+- Default sorting order = Ascending.
+- Not synchronized.
+
+HASHTABLE
+---------
+
+- Legacy implementation class of Map interface.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+- Null keys are not allowed.
+- Null values are not allowed.
+- Insertion order is not maintained.
+- Synchronized.
+- Default initial capacity = 11.
+- Default load factor = 0.75.
+
+IDENTITYHASHMAP
+---------------
+
+- Uses reference equality (==) instead of equals()
+  to compare keys.
+- Duplicate keys are determined by object identity.
+- Allows null key and null values.
+- Not synchronized.
+
+WEAKHASHMAP
+-----------
+
+- Uses weak references for keys.
+- Entries can be removed automatically by Garbage Collector
+  when keys are no longer strongly referenced.
+- Allows null key and null values.
+- Not synchronized.
+
+
+5. MAP INTERFACE METHODS
+------------------------
+
+1. put(K key, V value)
+
+   - Used to store one entry in Map.
+   - If key already exists, old value gets replaced.
+
+2. get(Object key)
+
+   - Used to get the value based on the given key.
+
+3. remove(Object key)
+
+   - Used to remove one entry based on the given key.
+
+4. containsKey(Object key)
+
+   - Used to check whether a particular key exists.
+
+5. keySet()
+
+   - Used to get all keys of Map.
+   - Returns Set<K>.
+
+6. values()
+
+   - Used to get all values of Map.
+   - Returns Collection<V>.
+
+7. entrySet()
+
+   - Used to get all entries of Map.
+   - Returns Set<Map.Entry<K,V>>.
+
+8. clear()
+
+   - Used to remove all entries from Map.
+
+9. isEmpty()
+
+   - Used to check whether Map is empty or not.
+   - Returns boolean.
+
+10. size()
+
+    - Used to get the number of entries in Map.
+    - Returns int.
+
+
+6. BASIC MAP OPERATIONS
+-----------------------
+
+Map<Integer, String> map = new HashMap<>();
+
+// Adding entries
+
+map.put(101, "John");
+map.put(102, "Smith");
+map.put(103, "David");
+
+// Duplicate key example
+
+map.put(101, "Rahul");
+
+// Old value "John" will be replaced by "Rahul".
+
+System.out.println(map);
+
+// Getting value based on key
+
+System.out.println(map.get(101));
+// Output: Rahul
+
+// Checking key availability
+
+System.out.println(map.containsKey(101));
+// Output: true
+
+System.out.println(map.containsKey(104));
+// Output: false
+
+// Checking Map size
+
+System.out.println(map.size());
+// Output: 3
+
+// Checking whether Map is empty
+
+System.out.println(map.isEmpty());
+// Output: false
+
+// Removing an entry
+
+map.remove(102);
+
+// Printing Map
+
+System.out.println(map);
+
+// Removing all entries
+
+map.clear();
+
+System.out.println(map.size());
+// Output: 0
+
+
+7. DIFFERENCE BETWEEN KEYSET(), VALUES()
+   AND ENTRYSET()
+-----------------------------------------
+
+KEYSET()
+--------
+
+- Returns all keys in Set format.
+- Return type = Set<K>.
+
+Example:
+
+Set<Integer> keys = map.keySet();
+
+for (Integer key : keys) {
+    System.out.println(key);
+}
+
+
+VALUES()
+--------
+
+- Returns all values in Collection format.
+- Return type = Collection<V>.
+
+Example:
+
+Collection<String> values = map.values();
+
+for (String value : values) {
+    System.out.println(value);
+}
+
+
+ENTRYSET()
+----------
+
+- Returns all key-value pairs in Set format.
+- Return type = Set<Map.Entry<K,V>>.
+- Each entry represents one key-value pair.
+
+Example:
+
+Set<Map.Entry<Integer, String>> entries = map.entrySet();
+
+for (Map.Entry<Integer, String> entry : entries) {
+
+    System.out.println(
+        entry.getKey() + " : " + entry.getValue()
+    );
+}
+
+
+8. COMPLETE MAP EXAMPLE
+-----------------------
+
+import java.util.*;
+
+public class MapExample {
+
+    public static void main(String[] args) {
+
+        Map<Integer, String> map = new HashMap<>();
+
+        // Adding entries
+
+        map.put(101, "John");
+        map.put(102, "Smith");
+        map.put(103, "David");
+
+        // Duplicate key
+
+        map.put(101, "Rahul");
+
+        // Printing Map
+
+        System.out.println(map);
+
+        // Checking key
+
+        System.out.println(map.containsKey(101));
+
+        // Checking value
+
+        System.out.println(map.containsValue("Smith"));
+
+        // Getting value
+
+        System.out.println(map.get(101));
+
+        // Getting size
+
+        System.out.println(map.size());
+
+        // Getting all keys
+
+        Set<Integer> keys = map.keySet();
+
+        for (Integer key : keys) {
+
+            System.out.println(
+                key + " - " + map.get(key)
+            );
+        }
+
+        // Getting all values
+
+        Collection<String> values = map.values();
+
+        for (String value : values) {
+
+            System.out.println(value);
+        }
+
+        // Getting all entries
+
+        Set<Map.Entry<Integer, String>> entries =
+                map.entrySet();
+
+        for (Map.Entry<Integer, String> entry : entries) {
+
+            System.out.println(
+                entry.getKey() + " - " + entry.getValue()
+            );
+        }
+    }
+}
+
+
+9. HOW TO ITERATE MAP?
+----------------------
+
+IMPORTANT:
+
+If we want to traverse a Map, we can use:
+
+1. keySet()
+2. values()
+3. entrySet()
+
+Map does not directly support Iterator.
+
+APPROACH 1: USING KEYSET()
+
+Map<Integer, String> map = new HashMap<>();
+
+map.put(101, "John");
+map.put(102, "Smith");
+map.put(103, "David");
+
+Set<Integer> keys = map.keySet();
+
+for (Integer key : keys) {
+
+    System.out.println(
+        key + " - " + map.get(key)
+    );
+}
+
+
+APPROACH 2: USING VALUES()
+
+Collection<String> values = map.values();
+
+for (String value : values) {
+
+    System.out.println(value);
+}
+
+
+APPROACH 3: USING ENTRYSET()
+
+Set<Map.Entry<Integer, String>> entries =
+        map.entrySet();
+
+for (Map.Entry<Integer, String> entry : entries) {
+
+    System.out.println(entry.getKey());
+
+    System.out.println(entry.getValue());
+}
+
+
+APPROACH 4: USING ITERATOR WITH ENTRYSET()
+
+Set<Map.Entry<Integer, String>> entrySet =
+        map.entrySet();
+
+Iterator<Map.Entry<Integer, String>> iterator =
+        entrySet.iterator();
+
+while (iterator.hasNext()) {
+
+    Map.Entry<Integer, String> entry = iterator.next();
+
+    System.out.println(
+        entry.getKey() + " - " + entry.getValue()
+    );
+}
+
+
+10. ENTRY INTERFACE
+-------------------
+
+- Entry is an inner interface of Map interface.
+- It represents one key-value pair.
+- We can access the key and value separately.
+
+Important methods:
+
+1. getKey()
+   - Returns the key of an entry.
+
+2. getValue()
+   - Returns the value of an entry.
+
+3. setValue(V value)
+   - Updates the value of an entry.
+
+Example:
+
+Map<Integer, String> map = new HashMap<>();
+
+map.put(101, "John");
+map.put(102, "Smith");
+
+Set<Map.Entry<Integer, String>> entries =
+        map.entrySet();
+
+for (Map.Entry<Integer, String> entry : entries) {
+
+    System.out.println(entry.getKey());
+
+    System.out.println(entry.getValue());
+
+    entry.setValue("Updated");
+}
+
+System.out.println(map);
+
+
+11. STORING CUSTOM OBJECT AS VALUE
+----------------------------------
+
+We can store custom objects as values in a Map.
+
+Example:
+
+public class Student {
+
+    int id;
+    String name;
+
+    public Student(int id, String name) {
+
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+
+        return id + " - " + name;
+    }
+}
+
+
+12. COMPLETE CUSTOM OBJECT EXAMPLE
+----------------------------------
+
+import java.util.*;
+
+public class StudentMapDemo {
+
+    public static void main(String[] args) {
+
+        // Creating Student objects
+
+        Student student1 = new Student(101, "John");
+
+        Student student2 = new Student(102, "Smith");
+
+        Student student3 = new Student(103, "David");
+
+
+        // Creating HashMap
+
+        Map<Integer, Student> map = new HashMap<>();
+
+        // Adding Student objects
+
+        map.put(1, student1);
+
+        map.put(2, student2);
+
+        map.put(3, student3);
+
+
+        // Printing Map
+
+        System.out.println(map);
+
+
+        // Checking key
+
+        System.out.println(map.containsKey(1));
+
+        System.out.println(map.containsKey(4));
+
+
+        // Iterating using keySet()
+
+        Set<Integer> keys = map.keySet();
+
+        for (Integer key : keys) {
+
+            System.out.println(
+                key + " - " + map.get(key)
+            );
+        }
+
+
+        // Iterating using entrySet()
+
+        Set<Map.Entry<Integer, Student>> entrySet =
+                map.entrySet();
+
+        for (Map.Entry<Integer, Student> entry : entrySet) {
+
+            System.out.println(entry.getKey());
+
+            System.out.println(entry.getValue());
+        }
+    }
+}
+
+
+13. CUSTOM OBJECT AS KEY
+------------------------
+
+We can also store custom objects as keys.
+
+Example:
+
+Map<Student, Integer> map = new HashMap<>();
+
+// Important:
+// If custom objects are used as HashMap keys,
+// equals() and hashCode() should be implemented
+// consistently to identify logically equal keys.
