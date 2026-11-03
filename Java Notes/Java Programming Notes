@@ -14348,4 +14348,448 @@ IMPORTANT:
 - ConcurrentHashMap uses weakly consistent iteration.
 - These two mechanisms are not identical.
 
+                  JAVA UTIL PACKAGE
+============================================================
 
+The java.util package provides various utility classes.
+
+Important classes:
+1. Scanner
+2. StringTokenizer
+3. Date
+4. Calendar
+
+
+============================================================
+1. SCANNER CLASS
+============================================================
+
+- Scanner class is available in java.util package.
+- It is used to read data from different input sources.
+- Commonly used to accept input from the keyboard.
+- It provides methods like nextInt(), next(), nextLine(),
+  nextDouble(), etc.
+
+Example: Addition of Two Numbers
+
+import java.util.Scanner;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter first number:");
+        int i = sc.nextInt();
+
+        System.out.println("Enter second number:");
+        int j = sc.nextInt();
+
+        System.out.println("Result: " + (i + j));
+
+        sc.close();
+    }
+}
+
+OUTPUT:
+Enter first number:
+10
+Enter second number:
+20
+Result: 30
+
+IMPORTANT SCANNER METHODS:
+
+next()       -> Reads a single token (word).
+nextLine()   -> Reads an entire line.
+nextInt()    -> Reads an integer.
+nextDouble() -> Reads a double value.
+nextFloat()  -> Reads a float value.
+nextLong()   -> Reads a long value.
+nextBoolean()-> Reads a boolean value.
+
+NOTE:
+- Scanner is used to read data from the keyboard,
+  files, strings, etc.
+- System.in represents standard keyboard input.
+
+
+============================================================
+2. STRINGTOKENIZER CLASS
+============================================================
+
+- StringTokenizer is a predefined class available in
+  the java.util package.
+- It is used to split a String into multiple tokens
+  based on delimiters.
+- By default, whitespace characters are used as delimiters.
+- We can also specify our own delimiters.
+
+Example:
+
+import java.util.StringTokenizer;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        String s = "Java Programming Course";
+
+        StringTokenizer st =
+                new StringTokenizer(s, " ");
+
+        while (st.hasMoreTokens()) {
+
+            System.out.println(st.nextToken());
+        }
+    }
+}
+
+OUTPUT:
+Java
+Programming
+Course
+
+EXPLANATION:
+
+String s = "Java Programming Course";
+
+StringTokenizer st =
+        new StringTokenizer(s, " ");
+
+- StringTokenizer splits the string using space (" ")
+  as the delimiter.
+
+- hasMoreTokens():
+  Checks whether more tokens are available.
+
+- nextToken():
+  Returns the next available token.
+
+IMPORTANT METHODS:
+
+1. hasMoreTokens()
+   -> Checks whether more tokens are available.
+
+2. nextToken()
+   -> Returns the next token.
+
+3. countTokens()
+   -> Returns the number of remaining tokens.
+
+Example: Custom Delimiter
+
+String s = "Java,Spring,SpringBoot,Microservices";
+
+StringTokenizer st =
+        new StringTokenizer(s, ",");
+
+while (st.hasMoreTokens()) {
+
+    System.out.println(st.nextToken());
+}
+
+OUTPUT:
+Java
+Spring
+SpringBoot
+Microservices
+
+NOTE:
+- StringTokenizer is a legacy class.
+- For modern string processing, String.split() or
+  regular expressions are generally preferred.
+
+
+============================================================
+3. DATE CLASS
+============================================================
+
+- Date class is available in the java.util package.
+- It represents a specific instant in time.
+- It can be used to obtain the current date and time.
+
+IMPORTANT:
+There are two commonly encountered Date classes:
+
+1. java.util.Date
+2. java.sql.Date
+
+java.util.Date:
+- Represents a date and time.
+- Used in general Java date-time operations.
+
+java.sql.Date:
+- Represents a SQL DATE value.
+- Primarily used in JDBC.
+
+Example: Get Current Date and Time
+
+import java.util.Date;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        Date d = new Date();
+
+        System.out.println(d);
+    }
+}
+
+OUTPUT (EXAMPLE):
+Tue Nov 03 23:30:00 IST 2026
+
+EXPLANATION:
+
+Date d = new Date();
+
+- Creates a Date object representing the current
+  date and time.
+
+System.out.println(d);
+
+- Prints the date and time using the default
+  string representation.
+
+NOTE:
+- java.util.Date stores time as milliseconds
+  since January 1, 1970, 00:00:00 UTC.
+- Many older Date methods are deprecated.
+- For modern date and time operations, Java provides
+  the java.time package.
+
+
+============================================================
+4. CALENDAR CLASS
+============================================================
+
+- Calendar is an abstract class available in
+  the java.util package.
+- We cannot create its object directly using new.
+- We can obtain its object using getInstance().
+- It is used to manipulate and retrieve date and
+  time information.
+- We can set and get individual date/time fields.
+
+Syntax:
+
+Calendar c = Calendar.getInstance();
+
+Example:
+
+import java.util.Calendar;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        Calendar c = Calendar.getInstance();
+
+        System.out.println(c);
+
+        System.out.println(c.get(Calendar.YEAR));
+
+        System.out.println(c.get(Calendar.HOUR_OF_DAY));
+    }
+}
+
+EXPLANATION:
+
+Calendar c = Calendar.getInstance();
+
+- Returns a Calendar object initialized with
+  the current date and time.
+
+c.get(Calendar.YEAR)
+- Returns the current year.
+
+c.get(Calendar.HOUR_OF_DAY)
+- Returns the hour in 24-hour format (0-23).
+
+------------------------------------------------------------
+
+IMPORTANT CALENDAR CONSTANTS
+------------------------------------------------------------
+
+Calendar.YEAR
+    -> Represents the year.
+
+Calendar.MONTH
+    -> Represents the month.
+    -> January = 0
+    -> February = 1
+    -> December = 11
+
+Calendar.DATE
+    -> Represents the day of the month.
+
+Calendar.DAY_OF_MONTH
+    -> Represents the day of the month.
+
+Calendar.DAY_OF_WEEK
+    -> Represents the day of the week.
+
+Calendar.HOUR
+    -> Represents the hour in 12-hour format.
+
+Calendar.HOUR_OF_DAY
+    -> Represents the hour in 24-hour format.
+
+Calendar.MINUTE
+    -> Represents minutes.
+
+Calendar.SECOND
+    -> Represents seconds.
+
+Calendar.MILLISECOND
+    -> Represents milliseconds.
+
+------------------------------------------------------------
+
+SETTING AND GETTING CALENDAR VALUES
+------------------------------------------------------------
+
+Example:
+
+import java.util.Calendar;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        Calendar c = Calendar.getInstance();
+
+        // Set year
+        c.set(Calendar.YEAR, 2025);
+
+        // Get year
+        System.out.println(c.get(Calendar.YEAR));
+
+        // Get hour
+        System.out.println(
+                c.get(Calendar.HOUR_OF_DAY)
+        );
+    }
+}
+
+OUTPUT:
+2025
+(Current hour in 24-hour format)
+
+IMPORTANT METHODS:
+
+1. getInstance()
+   -> Returns a Calendar object.
+
+2. get(field)
+   -> Retrieves the value of a particular field.
+
+3. set(field, value)
+   -> Sets the value of a particular field.
+
+4. add(field, amount)
+   -> Adds or subtracts an amount from a field.
+
+5. getTime()
+   -> Returns the corresponding java.util.Date object.
+
+6. setTime(Date date)
+   -> Sets the Calendar time using a Date object.
+
+Example: Add 5 Days
+
+Calendar c = Calendar.getInstance();
+
+c.add(Calendar.DATE, 5);
+
+System.out.println(c.getTime());
+
+Example: Subtract 2 Days
+
+Calendar c = Calendar.getInstance();
+
+c.add(Calendar.DATE, -2);
+
+System.out.println(c.getTime());
+
+
+============================================================
+5. COMPLETE CALENDAR EXAMPLE
+============================================================
+
+import java.util.Calendar;
+
+public class CalendarDemo {
+
+    public static void main(String[] args) {
+
+        Calendar c = Calendar.getInstance();
+
+        System.out.println("Current Date and Time:");
+        System.out.println(c.getTime());
+
+        System.out.println("Year: " +
+                c.get(Calendar.YEAR));
+
+        System.out.println("Month: " +
+                (c.get(Calendar.MONTH) + 1));
+
+        System.out.println("Day: " +
+                c.get(Calendar.DATE));
+
+        System.out.println("Hour: " +
+                c.get(Calendar.HOUR_OF_DAY));
+
+        System.out.println("Minute: " +
+                c.get(Calendar.MINUTE));
+
+        System.out.println("Second: " +
+                c.get(Calendar.SECOND));
+    }
+}
+============================================================
+7. MODERN JAVA ALTERNATIVE: JAVA.TIME
+============================================================
+
+Java 8 introduced the java.time package.
+
+Important classes:
+
+1. LocalDate
+   -> Represents date without time.
+
+2. LocalTime
+   -> Represents time without date.
+
+3. LocalDateTime
+   -> Represents date and time without timezone.
+
+4. ZonedDateTime
+   -> Represents date and time with timezone.
+
+5. Instant
+   -> Represents a point on the UTC timeline.
+
+Example:
+
+import java.time.*;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        LocalDate date = LocalDate.now();
+
+        LocalTime time = LocalTime.now();
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        System.out.println("Date: " + date);
+
+        System.out.println("Time: " + time);
+
+        System.out.println("DateTime: " + dateTime);
+    }
+}
+
+NOTE:
+- Prefer java.time for new Java applications.
+- Date and Calendar are older date-time APIs.
+- java.time classes are generally immutable and
+  provide a better API for date-time operations.
