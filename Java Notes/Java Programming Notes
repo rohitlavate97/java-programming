@@ -9899,3 +9899,1078 @@ C. INITIALIZATION
 - Assigns explicitly declared static values.
 - Happens before the class is actively used, subject to
   JVM initialization rules.
+
+
+                  JAVA COLLECTIONS FRAMEWORK
+============================================================
+
+============================================================
+1. DATA TYPES IN JAVA
+============================================================
+
+Java data types are classified into two categories:
+
+1. Primitive Data Types
+   - byte
+   - short
+   - int
+   - long
+   - float
+   - double
+   - char
+   - boolean
+
+2. Reference Data Types
+   - Array
+   - String
+   - Class
+   - Interface
+   - Enum, etc.
+
+
+============================================================
+2. ARRAY
+============================================================
+
+An array is used to store a group of values in a single
+variable.
+
+Example:
+
+int a[] = new int[3];
+
+a[0] = 100;
+a[1] = 200;
+a[2] = 300;
+
+Limitations of Arrays:
+----------------------
+
+1. Arrays are fixed in size.
+
+2. Arrays can store only homogeneous values
+   (values of the same data type).
+
+3. We cannot store different types of objects directly
+   in a strongly typed array.
+
+Example:
+
+Object[] a = new Object[2];
+
+a[0] = new Student(101, "Raj");
+a[1] = new Employee(101, "Raju", 10000);
+
+
+4. If we want to sort or update data based on new
+   requirements, we need to write the logic ourselves.
+
+5. To insert, update, retrieve and delete data,
+   common methods are not directly provided by arrays.
+
+
+============================================================
+3. WHY COLLECTION FRAMEWORK?
+============================================================
+
+To overcome the limitations of arrays, we use the
+Collection Framework.
+
+Advantages:
+-----------
+
+1. Collections are dynamic in nature.
+   - Size can increase or decrease based on data.
+
+2. Collections can store objects.
+
+3. Collections can store homogeneous as well as
+   heterogeneous objects (subject to generic type rules).
+
+4. Collections provide predefined methods to:
+   - Insert data
+   - Update data
+   - Retrieve data
+   - Delete data
+   - Search data
+   - Sort data
+
+5. Collections are ready-to-use data structures.
+
+Definition:
+-----------
+
+A Collection is an object/container used to store
+a group of objects.
+
+A Framework is a ready-made software structure that
+provides predefined interfaces, classes and methods.
+
+Collection Framework:
+---------------------
+
+The Collection Framework is a group of predefined
+interfaces and classes used to store and manipulate
+groups of objects.
+
+It provides common operations such as:
+
+- Add
+- Remove
+- Search
+- Retrieve
+- Sort
+- Iterate
+
+
+============================================================
+4. COLLECTION HIERARCHY
+============================================================
+
+The Java Collection Framework has two main families:
+
+1. Collection Interface Family
+2. Map Interface Family
+
+Collection Interface Family:
+----------------------------
+
+1. Iterable (Interface)
+   |
+   |-- Collection (Interface)
+       |
+       |-- List (Interface)
+       |
+       |-- Set (Interface)
+       |
+       |-- Queue (Interface)
+
+
+Map Interface Family:
+---------------------
+
+Map (Interface)
+   |
+   |-- HashMap
+   |
+   |-- LinkedHashMap
+   |
+   |-- SortedMap (Interface)
+       |
+       |-- NavigableMap (Interface)
+           |
+           |-- TreeMap
+
+
+NOTE:
+-----
+
+Collection and Map are separate hierarchies.
+
+Map does not extend Collection.
+
+Iterable is the super interface of Collection.
+
+
+============================================================
+5. COLLECTION TYPES
+============================================================
+
+LIST:
+-----
+
+- Used to store a group of objects.
+- Allows duplicate elements.
+- Maintains insertion order.
+- Supports index-based access.
+
+SET:
+----
+
+- Used to store a group of objects.
+- Does not allow duplicate elements.
+- Generally used when unique elements are required.
+
+QUEUE:
+------
+
+- Used to store a group of objects.
+- Generally follows FIFO (First In, First Out).
+- Elements are typically processed in insertion order.
+
+MAP:
+----
+
+- Used to store data in key-value pairs.
+- Keys must be unique.
+- Values can be duplicated.
+- Each key maps to a value.
+
+
+============================================================
+6. LIST INTERFACE
+============================================================
+
+List is a child interface of Collection.
+
+List is an interface having the following commonly
+used implementation classes:
+
+1. ArrayList
+2. LinkedList
+3. Vector
+4. Stack
+
+Syntax:
+
+List l = new ArrayList();
+
+List l = new LinkedList();
+
+ArrayList a = new ArrayList();
+
+IMPORTANT:
+----------
+
+- We can create an interface reference variable.
+- We cannot directly instantiate an interface.
+- We can assign an implementation class object
+  to an interface reference variable.
+
+Example:
+
+List l = new ArrayList();
+
+Here:
+- List is an interface.
+- l is a reference variable.
+- ArrayList is an implementation class.
+- new ArrayList() creates an object.
+
+
+============================================================
+7. ARRAYLIST
+============================================================
+
+ArrayList is an implementation class of the List interface.
+
+Example:
+
+ArrayList a1 = new ArrayList();
+
+a1.add(100);
+a1.add("Raj");
+a1.add(100.50);
+
+System.out.println(a1);
+
+System.out.println(a1.size());
+
+System.out.println(a1.remove(0));
+
+System.out.println("Size after removal: " + a1.size());
+
+System.out.println(a1);
+
+Common ArrayList Methods:
+------------------------
+
+add()       - Adds an element.
+remove()    - Removes an element.
+get()       - Retrieves an element using index.
+set()       - Updates an element using index.
+size()      - Returns the number of elements.
+contains()  - Checks whether an element exists.
+clear()     - Removes all elements.
+
+Example:
+
+ArrayList<String> names = new ArrayList<>();
+
+names.add("Raj");
+names.add("Rohit");
+names.add("Prajakta");
+
+System.out.println(names.get(0));
+
+names.set(1, "Amit");
+
+System.out.println(names.contains("Raj"));
+
+System.out.println(names.size());
+
+
+1. LIST INTERFACE
+-----------------
+
+Implementation Classes:
+
+1. ArrayList
+2. LinkedList
+3. Vector
+4. Stack
+
+
+2. SET INTERFACE
+----------------
+
+Implementation Classes:
+
+1. HashSet
+2. LinkedHashSet
+3. TreeSet
+
+
+3. QUEUE INTERFACE
+------------------
+
+Implementation Classes:
+
+1. PriorityQueue
+
+
+4. MAP INTERFACE
+----------------
+
+Implementation Classes:
+
+1. HashMap
+2. LinkedHashMap
+3. Hashtable
+4. TreeMap
+5. IdentityHashMap
+6. WeakHashMap
+
+
+============================================================
+2. CURSORS IN JAVA
+============================================================
+
+Cursors are used to iterate through collections
+and retrieve elements one by one.
+
+There are three main cursors in Java:
+
+1. Iterator
+2. ListIterator
+3. Enumeration
+
+
+============================================================
+3. COLLECTION FRAMEWORK PACKAGE
+============================================================
+
+Collection Framework classes and interfaces are available
+primarily in the java.util package.
+
+Collection Interface:
+---------------------
+
+- Collection is the root interface of the List, Set
+  and Queue interfaces.
+- It provides common methods to perform operations
+  on collection objects.
+
+Important Collection Interface Methods:
+
+1. add(Object obj)
+   - Used to add an object.
+
+2. remove(Object obj)
+   - Used to remove an object.
+
+3. contains(Object obj)
+   - Checks whether an object exists.
+
+4. addAll(Collection c)
+   - Adds all elements of another collection.
+
+5. removeAll(Collection c)
+   - Removes matching elements.
+
+6. retainAll(Collection c)
+   - Retains only the common elements.
+
+7. clear()
+   - Removes all elements.
+
+8. size()
+   - Returns the number of elements.
+
+9. isEmpty()
+   - Checks whether the collection is empty.
+
+10. iterator()
+    - Returns an Iterator to iterate through elements.
+
+NOTE:
+-----
+
+Every object stored in a collection is known as an element.
+
+
+============================================================
+4. LIST INTERFACE
+============================================================
+
+- List extends the Collection interface.
+- It maintains insertion order.
+- It allows duplicate elements.
+- It supports index-based operations.
+
+List has four commonly used implementation classes:
+
+1. ArrayList
+2. LinkedList
+3. Vector
+4. Stack
+
+
+============================================================
+5. ARRAYLIST
+============================================================
+
+ArrayList is an implementation class of the List interface.
+
+Features:
+---------
+
+1. Duplicate objects are allowed.
+2. Insertion order is maintained.
+3. Null values are accepted.
+4. Internally uses a resizable array.
+5. Default initial capacity is 10 when capacity
+   is first allocated in the usual default constructor.
+6. Automatically grows when required.
+
+
+Example:
+
+ArrayList al = new ArrayList();
+
+al.add(10);
+al.add(20);
+
+System.out.println(al);
+
+
+ArrayList Internal Working:
+---------------------------
+
+- Initially, an internal array is used.
+- When the array becomes full, a larger array is created.
+- Existing elements are copied into the new array.
+- New elements are then inserted.
+
+Example:
+
+Initial Array:
+
+[10] [20] [30] [40] [50]
+
+When capacity is exhausted:
+
+A new larger array is created.
+
+Existing elements are copied into the new array.
+
+
+============================================================
+6. ARRAYLIST CONSTRUCTORS
+============================================================
+
+ArrayList provides three commonly used constructors.
+
+1. ArrayList()
+
+   ArrayList al = new ArrayList();
+
+   Creates an empty ArrayList.
+
+2. ArrayList(int initialCapacity)
+
+   ArrayList al = new ArrayList(5);
+
+   Creates an ArrayList with the specified initial
+   capacity.
+
+3. ArrayList(Collection c)
+
+   ArrayList al = new ArrayList(c);
+
+   Creates an ArrayList containing elements from
+   another collection.
+
+   Useful for converting one collection into another.
+
+
+Example:
+
+ArrayList al1 = new ArrayList();
+
+al1.add(10);
+al1.add(20);
+al1.add(30);
+
+ArrayList al2 = new ArrayList(al1);
+
+System.out.println(al2);
+
+
+
+============================================================
+ARRAYLIST – FEATURES
+============================================================
+
+1. ArrayList is an implementation class of List interface.
+2. Duplicate objects are allowed.
+3. Insertion order is maintained.
+4. Multiple null values are accepted.
+5. Internal data structure is a resizable array.
+6. Default initial capacity is 10 (when allocated).
+7. Automatically increases its capacity when required.
+
+Example:
+
+ArrayList al = new ArrayList();
+
+al.add(10);
+al.add(20);
+
+System.out.println(al);
+
+Internal Working:
+-----------------
+
+Initial Array:
+[10] [20] [30] [40] [50] ... [ ]
+
+When capacity becomes full:
+- A new larger array is created.
+- Existing elements are copied.
+- New elements are inserted into the new array.
+
+
+============================================================
+8. ARRAYLIST CONSTRUCTORS
+============================================================
+
+1. Default Constructor
+----------------------
+
+ArrayList al = new ArrayList();
+
+Creates an empty ArrayList.
+
+2. Parameterized Constructor
+----------------------------
+
+ArrayList al = new ArrayList(10);
+
+Creates an ArrayList with initial capacity 10.
+
+3. Collection Constructor
+-------------------------
+
+ArrayList al = new ArrayList(collection);
+
+Creates a new ArrayList containing elements of
+another collection.
+
+Example:
+
+ArrayList al1 = new ArrayList();
+
+al1.add(100);
+al1.add(200);
+al1.add(300);
+
+ArrayList al2 = new ArrayList(al1);
+
+System.out.println(al2);
+
+NOTE:
+-----
+The Collection constructor is useful when we want
+to convert one collection into another collection.
+
+
+============================================================
+9. ARRAYLIST METHODS
+============================================================
+
+1. add(Object obj)
+------------------
+
+- Adds an object to the collection.
+
+Example:
+
+al.add(100);
+
+
+2. add(int index, Object obj)
+-----------------------------
+
+- Adds an object at the specified index.
+- Existing elements are shifted to the right.
+
+Example:
+
+al.add(1, 200);
+
+
+3. addAll(Collection c)
+-----------------------
+
+- Adds all elements of another collection.
+
+Example:
+
+al.addAll(al2);
+
+
+4. remove(Object obj)
+---------------------
+
+- Removes the first matching object.
+
+Example:
+
+al.remove(Integer.valueOf(100));
+
+
+5. remove(int index)
+--------------------
+
+- Removes an object from the specified index.
+
+Example:
+
+al.remove(1);
+
+
+6. get(int index)
+-----------------
+
+- Retrieves an object from the specified index.
+
+Example:
+
+System.out.println(al.get(0));
+
+
+7. contains(Object obj)
+-----------------------
+
+- Checks whether the specified object exists.
+
+Example:
+
+System.out.println(al.contains(100));
+
+
+8. clear()
+----------
+
+- Removes all elements from the collection.
+
+Example:
+
+al.clear();
+
+
+9. isEmpty()
+------------
+
+- Checks whether the collection is empty.
+
+Example:
+
+System.out.println(al.isEmpty());
+
+
+10. retainAll(Collection c)
+---------------------------
+
+- Retains only the common elements.
+- Removes elements that are not present in the
+  specified collection.
+
+Example:
+
+al1.retainAll(al2);
+
+
+11. indexOf(Object obj)
+-----------------------
+
+- Returns the index of the first occurrence of an object.
+- Returns -1 if the object is not found.
+
+Example:
+
+System.out.println(al.indexOf(100));
+
+
+12. lastIndexOf(Object obj)
+---------------------------
+
+- Returns the index of the last occurrence of an object.
+- Returns -1 if the object is not found.
+
+Example:
+
+System.out.println(al.lastIndexOf(100));
+
+
+13. set(int index, Object obj)
+------------------------------
+
+- Replaces an existing object at the specified index.
+- Does not shift other elements.
+
+Example:
+
+al.set(1, 500);
+
+
+14. iterator()
+--------------
+
+- Returns an Iterator object.
+- Supports forward traversal.
+
+Example:
+
+Iterator itr = al.iterator();
+
+
+15. listIterator()
+------------------
+
+- Returns a ListIterator object.
+- Supports forward and backward traversal.
+
+Example:
+
+ListIterator litr = al.listIterator();
+
+
+============================================================
+10. IMPORTANT POINT ABOUT ARRAYLIST
+============================================================
+
+ArrayList is not recommended when frequent insertions
+and deletions are required in the middle of a large list.
+
+Reason:
+-------
+
+- Elements may need to be shifted during insertion
+  or deletion.
+- This can affect performance.
+
+ArrayList is suitable when:
+---------------------------
+
+- Frequent retrieval is required.
+- Index-based access is required.
+- Insertion and deletion at the end are common.
+
+LinkedList can be considered when frequent insertions
+and deletions are required, depending on the access pattern.
+
+
+============================================================
+11. ITERATOR VS LISTITERATOR
+============================================================
+
+Iterator:
+---------
+
+- Supports forward traversal.
+- Can be used with different Collection implementations.
+- Supports element removal during iteration.
+
+ListIterator:
+-------------
+
+- Supports forward and backward traversal.
+- Can be used only with List implementations.
+- Supports add(), set() and remove() operations.
+
+
+============================================================
+12. ARRAYLIST EXAMPLE
+============================================================
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
+public class ArrayListDemo {
+
+    public static void main(String[] args) {
+
+        ArrayList<Integer> al = new ArrayList<>();
+
+        // Adding elements
+        al.add(10);
+        al.add(20);
+        al.add(30);
+
+        // Displaying ArrayList
+        System.out.println(al);
+
+        // Adding element at a particular index
+        al.add(1, 100);
+
+        System.out.println(al);
+
+        // Retrieving element
+        System.out.println(al.get(0));
+
+        // Updating element
+        al.set(1, 200);
+
+        System.out.println(al);
+
+        // Checking element
+        System.out.println(al.contains(20));
+
+        // Finding index
+        System.out.println(al.indexOf(30));
+
+        // Finding size
+        System.out.println(al.size());
+
+        // Removing element
+        al.remove(Integer.valueOf(200));
+
+        System.out.println(al);
+
+    }
+}
+
+============================================================
+                    CURSORS IN JAVA
+============================================================
+
+Definition:
+-----------
+
+Cursors are used to iterate through a collection and
+access elements one by one.
+
+Java provides three main cursors:
+
+1. Iterator
+2. ListIterator
+3. Enumeration
+
+
+1. ITERATOR
+-----------
+
+- Used to traverse collection elements.
+- Supports forward direction only.
+- Can be used with List, Set and Queue collections.
+- Supports removing elements during iteration.
+
+Important Methods:
+
+1. hasNext()
+   - Checks whether the next element is available.
+
+2. next()
+   - Returns the next element.
+
+3. remove()
+   - Removes the current element.
+
+Example:
+
+ArrayList<Integer> al = new ArrayList<>();
+
+al.add(10);
+al.add(20);
+al.add(30);
+
+Iterator<Integer> itr = al.iterator();
+
+while (itr.hasNext()) {
+
+    System.out.println(itr.next());
+
+}
+
+
+2. LISTITERATOR
+---------------
+
+- Used only with List implementations.
+- Supports forward and backward traversal.
+- Can add, update and remove elements.
+- Can start iteration from a specified index.
+
+Important Methods:
+
+1. hasNext()
+   - Checks whether the next element exists.
+
+2. next()
+   - Returns the next element.
+
+3. hasPrevious()
+   - Checks whether the previous element exists.
+
+4. previous()
+   - Returns the previous element.
+
+5. add(Object obj)
+   - Adds an element.
+
+6. set(Object obj)
+   - Replaces the last element returned by next()
+     or previous().
+
+7. remove()
+   - Removes the last element returned.
+
+8. nextIndex()
+   - Returns the index of the next element.
+
+9. previousIndex()
+   - Returns the index of the previous element.
+
+
+Example:
+
+ArrayList<Integer> al = new ArrayList<>();
+
+al.add(10);
+al.add(20);
+al.add(30);
+
+ListIterator<Integer> litr = al.listIterator();
+
+// Forward Traversal
+
+while (litr.hasNext()) {
+
+    System.out.println(litr.next());
+
+}
+
+// Backward Traversal
+
+while (litr.hasPrevious()) {
+
+    System.out.println(litr.previous());
+
+}
+
+
+3. ENUMERATION
+--------------
+
+- Used mainly with legacy collection classes.
+- Supports forward traversal only.
+- Commonly used with Vector and Hashtable.
+- Does not support removing elements.
+
+Important Methods:
+
+1. hasMoreElements()
+   - Checks whether more elements are available.
+
+2. nextElement()
+   - Returns the next element.
+
+Example:
+
+Vector<Integer> v = new Vector<>();
+
+v.add(10);
+v.add(20);
+v.add(30);
+
+Enumeration<Integer> e = v.elements();
+
+while (e.hasMoreElements()) {
+
+    System.out.println(e.nextElement());
+
+}
+
+
+============================================================
+14. ITERATOR VS LISTITERATOR VS ENUMERATION
+============================================================
+
+Iterator:
+---------
+
+1. Forward traversal.
+2. Applicable to collections.
+3. Supports remove().
+4. Modern cursor.
+
+ListIterator:
+-------------
+
+1. Forward and backward traversal.
+2. Applicable only to List.
+3. Supports add(), set() and remove().
+4. More functionality than Iterator.
+
+Enumeration:
+------------
+
+1. Forward traversal.
+2. Mainly used with legacy classes.
+3. Does not support remove().
+4. Legacy cursor.
+
+
+============================================================
+15. COLLECTION INTERFACE VS LIST INTERFACE METHODS
+============================================================
+
+IMPORTANT:
+----------
+
+Collection interface provides common methods:
+
+1. add(Object obj)
+2. addAll(Collection c)
+3. remove(Object obj)
+4. removeAll(Collection c)
+5. retainAll(Collection c)
+6. contains(Object obj)
+7. containsAll(Collection c)
+8. size()
+9. isEmpty()
+10. clear()
+11. iterator()
+12. toArray()
+
+List interface provides additional methods:
+
+1. add(int index, Object obj)
+2. addAll(int index, Collection c)
+3. get(int index)
+4. set(int index, Object obj)
+5. remove(int index)
+6. indexOf(Object obj)
+7. lastIndexOf(Object obj)
+8. listIterator()
+9. listIterator(int index)
+10. subList(int fromIndex, int toIndex)
+
+NOTE:
+-----
+
+Methods like get(index), set(index), indexOf() and
+lastIndexOf() belong to List, not Collection.
