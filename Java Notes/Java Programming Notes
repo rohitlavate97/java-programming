@@ -12839,3 +12839,515 @@ Map<Student, Integer> map = new HashMap<>();
 // If custom objects are used as HashMap keys,
 // equals() and hashCode() should be implemented
 // consistently to identify logically equal keys.
+
+HASHMAP
+------------------------------------------------------------
+
+- HashMap is an implementation class of the Map interface.
+- It stores data in key-value pair format.
+- Default initial capacity = 16.
+- Default load factor = 0.75.
+- Default threshold = 12 (16 * 0.75).
+- Internal data structure:
+    - Hash table (array of buckets).
+    - Linked list or balanced tree within buckets when collisions occur.
+- Duplicate keys are NOT allowed.
+- Duplicate values are allowed.
+- Null keys are allowed (only one null key).
+- Multiple null values are allowed.
+- Insertion order is NOT maintained.
+- HashMap is NOT synchronized (not thread-safe).
+
+
+Syntax:
+
+HashMap<Integer, String> map = new HashMap<>();
+
+map.put(101, "John");
+
+When put() is called:
+
+1. HashMap calculates the hash code of the key.
+2. It calculates the bucket index.
+3. It identifies the appropriate bucket.
+4. It stores the key-value entry in that bucket.
+
+If two keys map to the same bucket, a collision occurs.
+
+Collision handling:
+- Entries are initially stored using linked-list nodes.
+- When a bucket becomes sufficiently populated,
+  HashMap may convert its linked list into a red-black tree.
+- Tree conversion depends on implementation thresholds
+  and the overall capacity of the HashMap.
+
+Important:
+- HashMap does not maintain insertion order.
+
+
+2. LINKEDHASHMAP
+------------------------------------------------------------
+
+- LinkedHashMap is an implementation class of Map.
+- It maintains insertion order by default.
+- It allows duplicate values.
+- Duplicate keys are not allowed.
+- Null key and null values are allowed.
+- Internal data structure:
+    Hash table + Doubly Linked List.
+
+Example:
+
+LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+
+map.put(101, "John");
+map.put(102, "Smith");
+map.put(103, "David");
+
+Output:
+{101=John, 102=Smith, 103=David}
+
+Note:
+- LinkedHashMap maintains insertion order by default.
+- It can also be configured to maintain access order.
+
+
+3. TREEMAP
+------------------------------------------------------------
+
+- TreeMap is an implementation class of Map.
+- It maintains keys in sorted order.
+- By default, sorting is based on natural ordering of keys.
+- It uses a Red-Black Tree internally.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+- Null keys are not allowed with natural ordering.
+- Null values are allowed.
+
+Example:
+
+TreeMap<String, Integer> map = new TreeMap<>();
+
+map.put("Ashok", 101);
+map.put("Vani", 200);
+map.put("Raja", 50);
+
+System.out.println(map);
+
+Output:
+{Ashok=101, Raja=50, Vani=200}
+
+Note:
+- Keys must be Comparable or a Comparator must be provided.
+- TreeMap maintains sorted order of keys.
+- Internal data structure is a Red-Black Tree.
+
+
+4. QUEUE
+------------------------------------------------------------
+
+Package: java.util
+
+- Queue is an interface.
+- Queue extends the Collection interface.
+- It is used to store a group of objects.
+- It generally follows FIFO:
+    First In, First Out.
+- It represents an ordered collection of elements.
+- Newly inserted elements are generally added at the end.
+- Removal generally happens from the head.
+
+Queue implementation classes:
+
+1. PriorityQueue
+2. ArrayDeque
+3. LinkedList
+
+
+Example:
+
+PriorityQueue<String> queue = new PriorityQueue<>();
+
+queue.add("John");
+queue.add("Smith");
+queue.add("David");
+queue.add("Charles");
+
+System.out.println(queue);
+
+Note:
+- PriorityQueue does not guarantee insertion order.
+- Elements are ordered according to natural ordering
+  or the supplied Comparator.
+- The head contains the highest-priority element
+  according to the configured ordering.
+
+Important Queue Methods:
+
+1. add(element)
+   - Adds an element.
+   - Throws an exception if insertion fails.
+
+2. offer(element)
+   - Adds an element.
+   - Returns false if insertion fails.
+
+3. remove()
+   - Removes and returns the head element.
+   - Throws exception if queue is empty.
+
+4. poll()
+   - Removes and returns the head element.
+   - Returns null if queue is empty.
+
+5. element()
+   - Retrieves the head without removing it.
+   - Throws exception if queue is empty.
+
+6. peek()
+   - Retrieves the head without removing it.
+   - Returns null if queue is empty.
+
+
+Example:
+
+PriorityQueue<String> queue = new PriorityQueue<>();
+
+queue.add("John");
+queue.add("Smith");
+queue.add("David");
+queue.add("Charles");
+
+System.out.println(queue);
+
+System.out.println(queue.element()); // Head element
+System.out.println(queue.peek());    // Head element
+
+Iterator<String> iterator = queue.iterator();
+
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+
+queue.remove(); // Removes head element
+queue.poll();   // Removes head element
+
+
+5. ARRAYDEQUE
+------------------------------------------------------------
+
+- ArrayDeque implements the Deque interface.
+- Deque means Double Ended Queue.
+- It allows insertion and removal from both ends.
+- It is not thread-safe.
+- Null elements are not allowed.
+- It can be used as both:
+    1. Queue
+    2. Stack
+
+Example:
+
+ArrayDeque<String> ad = new ArrayDeque<>();
+
+ad.add("One");
+ad.add("Two");
+ad.add("Three");
+
+System.out.println(ad);
+
+Output:
+[One, Two, Three]
+
+
+Important Methods:
+
+1. addFirst(element)
+   - Adds an element at the beginning.
+
+2. addLast(element)
+   - Adds an element at the end.
+
+3. offerFirst(element)
+   - Inserts an element at the beginning.
+
+4. offerLast(element)
+   - Inserts an element at the end.
+
+5. peekFirst()
+   - Retrieves the first element without removing it.
+
+6. peekLast()
+   - Retrieves the last element without removing it.
+
+7. pollFirst()
+   - Retrieves and removes the first element.
+
+8. pollLast()
+   - Retrieves and removes the last element.
+
+
+Example:
+
+ArrayDeque<String> ad = new ArrayDeque<>();
+
+ad.add("One");
+ad.add("Two");
+ad.add("Three");
+
+ad.addFirst("Zero");
+ad.addLast("Four");
+
+System.out.println(ad);
+
+Output:
+[Zero, One, Two, Three, Four]
+
+System.out.println(ad.pollFirst());
+
+Output:
+Zero
+
+System.out.println(ad.pollLast());
+
+Output:
+Four
+
+Note:
+- ArrayDeque is generally faster than Stack for stack operations.
+- It is also useful for implementing queues.
+
+
+6. HASHTABLE
+------------------------------------------------------------
+
+- Hashtable is an implementation class of Map.
+- It stores data in key-value pair format.
+- Default initial capacity = 11.
+- Default load factor = 0.75.
+- It uses a hash table internally.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+- Null keys are not allowed.
+- Null values are not allowed.
+- Insertion order is not maintained.
+- Hashtable is synchronized (thread-safe).
+- Hashtable is a legacy class.
+
+Example:
+
+Hashtable<Integer, String> ht = new Hashtable<>();
+
+ht.put(101, "John");
+ht.put(102, "Smith");
+
+System.out.println(ht);
+
+
+Important:
+
+- If thread safety is not required, prefer HashMap.
+- If thread safety is required, ConcurrentHashMap is
+  generally recommended over Hashtable.
+- Hashtable synchronizes its methods, which can limit
+  concurrent performance.
+
+
+7. HASHMAP vs HASHTABLE
+------------------------------------------------------------
+
+HashMap:
+- Default capacity: 16
+- Load factor: 0.75
+- Null key: Allowed (one)
+- Null values: Allowed
+- Thread-safe: No
+- Insertion order: Not maintained
+- Introduced in Java 1.2
+- Modern collection class
+
+Hashtable:
+- Default capacity: 11
+- Load factor: 0.75
+- Null key: Not allowed
+- Null values: Not allowed
+- Thread-safe: Yes
+- Insertion order: Not maintained
+- Legacy class (Java 1.0)
+
+
+8. THREAD SAFETY
+------------------------------------------------------------
+
+Thread safety is important when multiple threads access
+and modify shared data.
+
+If thread safety is required:
+
+1. ConcurrentHashMap
+   - Recommended concurrent Map implementation.
+   - Supports concurrent access efficiently.
+
+2. Collections.synchronizedMap()
+   - Creates a synchronized wrapper around a Map.
+
+3. Hashtable
+   - Legacy synchronized Map implementation.
+
+Example:
+
+Map<Integer, String> map = new ConcurrentHashMap<>();
+
+map.put(101, "John");
+
+
+9. COLLECTION SORTING / COMPARATOR
+------------------------------------------------------------
+
+Important topics:
+
+1. Pair-Pair and Pair-List collections.
+2. Properties class.
+3. Collection use cases.
+4. Java Util Date and Java SQL Date.
+5. Java Util StringTokenizer.
+
+
+10. PROPERTIES CLASS IN JAVA
+------------------------------------------------------------
+
+- Properties is a predefined class available in java.util.
+- Properties extends Hashtable.
+- It stores data in key-value format.
+- It is commonly used to store configuration information.
+- It avoids hardcoding configuration values in Java programs.
+- It is commonly used for database configuration,
+  application configuration, etc.
+
+Example use case:
+
+Suppose a Java application wants to communicate with
+a database.
+
+We need the following information:
+
+- Database URL
+- Database username
+- Database password
+
+Hardcoding these values in Java code creates problems.
+
+If database credentials or URL change:
+- We need to modify Java source code.
+- We need to recompile the application.
+- We need to redeploy the application.
+
+To avoid this problem, we use a properties file.
+
+Benefits:
+- Avoids hardcoding.
+- Improves maintainability.
+- Provides loose coupling.
+- Configuration can be changed without modifying
+  application source code.
+
+
+11. DATABASE.PROPERTIES FILE
+------------------------------------------------------------
+
+Create a file named:
+
+database.properties
+
+File content:
+
+db-url=jdbc:mysql://localhost:3306/mydb
+db-uname=admin
+db-pwd=admin@123
+
+Note:
+- A properties file stores data in key-value format.
+- The file extension is .properties.
+- Keys and values are separated by '='.
+- Values are stored as strings.
+
+
+12. READING PROPERTIES FILE IN JAVA
+------------------------------------------------------------
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+public class DatabaseApp {
+
+    public static void main(String[] args)
+            throws IOException {
+
+        // Create FileInputStream
+        FileInputStream fis =
+                new FileInputStream("database.properties");
+
+        // Create Properties object
+        Properties p = new Properties();
+
+        // Load properties from file
+        p.load(fis);
+
+        // Read values using keys
+        String url = p.getProperty("db-url");
+
+        String username = p.getProperty("db-uname");
+
+        String password = p.getProperty("db-pwd");
+
+        // Print configuration
+        System.out.println("URL: " + url);
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+
+        // Close FileInputStream
+        fis.close();
+    }
+}
+
+
+Output:
+
+URL: jdbc:mysql://localhost:3306/mydb
+Username: admin
+Password: admin@123
+
+
+Important Properties Methods:
+
+1. setProperty(key, value)
+   - Adds or updates a property.
+
+2. getProperty(key)
+   - Retrieves a property value.
+   - Returns null if the key is not found.
+
+3. load(InputStream)
+   - Loads properties from an input stream.
+
+4. store(OutputStream, comments)
+   - Stores properties into a file.
+
+5. propertyNames()
+   - Returns property names.
+
+6. stringPropertyNames()
+   - Returns property names as a Set<String>.
+
+
+Example:
+
+Properties p = new Properties();
+
+p.setProperty("username", "admin");
+p.setProperty("password", "admin123");
+
+System.out.println(p.getProperty("username"));
+
+Output:
+admin
