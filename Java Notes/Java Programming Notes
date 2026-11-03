@@ -8860,3 +8860,1042 @@ JVM garbage collectors are designed to balance:
 - Throughput
 - Latency
 - Memory utilization
+
+
+GENERICS IN JAVA
+============================================================
+
+1. WHAT ARE GENERICS?
+
+Generics were introduced in Java 5.
+
+Generics allow us to write classes, interfaces and methods that
+can operate on different data types while providing compile-time
+type safety.
+
+Benefits:
+- Type safety.
+- Code reusability.
+- Avoids unnecessary type casting.
+- Reduces ClassCastException at runtime.
+- Makes code more flexible and maintainable.
+
+Without Generics:
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        ArrayList list = new ArrayList();
+
+        list.add(10);
+        list.add("Hello");
+        list.add(100.52);
+
+        String value = (String) list.get(0);
+        // ClassCastException at runtime
+    }
+}
+
+With Generics:
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        ArrayList<String> list = new ArrayList<>();
+
+        list.add("Java");
+        list.add("Spring Boot");
+
+        // list.add(100); // Compilation error
+
+        String value = list.get(0);
+    }
+}
+
+Here, ArrayList<String> allows only String values.
+
+
+2. GENERIC CLASS
+
+A generic class allows us to define a class that works with
+different data types.
+
+Example:
+
+public class Demo<T> {
+
+    T obj;
+
+    public void set(T obj) {
+        this.obj = obj;
+    }
+
+    public void get() {
+        System.out.println(obj);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Demo<Integer> d1 = new Demo<>();
+        d1.set(10);
+        d1.get();
+
+        Demo<String> d2 = new Demo<>();
+        d2.set("Java");
+        d2.get();
+
+        Demo<Double> d3 = new Demo<>();
+        d3.set(100.52);
+        d3.get();
+    }
+}
+
+Explanation:
+
+T is a type parameter.
+
+Instead of creating separate classes for Integer, String and
+Double, we use one generic class.
+
+Common type parameter naming conventions:
+
+T - Type
+E - Element
+K - Key
+V - Value
+N - Number
+
+
+3. GENERIC METHOD
+
+A generic method declares its own type parameter independently
+of whether the containing class is generic.
+
+Syntax:
+
+public <T> void methodName(T obj) {
+    // Logic
+}
+
+Example:
+
+public class Demo {
+
+    public <T> void display(T obj) {
+        System.out.println(obj);
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        d.display(10);
+        d.display("Java");
+        d.display(100.52);
+    }
+}
+
+Here:
+- <T> declares the generic method's type parameter.
+- T obj accepts different types of arguments.
+- The compiler infers the type from the argument.
+
+
+4. GENERIC CLASS VS GENERIC METHOD
+
+Generic Class:
+- Type parameter is declared at class level.
+- Can be used by instance variables and instance methods.
+- Type is specified when creating the object.
+
+Generic Method:
+- Type parameter is declared at method level.
+- Has its own independent type parameter.
+- Type is inferred from the method arguments or specified
+  explicitly when calling the method.
+
+ BOUNDED GENERICS
+============================================================
+
+1. WHAT ARE BOUNDED GENERICS?
+
+Bounded Generics allow us to restrict the types that can be
+passed as generic type arguments.
+
+Example:
+
+public class Demo<T extends Number> {
+
+    T obj;
+
+    public void display(T obj) {
+        System.out.println(obj);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Demo<Integer> d1 = new Demo<>();
+        d1.display(10);
+
+        Demo<Double> d2 = new Demo<>();
+        d2.display(100.52);
+
+        // Demo<String> d3 = new Demo<>();
+        // Compilation error
+    }
+}
+
+Explanation:
+
+T extends Number means T must be Number or one of its subclasses.
+
+Valid types:
+- Integer
+- Double
+- Float
+- Long
+- Short
+- Byte
+
+Invalid type:
+- String
+
+
+2. BOUNDED GENERIC METHODS
+
+Example:
+
+public class Demo {
+
+    public <T extends Number> void display(T obj) {
+        System.out.println(obj);
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        d.display(10);
+        d.display(20.5);
+
+        // d.display("Java"); // Compilation error
+    }
+}
+
+
+3. MULTIPLE BOUNDS
+
+A generic type can have multiple bounds.
+
+Syntax:
+
+<T extends ClassName & Interface1 & Interface2>
+
+Example:
+
+class Demo<T extends Number & Comparable<T>> {
+
+    T obj;
+
+}
+
+Important rules:
+
+- Only one class can be specified as a bound.
+- The class, if present, must come first.
+- Multiple interfaces can follow.
+- Use & to separate multiple bounds.
+
+Note:
+If no class is specified, multiple interfaces can be used.
+
+
+4. WILDCARDS IN GENERICS
+
+The wildcard symbol (?) represents an unknown type.
+
+Three important wildcard forms:
+
+A. Unbounded Wildcard (?)
+
+Example:
+
+public void display(List<?> list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+}
+
+It accepts a List of any type.
+
+B. Upper Bounded Wildcard (? extends Type)
+
+Example:
+
+public void display(List<? extends Number> list) {
+
+    for (Number n : list) {
+        System.out.println(n);
+    }
+}
+
+Accepts Number or its subclasses.
+
+Examples:
+List<Integer>
+List<Double>
+List<Float>
+
+C. Lower Bounded Wildcard (? super Type)
+
+Example:
+
+public void display(List<? super Integer> list) {
+
+    list.add(10);
+}
+
+Accepts Integer or its supertypes.
+
+Examples:
+List<Integer>
+List<Number>
+List<Object>
+
+
+5. QUICK COMPARISON
+
+?                  -> Any type.
+? extends Number   -> Number or its subclasses.
+? super Integer   -> Integer or its supertypes.
+
+INTERVIEW TIP:
+
+PECS principle:
+
+Producer Extends:
+Use ? extends T when you mainly read values from a collection.
+
+Consumer Super:
+Use ? super T when you mainly write values into a collection.
+
+ENUMS IN JAVA
+============================================================
+
+1. WHAT IS AN ENUM?
+
+Enum is a special Java type used to represent a fixed set of
+predefined constants.
+
+Example:
+
+enum Days {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+}
+
+Usage:
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Days day = Days.MONDAY;
+
+        System.out.println(day);
+    }
+}
+
+Output:
+MONDAY
+
+
+2. WHY DO WE USE ENUM?
+
+- Represents a fixed set of constants.
+- Provides type safety.
+- Prevents invalid values.
+- Makes code readable and maintainable.
+- Can be used with switch statements.
+
+Example:
+
+enum Status {
+    PENDING,
+    APPROVED,
+    REJECTED
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Status status = Status.APPROVED;
+
+        switch (status) {
+
+            case PENDING:
+                System.out.println("Request Pending");
+                break;
+
+            case APPROVED:
+                System.out.println("Request Approved");
+                break;
+
+            case REJECTED:
+                System.out.println("Request Rejected");
+                break;
+        }
+    }
+}
+
+
+3. IMPORTANT ENUM METHODS
+
+values()
+    Returns an array containing all enum constants.
+
+valueOf()
+    Returns the enum constant matching the specified name.
+
+ordinal()
+    Returns the zero-based position of the enum constant.
+
+name()
+    Returns the exact name of the enum constant.
+
+Example:
+
+enum Days {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        // values()
+        for (Days day : Days.values()) {
+            System.out.println(day);
+        }
+
+        // valueOf()
+        Days day = Days.valueOf("MONDAY");
+        System.out.println(day);
+
+        // ordinal()
+        System.out.println(Days.TUESDAY.ordinal());
+
+        // name()
+        System.out.println(Days.MONDAY.name());
+    }
+}
+
+Output:
+
+MONDAY
+TUESDAY
+WEDNESDAY
+MONDAY
+1
+MONDAY
+
+
+4. ENUM WITH VARIABLES AND CONSTRUCTORS
+
+An enum can have:
+- Instance variables.
+- Constructors.
+- Methods.
+- Constant-specific implementations.
+
+Example:
+
+enum Days {
+
+    MONDAY("Working Day"),
+    TUESDAY("Working Day"),
+    SATURDAY("Weekend"),
+    SUNDAY("Weekend");
+
+    private String type;
+
+    Days(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Days day = Days.SUNDAY;
+
+        System.out.println(day);
+        System.out.println(day.getType());
+    }
+}
+
+Output:
+
+SUNDAY
+Weekend
+
+Important:
+
+- Enum constructors cannot be public or protected.
+- Enum constructors are effectively private.
+- We cannot create enum objects using new.
+- Enum constants are implicitly public, static and final.
+- Every enum implicitly extends java.lang.Enum.
+- An enum cannot extend another class.
+- An enum can implement interfaces.
+
+
+5. ENUM IMPLEMENTING AN INTERFACE
+
+interface Printable {
+    void print();
+}
+
+enum Days implements Printable {
+
+    MONDAY,
+    SUNDAY;
+
+    @Override
+    public void print() {
+        System.out.println("Day: " + this);
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Days.MONDAY.print();
+        Days.SUNDAY.print();
+    }
+}
+
+
+INNER CLASSES IN JAVA
+============================================================
+
+1. WHAT IS AN INNER CLASS?
+
+A class declared inside another class is called a nested class.
+
+Nested classes are useful for:
+- Logical grouping of related classes.
+- Better encapsulation.
+- Improved code organization.
+- Accessing members of the enclosing class.
+
+Java has two main categories:
+
+1. Static Nested Class
+2. Inner Class (Non-static nested class)
+
+
+2. TYPES OF NESTED CLASSES
+
+1. Static Nested Class
+2. Member Inner Class
+3. Local Inner Class
+4. Anonymous Inner Class
+
+Explanation:
+
+A. STATIC NESTED CLASS
+
+- Declared using the static keyword.
+- Does not require an outer class object.
+- Can directly access static members of the outer class.
+- Cannot directly access non-static members of the outer class.
+
+Example:
+
+class Outer {
+
+    static int x = 10;
+    int y = 20;
+
+    static class Inner {
+
+        void display() {
+
+            System.out.println(x);
+
+            // System.out.println(y);
+            // Compilation error
+        }
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Outer.Inner obj = new Outer.Inner();
+
+        obj.display();
+    }
+}
+
+
+B. MEMBER INNER CLASS
+
+- Declared inside a class without static.
+- Requires an outer class object.
+- Can access both static and non-static members of the outer class.
+
+Example:
+
+class Outer {
+
+    int x = 10;
+
+    class Inner {
+
+        void display() {
+            System.out.println(x);
+        }
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Outer outer = new Outer();
+
+        Outer.Inner inner = outer.new Inner();
+
+        inner.display();
+    }
+}
+
+
+C. LOCAL INNER CLASS
+
+- Declared inside a method or block.
+- Can be accessed only within that method or block.
+- Can access members of the enclosing class.
+- Can access local variables that are final or effectively final.
+
+Example:
+
+class Outer {
+
+    void display() {
+
+        int x = 10;
+
+        class Inner {
+
+            void show() {
+                System.out.println(x);
+            }
+        }
+
+        Inner obj = new Inner();
+
+        obj.show();
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Outer outer = new Outer();
+
+        outer.display();
+    }
+}
+
+
+D. ANONYMOUS INNER CLASS
+
+- A class without a name.
+- Used when we need a one-time implementation.
+- Can extend a class or implement an interface.
+- Commonly used with interfaces and abstract classes.
+
+Example:
+
+interface Printable {
+
+    void print();
+}
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Printable obj = new Printable() {
+
+            @Override
+            public void print() {
+                System.out.println("Anonymous class called");
+            }
+        };
+
+        obj.print();
+    }
+}
+
+Note:
+
+For a functional interface, a lambda expression can often
+replace an anonymous class.
+
+Example:
+
+Printable obj = () -> System.out.println("Hello");
+
+
+3. STATIC NESTED CLASS VS MEMBER INNER CLASS
+
+Static Nested Class:
+- Declared using static.
+- Does not need an outer object.
+- Direct access to outer static members only.
+
+Member Inner Class:
+- Non-static.
+- Requires an outer object.
+- Can access both static and non-static outer members.
+
+
+4. ACCESS MODIFIERS IN NESTED CLASSES
+
+Nested classes can use access modifiers:
+
+- public
+- protected
+- private
+- default
+
+Top-level classes can only use:
+- public
+- default (package-private)
+
+A top-level class cannot be declared private or protected.
+
+CLASS LOADING IN JAVA
+============================================================
+
+1. JAVA PROGRAM EXECUTION FLOW
+
+Java Source Code (.java)
+          |
+          v
+       Compiler
+       (javac)
+          |
+          v
+   Bytecode (.class)
+          |
+          v
+        JVM
+          |
+          v
+   Class Loading
+          |
+          v
+   Linking & Initialization
+          |
+          v
+   Program Execution
+
+
+2. WHAT IS CLASS LOADING?
+
+Class Loading is the process of loading Java .class files into
+JVM memory so that the JVM can execute the program.
+
+Execution flow:
+
+1. We write Java source code (.java).
+2. Java compiler (javac) compiles the source code.
+3. Compiler generates bytecode (.class file).
+4. When we run the program, JVM loads the required classes.
+5. JVM converts bytecode into machine instructions using
+   the interpreter and JIT compiler.
+6. Program execution begins.
+
+Important:
+
+- .java  -> Java source code.
+- .class -> Java bytecode.
+- JVM    -> Executes Java bytecode.
+
+
+3. TYPES OF CLASS LOADERS IN JAVA
+
+Java provides three main built-in class loaders:
+
+1. Bootstrap ClassLoader
+2. Platform ClassLoader
+3. Application ClassLoader
+
+Note:
+Before Java 9, Platform ClassLoader was known as
+Extension ClassLoader.
+
+A. BOOTSTRAP CLASSLOADER
+
+- It is the parent of the Platform ClassLoader.
+- Loads core Java classes.
+- Loads fundamental classes required by the JVM.
+- Examples include classes from java.lang and java.util.
+- Implemented as part of the JVM.
+
+Examples:
+
+String
+Object
+System
+Integer
+ArrayList
+
+Note:
+In modern Java, core classes are stored in modules such as
+java.base, not in rt.jar.
+
+B. PLATFORM CLASSLOADER
+
+- Introduced in Java 9, replacing the Extension ClassLoader.
+- Loads platform classes that are not loaded by Bootstrap.
+- Loads classes from platform modules and relevant platform
+  class-loader paths.
+
+Before Java 9:
+Extension ClassLoader loaded classes from the JRE extension
+directory, such as jre/lib/ext.
+
+C. APPLICATION CLASSLOADER
+
+- Also called System ClassLoader.
+- Loads application classes.
+- Loads classes from the application classpath or module path.
+- Usually loads our project classes and external dependencies.
+
+Example:
+
+com.example.Demo
+com.example.Student
+
+
+4. CLASS LOADER HIERARCHY
+
+          Bootstrap ClassLoader
+                   |
+                   v
+           Platform ClassLoader
+                   |
+                   v
+          Application ClassLoader
+                   |
+                   v
+             Custom ClassLoader
+
+Explanation:
+
+Application ClassLoader delegates to Platform ClassLoader.
+
+Platform ClassLoader delegates to Bootstrap ClassLoader.
+
+This delegation mechanism is called Parent Delegation.
+
+
+5. PARENT DELEGATION MODEL
+
+Java follows the Parent Delegation Model by default.
+
+When a class needs to be loaded:
+
+Step 1:
+Application ClassLoader receives a class-loading request.
+
+Step 2:
+It delegates the request to its parent (Platform ClassLoader).
+
+Step 3:
+Platform ClassLoader delegates the request to
+Bootstrap ClassLoader.
+
+Step 4:
+Bootstrap ClassLoader checks whether it can load the class.
+
+Step 5:
+If Bootstrap cannot load it, the request goes back to
+Platform ClassLoader.
+
+Step 6:
+If Platform cannot load it, the request goes back to
+Application ClassLoader.
+
+Step 7:
+If Application cannot load it, a ClassNotFoundException
+or NoClassDefFoundError may occur, depending on the situation.
+
+Flow:
+
+Application ClassLoader
+          |
+          | Request
+          v
+Platform ClassLoader
+          |
+          | Request
+          v
+Bootstrap ClassLoader
+          |
+          | Cannot load?
+          v
+Platform ClassLoader
+          |
+          | Cannot load?
+          v
+Application ClassLoader
+          |
+          v
+      Class Loaded
+
+
+6. WHY DOES JAVA FOLLOW PARENT DELEGATION?
+
+- Prevents duplicate loading of core Java classes.
+- Improves security.
+- Ensures standard Java classes are loaded by trusted loaders.
+- Avoids accidental replacement of core Java classes.
+
+Example:
+
+Suppose we create our own class named String.
+
+Java will not normally allow the application class loader
+to replace java.lang.String.
+
+The Bootstrap ClassLoader is responsible for loading
+the standard java.lang.String class.
+
+
+7. HOW TO CHECK WHICH CLASSLOADER LOADED A CLASS?
+
+Java provides getClassLoader().
+
+Example:
+
+public class Demo {
+
+    public static void main(String[] args) {
+
+        System.out.println(
+            String.class.getClassLoader()
+        );
+
+        System.out.println(
+            Demo.class.getClassLoader()
+        );
+    }
+}
+
+Possible Output:
+
+null
+jdk.internal.loader.ClassLoaders$AppClassLoader@...
+
+Explanation:
+
+String.class.getClassLoader()
+    Returns null because String is loaded by Bootstrap
+    ClassLoader.
+
+Demo.class.getClassLoader()
+    Returns the Application ClassLoader.
+
+IMPORTANT:
+Bootstrap ClassLoader is implemented by the JVM, so its
+class loader reference is represented as null in Java.
+
+
+8. CLASS LOADER METHODS
+
+Important methods of ClassLoader:
+
+loadClass(String name)
+    Loads a class using the class loader's delegation mechanism.
+
+findClass(String name)
+    Finds and defines a class.
+
+defineClass()
+    Converts class bytecode into a Class object.
+
+getParent()
+    Returns the parent class loader.
+
+getSystemClassLoader()
+    Returns the system/application class loader.
+
+
+9. CLASS LOADING LIFECYCLE
+
+Class loading in JVM involves three major stages:
+
+1. Loading
+2. Linking
+3. Initialization
+
+
+A. LOADING
+
+- JVM locates the class bytecode.
+- Reads the class file.
+- Creates the corresponding Class object.
+- Makes the class available to the JVM.
+
+B. LINKING
+
+Linking consists of three stages:
+
+1. Verification
+   Checks whether bytecode is valid and follows JVM rules.
+
+2. Preparation
+   Allocates memory for static fields and assigns default
+   values to them.
+
+3. Resolution
+   Converts symbolic references into direct references
+   when required.
+
+C. INITIALIZATION
+
+- Executes static variable initializers and static blocks.
+- Assigns explicitly declared static values.
+- Happens before the class is actively used, subject to
+  JVM initialization rules.
