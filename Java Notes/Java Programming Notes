@@ -13855,3 +13855,497 @@ public class Main {
     }
 
 }
+
+
+1. FAIL-FAST AND FAIL-SAFE ITERATORS
+======================================
+
+FAIL-FAST ITERATOR:
+- Fail-fast iterators throw ConcurrentModificationException
+  when a collection is structurally modified while iterating,
+  except through the iterator's own supported remove() method.
+- They detect modifications on a best-effort basis.
+- Common examples:
+    1. ArrayList
+    2. LinkedList
+    3. Vector
+    4. HashMap
+    5. HashSet
+
+Example:
+
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        ArrayList<Integer> al = new ArrayList<>();
+
+        al.add(100);
+        al.add(200);
+        al.add(300);
+        al.add(400);
+
+        for (int i : al) {
+
+            System.out.println(i);
+
+            if (i == 100) {
+                al.add(150);
+            }
+        }
+    }
+}
+
+OUTPUT:
+100
+Exception in thread "main"
+java.util.ConcurrentModificationException
+
+Reason:
+- ArrayList uses a fail-fast iterator.
+- We are modifying the collection while traversing it.
+- The iterator detects the structural modification and
+  throws ConcurrentModificationException.
+
+------------------------------------------------------------
+
+FAIL-SAFE ITERATION (SNAPSHOT / WEAKLY CONSISTENT)
+------------------------------------------------------------
+
+- Such iterators do not throw ConcurrentModificationException
+  when modifications occur during iteration.
+- Different implementations achieve this differently.
+
+Examples:
+    1. CopyOnWriteArrayList
+    2. ConcurrentHashMap
+
+A) CopyOnWriteArrayList:
+
+- Creates a new copy of the underlying array whenever
+  a modification operation is performed.
+- Its iterator works on a snapshot of the collection.
+- Changes made after iterator creation are not visible
+  to that iterator.
+- Suitable when read operations are frequent and
+  write operations are relatively less frequent.
+
+Example:
+
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        CopyOnWriteArrayList<Integer> al =
+                new CopyOnWriteArrayList<>();
+
+        al.add(100);
+        al.add(200);
+        al.add(300);
+        al.add(400);
+
+        for (int i : al) {
+
+            System.out.println(i);
+
+            if (i == 100) {
+                al.add(150);
+            }
+        }
+
+        System.out.println(al);
+    }
+}
+
+OUTPUT:
+100
+200
+300
+400
+
+[100, 200, 300, 400, 150]
+
+NOTE:
+- The iterator traverses the original snapshot.
+- The newly added element is not visible to the
+  existing iterator.
+
+B) ConcurrentHashMap:
+
+- A thread-safe implementation of the Map interface.
+- Supports concurrent access by multiple threads.
+- Its iterators are weakly consistent.
+- They do not throw ConcurrentModificationException.
+- They may reflect some modifications made during
+  iteration, but do not guarantee that every concurrent
+  modification will be visible.
+
+Example:
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        ConcurrentHashMap<Integer, String> map =
+                new ConcurrentHashMap<>();
+
+        map.put(101, "One");
+        map.put(102, "Two");
+        map.put(103, "Three");
+
+        Set<Integer> keySet = map.keySet();
+
+        Iterator<Integer> iterator = keySet.iterator();
+
+        while (iterator.hasNext()) {
+
+            System.out.println(iterator.next());
+
+            map.put(104, "Four");
+        }
+
+        System.out.println(map);
+    }
+}
+
+NOTE:
+- ConcurrentHashMap is designed for concurrent access.
+- Its iterator is weakly consistent.
+- It does not provide a fixed snapshot like
+  CopyOnWriteArrayList.
+
+
+============================================================
+2. HASHMAP
+============================================================
+
+- HashMap is an implementation class of the Map interface.
+- It stores data in key-value pairs.
+- Default initial capacity = 16.
+- Default load factor = 0.75.
+- Allows one null key.
+- Allows multiple null values.
+- Does not maintain insertion order.
+- Not synchronized.
+- Duplicate keys are not allowed.
+- Duplicate values are allowed.
+
+Syntax:
+
+HashMap<K, V> map = new HashMap<>();
+
+Example:
+
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        HashMap<String, Integer> hm = new HashMap<>();
+
+        hm.put("Ashok", 101);
+        hm.put("Raja", 102);
+        hm.put("Rani", 103);
+        hm.put("Anil", 104);
+
+        System.out.println("Size: " + hm.size());
+
+        System.out.println(hm);
+    }
+}
+
+OUTPUT (ORDER MAY VARY):
+Size: 4
+
+------------------------------------------------------------
+
+DUPLICATE KEY IN HASHMAP
+------------------------------------------------------------
+
+- If we insert a duplicate key, the old value will be
+  replaced by the new value.
+- HashMap compares keys using hashCode() and equals().
+
+Example:
+
+hm.put("Ashok", 101);
+
+hm.put("Raja", 102);
+
+hm.put("Rani", 103);
+
+hm.put("Ashok", 104);
+
+System.out.println(hm);
+
+OUTPUT:
+{Ashok=104, Raja=102, Rani=103}
+
+NOTE:
+- The old value 101 is replaced with 104.
+- The key "Ashok" is not duplicated.
+- Size remains 3.
+
+------------------------------------------------------------
+
+HASHMAP INTERNAL WORKING
+------------------------------------------------------------
+
+1. HashMap calculates the hash code of the key.
+2. It calculates the bucket index using the hash.
+3. The key-value entry is stored in the corresponding bucket.
+4. If multiple keys map to the same bucket, a collision occurs.
+5. HashMap compares keys using hashCode() and equals().
+6. If the key already exists, its value is replaced.
+7. Otherwise, a new entry is inserted.
+
+IMPORTANT:
+- HashMap uses an array of buckets internally.
+- Each bucket can store multiple entries.
+- Collision handling uses linked nodes.
+- When a bucket becomes sufficiently large,
+  it can be converted into a red-black tree.
+- Treeification generally happens when the bucket
+  has at least 8 entries and the table capacity is
+  at least 64.
+- If the table capacity is smaller, HashMap may resize.
+
+------------------------------------------------------------
+
+HASHMAP EXAMPLE WITH DUPLICATE KEYS
+------------------------------------------------------------
+
+HashMap<String, Integer> hm = new HashMap<>();
+
+hm.put("Ashok", 101);
+hm.put("Raja", 102);
+hm.put("Rani", 103);
+hm.put("Ashok", 104);
+
+System.out.println(hm.size());
+System.out.println(hm);
+
+OUTPUT:
+3
+{Ashok=104, Raja=102, Rani=103}
+
+============================================================
+3. IDENTITYHASHMAP
+============================================================
+
+- IdentityHashMap is an implementation of the Map interface.
+- It compares keys using the == operator.
+- It does not use equals() to determine key equality.
+- Two different objects with the same content can be
+  treated as separate keys.
+- It is useful when object identity is important.
+
+Example:
+
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        IdentityHashMap<String, Integer> ihm =
+                new IdentityHashMap<>();
+
+        ihm.put("Ashok", 101);
+        ihm.put("Raja", 102);
+        ihm.put("Rani", 103);
+
+        ihm.put(new String("Ashok"), 104);
+
+        System.out.println("Size: " + ihm.size());
+
+        System.out.println(ihm);
+    }
+}
+
+OUTPUT:
+Size: 4
+
+Explanation:
+
+- First "Ashok" refers to a string literal.
+- new String("Ashok") creates a different String object.
+- Both objects have the same content.
+- However, their memory references are different.
+- IdentityHashMap considers them separate keys.
+
+------------------------------------------------------------
+
+IDENTITYHASHMAP INTERNAL WORKING
+------------------------------------------------------------
+
+HashMap:
+- Uses hashCode() and equals() to compare keys.
+- Two different objects with equal content are
+  considered the same key.
+
+IdentityHashMap:
+- Uses System.identityHashCode() for hashing.
+- Uses == to compare keys.
+- Two different objects are treated as separate keys
+  even if their contents are equal.
+
+Example:
+
+String s1 = new String("Ashok");
+String s2 = new String("Ashok");
+
+System.out.println(s1.equals(s2)); // true
+System.out.println(s1 == s2);      // false
+
+HashMap<String, Integer> hm = new HashMap<>();
+
+hm.put(s1, 101);
+hm.put(s2, 102);
+
+System.out.println(hm.size());     // 1
+
+IdentityHashMap<String, Integer> ihm =
+        new IdentityHashMap<>();
+
+ihm.put(s1, 101);
+ihm.put(s2, 102);
+
+System.out.println(ihm.size());    // 2
+
+------------------------------------------------------------
+
+DIFFERENCE BETWEEN HASHMAP AND IDENTITYHASHMAP
+------------------------------------------------------------
+
+HashMap:
+- Compares keys using equals().
+- Uses hashCode() for hashing.
+- Two equal objects are considered duplicate keys.
+- Suitable for normal key-value storage.
+
+IdentityHashMap:
+- Compares keys using ==.
+- Uses identityHashCode() for hashing.
+- Two different object references are treated as
+  different keys.
+- Useful when object identity matters.
+
+============================================================
+4. WEAKHASHMAP
+============================================================
+
+- WeakHashMap is an implementation of the Map interface.
+- It stores keys using weak references.
+- Keys are not strongly referenced by WeakHashMap.
+- If a key has no other strong references, it becomes
+  eligible for garbage collection.
+- When the garbage collector removes the key,
+  its corresponding entry can also be removed.
+- Useful in certain cache and metadata scenarios.
+
+Example:
+
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        WeakHashMap<Integer, String> whm =
+                new WeakHashMap<>();
+
+        Integer key1 = new Integer(1);
+        Integer key2 = new Integer(2);
+        Integer key3 = new Integer(3);
+
+        whm.put(key1, "Hi");
+        whm.put(key2, "Hello");
+        whm.put(key3, "Hey");
+
+        System.out.println(whm);
+
+        key1 = null;
+        key2 = null;
+        key3 = null;
+
+        System.gc();
+
+        System.out.println(whm);
+    }
+}
+
+NOTE:
+- The output after System.gc() is not guaranteed.
+- Garbage collection is controlled by the JVM.
+- System.gc() only requests garbage collection.
+
+------------------------------------------------------------
+
+HASHMAP VS WEAKHASHMAP
+------------------------------------------------------------
+
+HashMap:
+- Keys are strongly referenced.
+- Keys remain reachable through the map.
+- Garbage collector cannot collect a key merely because
+  no other reference to it exists.
+
+WeakHashMap:
+- Keys are weakly referenced.
+- If no strong reference to a key exists elsewhere,
+  it becomes eligible for garbage collection.
+- Its corresponding map entry can be removed.
+
+Example:
+
+HashMap:
+    key -> Strong Reference
+    Entry remains until explicitly removed or map
+    becomes unreachable.
+
+WeakHashMap:
+    key -> Weak Reference
+    Entry can disappear after key is garbage collected.
+
+============================================================
+5. QUICK COMPARISON
+============================================================
+
+Collection Type          Main Characteristic
+------------------------------------------------------------
+HashMap                  Uses equals() and hashCode()
+IdentityHashMap          Uses == for key comparison
+WeakHashMap              Uses weak references for keys
+ConcurrentHashMap        Thread-safe concurrent Map
+CopyOnWriteArrayList     Snapshot-based iterator
+
+------------------------------------------------------------
+
+FAIL-FAST VS FAIL-SAFE / CONCURRENT ITERATION
+------------------------------------------------------------
+
+Feature                 Fail-Fast
+------------------------------------------------------------
+Modification            Detects structural modification
+Exception               ConcurrentModificationException
+Examples                ArrayList, HashMap, HashSet
+Iteration               Normally reflects collection state
+
+Feature                 Snapshot / Weakly Consistent
+------------------------------------------------------------
+Modification            Supports concurrent modification
+Exception               No CME for supported iteration
+Examples                CopyOnWriteArrayList,
+                        ConcurrentHashMap
+Iteration               Snapshot or weakly consistent
+
+IMPORTANT:
+- Fail-safe is a commonly used informal term.
+- CopyOnWriteArrayList uses snapshot iteration.
+- ConcurrentHashMap uses weakly consistent iteration.
+- These two mechanisms are not identical.
+
+
