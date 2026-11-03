@@ -7865,3 +7865,517 @@ Q7. What is the difference between `sleep()` and `wait()`?
 Q8. What happens if a thread calls `wait()` without owning the monitor?
 
 It throws `IllegalMonitorStateException`.
+
+
+## Anonymous Implementation in Java
+----------------------------------
+
+Definition: Anonymous implementation is a way to implement an interface or extend a class without creating a separate named class.
+
+### 1. Anonymous class using Runnable
+
+```
+Runnable task = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Task executing...");
+    }
+};
+
+Thread t1 = new Thread(task);
+t1.start();
+```
+
+Key points:
+
+- `Runnable` is an interface.
+- `new Runnable()` creates an anonymous class object.
+- `run()` provides the implementation.
+- No separate implementation class is required.
+
+### 2. Anonymous class using Callable
+
+```
+Callable<Integer> task = new Callable<Integer>() {
+    @Override
+    public Integer call() {
+        return 100;
+    }
+};
+```
+
+- `Callable` returns a result.
+- `call()` contains the task logic.
+- Commonly used with `ExecutorService` and `Future`.
+
+### 3. Lambda expression (Java 8)
+
+A shorter alternative to anonymous classes for functional interfaces.
+
+```
+Runnable task = () -> {
+    System.out.println("Task executing...");
+};
+
+new Thread(task).start();
+```
+
+### 4. Anonymous class vs Lambda
+
+| Anonymous class                         | Lambda                     |
+| --------------------------------------- | -------------------------- |
+| Longer syntax                           | Shorter syntax             |
+| Can implement multiple abstract methods | Only functional interfaces |
+| Has its own `this`                      | Uses enclosing `this`      |
+| Java 1.1                                | Java 8                     |
+
+### 5. When to use?
+
+- Anonymous class: One-time implementation without creating a separate class.
+- Lambda: Short implementation of a functional interface.
+- Separate class: When implementation needs reuse or is complex.
+
+Remember for interviews
+
+Anonymous implementation = Implementing an interface or extending a class without explicitly declaring a named class.
+
+Lambda = Concise implementation of a functional interface.
+
+
+JAVA MULTITHREADING - DEADLOCK NOTES
+===================================
+
+1. DEFINITION
+-------------
+
+Deadlock is a situation in multithreading where two or more
+threads are blocked indefinitely because each thread is
+waiting for a resource (lock) held by another thread.
+
+As a result, none of the threads can proceed.
+
+
+2. TEXT DIAGRAM
+---------------
+
+       THREAD 1                  THREAD 2
+       --------                  --------
+
+     Holds Lock 1              Holds Lock 2
+          |                         |
+          v                         v
+     Waits for Lock 2          Waits for Lock 1
+          |                         |
+          +-------- CIRCULAR -------+
+                   WAIT
+
+Thread 1 waits for Lock 2.
+Thread 2 waits for Lock 1.
+
+Neither thread can proceed.
+This situation is called DEADLOCK.
+
+
+3. FOUR NECESSARY CONDITIONS FOR DEADLOCK
+-----------------------------------------
+
+1. Mutual Exclusion
+   Only one thread can hold a particular lock at a time.
+
+2. Hold and Wait
+   A thread holds one lock while waiting to acquire another.
+
+3. No Preemption
+   A lock cannot be forcibly taken away from its owner.
+
+4. Circular Wait
+   Threads form a circular chain where each thread waits
+   for a lock held by another thread.
+
+
+4. JAVA DEADLOCK EXAMPLE
+------------------------
+
+public class DeadlockDemo {
+
+    static final Object lock1 = new Object();
+    static final Object lock2 = new Object();
+
+    public static void main(String[] args) {
+
+        Thread t1 = new Thread(() -> {
+
+            synchronized (lock1) {
+
+                System.out.println("Thread 1 holds Lock 1");
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+
+                synchronized (lock2) {
+                    System.out.println("Thread 1 holds Lock 2");
+                }
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+
+            synchronized (lock2) {
+
+                System.out.println("Thread 2 holds Lock 2");
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+
+                synchronized (lock1) {
+                    System.out.println("Thread 2 holds Lock 1");
+                }
+            }
+        });
+
+        t1.start();
+        t2.start();
+    }
+}
+
+
+5. HOW DOES DEADLOCK OCCUR?
+---------------------------
+
+1. Thread 1 acquires Lock 1.
+2. Thread 2 acquires Lock 2.
+3. Thread 1 waits for Lock 2.
+4. Thread 2 waits for Lock 1.
+5. Both threads wait indefinitely.
+
+
+6. HOW TO PREVENT DEADLOCK?
+---------------------------
+
+1. Lock Ordering
+   Always acquire multiple locks in the same predefined order.
+
+2. Avoid Nested Locks
+   Minimize acquiring multiple locks simultaneously.
+
+3. Use tryLock()
+   ReentrantLock.tryLock() allows attempting to acquire a lock
+   without waiting indefinitely.
+
+4. Release Locks Properly
+   Use finally blocks to release explicit locks such as
+   ReentrantLock.
+
+
+7. CONSISTENT LOCK ORDERING EXAMPLE
+-----------------------------------
+
+synchronized (lock1) {
+
+    synchronized (lock2) {
+
+        System.out.println("Task executing");
+
+    }
+}
+
+IMPORTANT:
+All threads should acquire locks in the same order:
+
+LOCK 1  --->  LOCK 2
+
+This helps prevent circular waiting.
+
+
+JAVA MULTITHREADING – join() AND yield()
+
+1. join() METHOD
+
+Definition:
+The join() method makes the currently executing thread wait until another
+thread completes its execution.
+
+Syntax:
+    thread.join();
+    thread.join(milliseconds);
+
+Example:
+
+public class JoinExample {
+    public static void main(String[] args) throws InterruptedException {
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 1; i <= 5; i++) {
+                System.out.println("Child Thread: " + i);
+            }
+        });
+
+        t1.start();
+
+        t1.join(); // Main thread waits until t1 completes
+
+        System.out.println("Main Thread Completed");
+    }
+}
+
+Key Points:
+- join() is an instance method of the Thread class.
+- The calling thread waits for the target thread to finish.
+- join() throws InterruptedException.
+- join(1000) waits for a maximum of 1000 milliseconds.
+- It does not stop or pause the target thread.
+- While waiting, the calling thread releases its own monitor locks.
+
+
+2. yield() METHOD
+
+Definition:
+The yield() method hints to the thread scheduler that the current thread
+is willing to give other threads an opportunity to execute.
+
+Syntax:
+    Thread.yield();
+
+Example:
+
+public class YieldExample {
+    public static void main(String[] args) {
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 1; i <= 5; i++) {
+                System.out.println("Thread 1: " + i);
+                Thread.yield();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            for (int i = 1; i <= 5; i++) {
+                System.out.println("Thread 2: " + i);
+            }
+        });
+
+        t1.start();
+        t2.start();
+    }
+}
+
+Key Points:
+- yield() is a static method of the Thread class.
+- It provides a hint to the thread scheduler.
+- It does not guarantee that another thread will execute.
+- The scheduler may continue executing the same thread.
+- It does not release any locks or monitors.
+- It does not guarantee a context switch.
+
+
+3. join() vs yield()
+
+join():
+- Instance method.
+- Calling thread waits for another thread to complete.
+- Provides predictable waiting behavior.
+- Throws InterruptedException.
+
+yield():
+- Static method.
+- Hints the scheduler to give other threads an opportunity.
+- No guarantee of execution order or context switching.
+- Does not throw a checked exception.
+
+
+INTERVIEW TAKEAWAY:
+
+join()  -> Wait until another thread completes.
+yield() -> Hint to the scheduler to let another thread execute.
+
+
+JAVA MULTITHREADING – INTER-THREAD COMMUNICATION
+
+1. DEFINITION
+
+Inter-thread communication is a mechanism that allows multiple threads
+to communicate with each other and coordinate their execution.
+
+Java provides three important methods for inter-thread communication:
+
+    1. wait()
+    2. notify()
+    3. notifyAll()
+
+These methods belong to the Object class.
+
+
+2. wait() METHOD
+
+Definition:
+The wait() method makes the current thread wait until another thread
+notifies it or it gets interrupted.
+
+Syntax:
+    object.wait();
+    object.wait(milliseconds);
+
+Key Points:
+- Must be called inside a synchronized block or method.
+- Releases the monitor lock of the object on which wait() is called.
+- The thread enters the WAITING state.
+- The thread must reacquire the same object's monitor before continuing.
+- Throws InterruptedException.
+
+
+3. notify() METHOD
+
+Definition:
+The notify() method wakes up one thread waiting on the same object's
+monitor.
+
+Syntax:
+    object.notify();
+
+Key Points:
+- Must be called while holding the same object's monitor.
+- Wakes up one waiting thread (selection is not guaranteed).
+- The awakened thread cannot proceed until it reacquires the lock.
+- Does not immediately release the lock.
+
+
+4. notifyAll() METHOD
+
+Definition:
+The notifyAll() method wakes up all threads waiting on the same
+object's monitor.
+
+Syntax:
+    object.notifyAll();
+
+Key Points:
+- Must be called inside a synchronized block or method.
+- Wakes up all threads waiting on that object's monitor.
+- Only one thread can acquire the monitor at a time.
+- Other threads continue waiting until they acquire the lock.
+
+
+5. EXAMPLE – INTER-THREAD COMMUNICATION
+
+class SharedResource {
+
+    private boolean available = false;
+
+    synchronized void consume() throws InterruptedException {
+
+        while (!available) {
+            wait();
+        }
+
+        System.out.println("Consumer consumed the resource");
+
+        available = false;
+        notifyAll();
+    }
+
+    synchronized void produce() throws InterruptedException {
+
+        while (available) {
+            wait();
+        }
+
+        System.out.println("Producer produced the resource");
+
+        available = true;
+        notifyAll();
+    }
+}
+
+public class InterThreadCommunication {
+
+    public static void main(String[] args) {
+
+        SharedResource resource = new SharedResource();
+
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 5; i++) {
+                    resource.produce();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        Thread consumer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 5; i++) {
+                    resource.consume();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        producer.start();
+        consumer.start();
+    }
+}
+
+
+6. IMPORTANT DIFFERENCES
+
+wait():
+- Makes the current thread wait.
+- Releases the object's monitor lock.
+- Called on an object.
+- Used for inter-thread communication.
+
+notify():
+- Wakes up one waiting thread.
+- Does not release the monitor immediately.
+- Called on an object.
+- The awakened thread must reacquire the monitor.
+
+notifyAll():
+- Wakes up all waiting threads.
+- Does not release the monitor immediately.
+- Called on an object.
+- All awakened threads compete to reacquire the monitor.
+
+
+7. IMPORTANT INTERVIEW POINTS
+
+1. wait(), notify(), and notifyAll() belong to Object class,
+   not Thread class.
+
+2. All three methods must be called while holding the monitor
+   of the same object.
+
+3. Calling them without owning the object's monitor results in
+   IllegalMonitorStateException.
+
+4. wait() releases the monitor lock, whereas sleep() does not.
+
+5. notify() wakes one waiting thread; notifyAll() wakes all
+   waiting threads.
+
+6. A notified thread does not execute immediately. It must first
+   reacquire the monitor.
+
+7. Always prefer while(condition) with wait(), instead of if(condition),
+   because a thread must recheck the condition after waking up.
+
+8. wait() is used for coordination, not for simply delaying execution.
+
+
+REAL-WORLD USE CASES
+
+- Producer-Consumer problem.
+- Task processing systems.
+- Thread coordination.
+- Resource sharing.
+- Multithreaded applications.
