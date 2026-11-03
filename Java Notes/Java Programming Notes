@@ -8379,3 +8379,484 @@ REAL-WORLD USE CASES
 - Thread coordination.
 - Resource sharing.
 - Multithreaded applications.
+
+
+REFLECTION API:
+============================================================
+
+1. WHAT IS REFLECTION API?
+
+Reflection is a Java feature that allows us to inspect and interact
+with classes, methods, constructors and fields at runtime.
+
+Using Reflection API, we can:
+
+- Identify which variables (fields) are available in a class.
+- Identify which methods are available.
+- Identify which constructors are available.
+- Access private fields and methods, subject to access restrictions.
+- Create objects dynamically.
+- Invoke methods dynamically.
+- Read or modify field values at runtime.
+
+Reflection = Inspecting and interacting with classes at runtime.
+
+Package:
+    java.lang.reflect
+
+
+2. IMPORTANT CLASSES AND INTERFACES
+
+Class      - Represents class metadata.
+Field      - Represents a variable or field.
+Method     - Represents a method.
+Constructor - Represents a constructor.
+
+Important methods of Class class:
+
+getName()
+    Returns the fully qualified class name.
+
+getDeclaredFields()
+    Returns all fields declared in the class, including private fields.
+
+getFields()
+    Returns only public fields, including inherited public fields.
+
+getDeclaredMethods()
+    Returns all methods declared in the class, including private methods.
+
+getMethods()
+    Returns public methods, including inherited public methods.
+
+getDeclaredConstructors()
+    Returns all constructors declared in the class.
+
+getConstructor()
+    Returns a public constructor with the specified parameter types.
+
+getDeclaredField()
+    Returns a specific field declared in the class.
+
+getDeclaredMethod()
+    Returns a specific method declared in the class.
+
+
+3. PRACTICAL EXAMPLE – REFLECTION API
+
+Student.java
+
+public class Student {
+
+    private int id;
+    private String name;
+
+    public void display() {
+        System.out.println("Student Details");
+    }
+
+    public void m1() {
+        System.out.println("This is m1()");
+    }
+
+    private void m2() {
+        System.out.println("This is m2()");
+    }
+}
+
+
+Demo.java
+
+import java.lang.reflect.*;
+
+public class Demo {
+
+    public static void main(String[] args) throws Exception {
+
+        // Get Class object
+        Class<?> cl = Class.forName("in.abhishek.Student");
+
+        // Get declared fields
+        Field[] fields = cl.getDeclaredFields();
+
+        for (Field f : fields) {
+            System.out.println("Field: " + f.getName());
+        }
+
+        // Get declared methods
+        Method[] methods = cl.getDeclaredMethods();
+
+        for (Method m : methods) {
+            System.out.println("Method: " + m.getName());
+        }
+
+        // Get declared constructors
+        Constructor<?>[] constructors =
+                cl.getDeclaredConstructors();
+
+        for (Constructor<?> c : constructors) {
+            System.out.println("Constructor: " + c.getName());
+        }
+    }
+}
+
+
+4. ACCESSING PRIVATE VARIABLES USING REFLECTION
+
+Normally, private variables cannot be accessed directly outside
+their declaring class.
+
+Reflection can provide access by using setAccessible(true),
+subject to Java access and module restrictions.
+
+Example:
+
+import java.lang.reflect.*;
+
+public class Demo {
+
+    public static void main(String[] args) throws Exception {
+
+        Class<?> cl = Class.forName("in.abhishek.Student");
+
+        Object obj = cl.getDeclaredConstructor().newInstance();
+
+        Field field = cl.getDeclaredField("id");
+
+        field.setAccessible(true);
+
+        field.set(obj, 135);
+
+        System.out.println(field.get(obj));
+    }
+}
+
+Explanation:
+
+getDeclaredField("id")
+    Gets the private field named id.
+
+setAccessible(true)
+    Requests access to the private field.
+
+field.set(obj, 135)
+    Sets the value of id to 135 in the given object.
+
+field.get(obj)
+    Reads the field value from the given object.
+
+
+5. INVOKING A METHOD USING REFLECTION
+
+We can invoke a method dynamically without directly calling it
+using the object reference.
+
+Example:
+
+Class<?> cl = Class.forName("in.abhishek.Student");
+
+Object obj = cl.getDeclaredConstructor().newInstance();
+
+Method method = cl.getDeclaredMethod("m1");
+
+method.invoke(obj);
+
+Explanation:
+
+getDeclaredMethod("m1")
+    Gets the method named m1.
+
+invoke(obj)
+    Invokes m1() on the given object.
+
+For a private method:
+
+Method method = cl.getDeclaredMethod("m2");
+
+method.setAccessible(true);
+
+method.invoke(obj);
+
+
+6. CREATING OBJECTS USING REFLECTION
+
+Class<?> cl = Class.forName("in.abhishek.Student");
+
+Object obj = cl.getDeclaredConstructor().newInstance();
+
+Explanation:
+
+- Class.forName() loads or initializes the class.
+- getDeclaredConstructor() obtains its no-argument constructor.
+- newInstance() creates a new object.
+
+Note:
+newInstance() on Class is deprecated.
+Prefer Constructor.newInstance().
+
+
+7. DIFFERENCE BETWEEN ClassNotFoundException
+   AND NoClassDefFoundError
+
+ClassNotFoundException:
+- A checked exception.
+- Occurs when a class is explicitly loaded by name but cannot
+  be found.
+- Example: Class.forName("in.abhishek.Student") when the class
+  cannot be found.
+
+NoClassDefFoundError:
+- An unchecked Error.
+- Occurs when the JVM needs a class that was available during
+  compilation but cannot be found or initialized successfully
+  at runtime.
+- Example: A required class file is missing at runtime.
+
+Interview point:
+
+ClassNotFoundException -> Class cannot be found during explicit loading.
+
+NoClassDefFoundError -> JVM cannot find or use a required class
+                        at runtime.
+
+GARBAGE COLLECTION (GC)
+============================================================
+
+1. WHAT IS GARBAGE COLLECTION?
+
+Garbage Collection is the process of automatically identifying
+and reclaiming heap memory occupied by objects that are no longer
+reachable by the application.
+
+- Objects are created in the heap memory.
+- Objects are accessed through references.
+- When an object becomes unreachable, it becomes eligible for GC.
+- JVM manages garbage collection automatically.
+
+Important:
+
+An object becoming eligible for GC does not mean it will be
+collected immediately.
+
+
+2. HOW DOES AN OBJECT BECOME ELIGIBLE FOR GC?
+
+Example:
+
+Student s1 = new Student();
+
+s1 = null;
+
+Explanation:
+
+Initially:
+s1 -----> Student Object
+
+After assigning null:
+
+s1 -----> null
+
+The Student object no longer has a reference from s1.
+If no other reachable reference points to it, the object becomes
+eligible for garbage collection.
+
+
+3. DIFFERENT WAYS AN OBJECT BECOMES ELIGIBLE FOR GC
+
+A. Assigning null
+
+Student s1 = new Student();
+
+s1 = null;
+
+
+B. Reassigning a reference
+
+Student s1 = new Student();
+
+s1 = new Student();
+
+The first Student object becomes eligible for GC if no other
+reachable reference points to it.
+
+
+C. Object created inside a method
+
+public void display() {
+
+    Student s1 = new Student();
+
+}
+
+After the method finishes, its local reference is no longer
+available. If no other reachable reference points to the object,
+it becomes eligible for GC.
+
+
+D. Island of Isolation
+
+Student s1 = new Student();
+Student s2 = new Student();
+
+s1.ref = s2;
+s2.ref = s1;
+
+s1 = null;
+s2 = null;
+
+Both objects refer to each other, but neither is reachable
+from a GC root.
+
+Therefore, both objects can become eligible for GC.
+
+IMPORTANT:
+Java GC can collect cyclically referenced objects if they are
+unreachable from GC roots.
+
+
+4. HOW TO REQUEST GARBAGE COLLECTION?
+
+Java provides two commonly known ways:
+
+1. System.gc();
+
+2. Runtime.getRuntime().gc();
+
+Example:
+
+System.gc();
+
+Runtime.getRuntime().gc();
+
+IMPORTANT:
+
+- These methods only request garbage collection.
+- They do NOT guarantee immediate garbage collection.
+- JVM decides when and how GC will run.
+- GC behavior depends on JVM implementation and configuration.
+
+
+5. HOW DOES GARBAGE COLLECTION WORK?
+
+Conceptually, traditional garbage collection can be explained
+using three major operations:
+
+1. MARKING
+2. SWEEPING
+3. COMPACTION
+
+Actual modern JVM garbage collectors may use different algorithms
+and phases.
+
+
+A. MARKING
+
+- GC starts identifying objects that are reachable.
+- It begins from GC Roots.
+- It follows references from reachable objects.
+- Reachable objects are marked as alive.
+- Objects that cannot be reached are considered garbage.
+
+Examples of GC Roots include:
+- References in active thread stacks.
+- Static references.
+- JNI references.
+- Other JVM-managed root references.
+
+
+B. SWEEPING
+
+- GC identifies unreachable objects.
+- Memory occupied by those objects is reclaimed.
+- Reclaimed memory becomes available for future allocations.
+
+
+C. COMPACTION
+
+- After reclaiming memory, free memory may be fragmented.
+- Compaction moves surviving objects closer together.
+- It creates larger continuous free memory regions.
+- References are updated as required by the JVM.
+
+Note:
+Not every garbage collector performs compaction in the same way.
+
+
+6. MARK-AND-SWEEP ALGORITHM
+
+Mark-and-Sweep is a traditional garbage collection algorithm.
+
+Steps:
+
+1. Mark:
+   Identify all reachable objects starting from GC Roots.
+
+2. Sweep:
+   Remove unreachable objects and reclaim their memory.
+
+3. Compact (if supported):
+   Rearrange surviving objects to reduce memory fragmentation.
+
+Example:
+
+Before GC:
+
+Heap:
+[Object A] [Object B] [Object C] [Object D] [Object E]
+
+Suppose:
+A, C and E are reachable.
+B and D are unreachable.
+
+After marking:
+
+[A - Marked] [B - Garbage] [C - Marked]
+[D - Garbage] [E - Marked]
+
+After sweeping:
+
+[A] [Free] [C] [Free] [E]
+
+After compaction (conceptually):
+
+[A] [C] [E] [Free Memory]
+
+Note:
+This is a simplified conceptual illustration, not a guarantee
+of how every JVM garbage collector operates.
+
+
+7. STOP-THE-WORLD (STW) PAUSE
+
+Stop-the-World is a JVM pause during which application threads
+are temporarily stopped so the garbage collector can safely
+perform certain operations.
+
+During an STW pause:
+- Application threads are paused.
+- GC performs the required work.
+- Application threads resume after the pause.
+
+Important:
+
+- Some GC operations require STW pauses.
+- Not every GC operation necessarily stops all application threads.
+- Modern collectors try to minimize pause duration.
+- Long GC pauses can affect application performance and response time.
+
+
+8. DOES GARBAGE COLLECTION AFFECT PERFORMANCE?
+
+Yes.
+
+Garbage collection consumes CPU and memory-management resources.
+
+If GC runs frequently or takes a long time:
+- Application response time may increase.
+- Throughput may decrease.
+- Application threads may experience pauses.
+
+JVM garbage collectors are designed to balance:
+- Throughput
+- Latency
+- Memory utilization
