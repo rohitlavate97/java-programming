@@ -11785,3 +11785,454 @@ ENUMERATION:
 - Legacy cursor.
 - Used with Vector and Hashtable.
 - Does not support remove().
+
+
+SET INTERFACE
+==============
+
+1. Set is an interface available in java.util package.
+2. Set extends the Collection interface.
+3. Set is used to store a group of objects.
+4. Duplicate objects are not allowed.
+5. Supports homogeneous and heterogeneous objects,
+   depending on the implementation.
+6. Null values depend on the implementation.
+
+IMPLEMENTATION CLASSES:
+
+1. HashSet
+2. LinkedHashSet
+3. TreeSet
+
+
+HASHSET
+-------
+
+1. HashSet is an implementation class of Set interface.
+2. Duplicate objects are not allowed.
+3. Null value is allowed.
+4. Insertion order is NOT maintained.
+5. Initial capacity = 16
+6. Load factor = 0.75
+7. Internal data structure = HashTable
+8. Does not maintain insertion order.
+
+Example:
+
+HashSet<String> hs = new HashSet<>();
+
+hs.add("Java");
+hs.add("Python");
+hs.add("HTML");
+hs.add("Java");
+
+System.out.println(hs);
+
+// Duplicate "Java" is ignored.
+
+
+LINKEDHASHSET
+-------------
+
+1. Implementation class of Set interface.
+2. Duplicate objects are not allowed.
+3. Null value is allowed.
+4. Insertion order is maintained.
+5. Internal data structure = HashTable + DLL
+   (Doubly Linked List).
+
+
+TREESET
+-------
+
+1. Implementation class of Set interface.
+2. Duplicate objects are not allowed.
+3. Null values are not allowed.
+4. Only homogeneous data is supported.
+5. Insertion order is NOT maintained.
+6. Data is stored in sorted order.
+7. Internal data structure = TreeMap.
+8. Default sorting order is ascending.
+
+Example:
+
+TreeSet<Integer> ts = new TreeSet<>();
+
+ts.add(10);
+ts.add(30);
+ts.add(20);
+ts.add(40);
+
+System.out.println(ts);
+
+// Output: [10, 20, 30, 40]
+*/
+
+/*
+HASHSET CONSTRUCTORS
+--------------------
+
+1. HashSet()
+
+   HashSet<String> hs = new HashSet<>();
+
+2. HashSet(int initialCapacity)
+
+   HashSet<String> hs = new HashSet<>(20);
+
+3. HashSet(int initialCapacity, float loadFactor)
+
+   HashSet<String> hs = new HashSet<>(20, 0.80f);
+
+4. HashSet(Collection c)
+
+   HashSet<String> hs = new HashSet<>(collection);
+
+
+INTERNAL WORKING
+----------------
+
+- HashSet internally uses HashMap.
+- Objects added to HashSet are stored as keys in HashMap.
+- A dummy object is used as the value.
+- Hashing is used to determine the storage location.
+
+Example:
+
+HashSet<String> hs = new HashSet<>();
+
+hs.add("Java");
+hs.add("Python");
+hs.add("Java");
+
+System.out.println(hs);
+
+// Output order is not guaranteed.
+// Duplicate Java is ignored.
+
+
+ITERATING HASHSET
+-----------------
+
+HashSet<Integer> hs = new HashSet<>();
+
+hs.add(10);
+hs.add(20);
+hs.add(30);
+
+// Using Iterator
+
+Iterator<Integer> iterator = hs.iterator();
+
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+*/
+
+
+/*
+LINKEDHASHSET
+-------------
+
+1. Implementation class of Set interface.
+2. Duplicate objects are not allowed.
+3. Null value is allowed (only one null).
+4. Insertion order is maintained.
+5. Internal data structure:
+   HashTable + Doubly Linked List.
+6. Initial capacity = 16
+7. Load factor = 0.75
+
+
+Example:
+
+LinkedHashSet<Integer> lhs = new LinkedHashSet<>();
+
+lhs.add(10);
+lhs.add(20);
+lhs.add(30);
+lhs.add(null);
+lhs.add(40);
+lhs.add(20);
+
+System.out.println(lhs);
+
+// Output:
+// [10, 20, 30, null, 40]
+
+// Insertion order is maintained.
+// Duplicate 20 is ignored.
+*/
+
+
+/*
+TREESET
+-------
+
+1. Implementation class of Set interface.
+2. Duplicate objects are not allowed.
+3. Null values are generally not allowed
+   with natural ordering.
+4. Only mutually comparable elements are supported
+   with natural ordering.
+5. Elements are maintained in sorted order.
+6. Internal data structure = TreeMap.
+7. Default sorting order = Ascending.
+8. Internal data structure is based on a Red-Black Tree.
+
+
+Example 1: Integer Sorting
+
+TreeSet<Integer> ts = new TreeSet<>();
+
+ts.add(10);
+ts.add(7);
+ts.add(9);
+ts.add(1);
+ts.add(3);
+
+System.out.println(ts);
+
+// Output: [1, 3, 7, 9, 10]
+
+
+Example 2: String Sorting
+
+TreeSet<String> ts = new TreeSet<>();
+
+ts.add("raja");
+ts.add("ganesh");
+ts.add("ashok");
+
+System.out.println(ts);
+
+// Output: [ashok, ganesh, raja]
+// Alphabetical order
+
+
+Example 3: Heterogeneous Objects
+
+TreeSet ts = new TreeSet();
+
+ts.add(10);
+ts.add(20);
+ts.add(30);
+ts.add("Java");
+
+// ClassCastException
+
+// Reason:
+// Integer and String cannot be compared
+// using their natural ordering.
+
+
+Example 4: Null Value
+
+TreeSet<Integer> ts = new TreeSet<>();
+
+ts.add(10);
+ts.add(20);
+ts.add(null);
+
+// NullPointerException
+
+
+CUSTOM SORTING
+--------------
+
+- We can customize sorting order using:
+  1. Comparable
+  2. Comparator
+
+Example:
+
+TreeSet<Integer> ts = new TreeSet<>(
+    Comparator.reverseOrder()
+);
+
+ts.add(10);
+ts.add(30);
+ts.add(20);
+
+System.out.println(ts);
+
+// Output: [30, 20, 10]
+*/
+
+
+/*
+TREESET IMPORTANT POINTS
+------------------------
+
+1. TreeSet always performs sorting.
+2. When a new object is added, it is compared
+   with existing objects.
+3. Objects should be of the same comparable type
+   when using natural ordering.
+4. ClassCastException occurs if objects cannot
+   be compared.
+5. Null values generally cause NullPointerException
+   with natural ordering.
+6. Internal data structure = TreeMap.
+7. We can customize sorting using Comparator.
+
+
+Example:
+
+TreeSet<String> ts = new TreeSet<>();
+
+ts.add("raja");
+ts.add("yoga");
+ts.add("rani");
+ts.add("ashok");
+
+System.out.println(ts);
+
+// Output:
+// [ashok, raja, rani, yoga]
+
+
+ITERATING TREESET
+-----------------
+
+Iterator<String> iterator = ts.iterator();
+
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+*/
+
+
++----------------+-------------+---------------+----------+
+| Feature        | ArrayList   | LinkedList    | Vector   |
++----------------+-------------+---------------+----------+
+| Duplicates     | Allowed     | Allowed       | Allowed  |
+| Insertion Order| Maintained  | Maintained    | Maintained|
+| Null Values    | Allowed     | Allowed       | Allowed  |
+| Data Structure | Dynamic     | Doubly Linked | Dynamic  |
+|                | Array       | List          | Array    |
+| Initial        | 10          | -             | 10       |
+| Capacity       |             |               |          |
+| Sorting Order  | No          | No            | No       |
++----------------+-------------+---------------+----------+
+
++----------------+----------+---------------+----------+
+| Feature        | Stack    | HashSet       | LinkedHS |
++----------------+----------+---------------+----------+
+| Duplicates     | Allowed  | Not Allowed   | Not      |
+|                |          |               | Allowed  |
+| Insertion Order| Maintained| Not Maintained| Maintained|
+| Null Values    | Allowed  | Allowed       | Allowed  |
+| Data Structure | LIFO     | HashTable     | HT + DLL |
+| Initial        | -        | 16            | 16       |
+| Capacity       |          |               |          |
+| Load Factor    | -        | 0.75          | 0.75     |
+| Sorting Order  | No       | No            | No       |
++----------------+----------+---------------+----------+
+
++----------------+----------+
+| Feature        | TreeSet  |
++----------------+----------+
+| Duplicates     | Not Allowed |
+| Insertion Order| Not Maintained |
+| Null Values    | Not Allowed* |
+| Data Structure | Red-Black Tree |
+| Initial Capacity| -       |
+| Load Factor    | -        |
+| Sorting Order  | Yes      |
++----------------+----------+
+
+* With natural ordering.
+
+
+/*
+ITERATOR
+--------
+
+1. Used to iterate Collection objects.
+2. Supports forward traversal.
+3. Supports remove() operation.
+4. Available with Collection implementations.
+
+
+LISTITERATOR
+------------
+
+1. Used with List implementations only.
+2. Supports forward and backward traversal.
+3. Supports add(), set() and remove().
+4. Can access elements using previous() and next().
+
+
+ENUMERATION
+-----------
+
+1. Legacy interface.
+2. Used mainly with legacy classes like Vector.
+3. Supports forward traversal.
+4. Does not support remove().
+
+
+COMPARISON
+----------
+
+Operation       Iterator   ListIterator   Enumeration
+------------------------------------------------------
+Forward            Yes          Yes           Yes
+Backward           No           Yes           No
+hasNext()          Yes          Yes           Yes*
+hasPrevious()      No           Yes           No
+next()             Yes          Yes           Yes
+previous()         No           Yes           No
+remove()           Yes          Yes           No
+set()              No           Yes           No
+add()              No           Yes           No
+
+* Enumeration uses hasMoreElements() and nextElement()
+  instead of hasNext() and next().
+*/
+
+
+// Example 1: Iterator
+
+ArrayList<Integer> al = new ArrayList<>();
+
+al.add(10);
+al.add(20);
+al.add(30);
+
+Iterator<Integer> iterator = al.iterator();
+
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+
+
+// Example 2: ListIterator
+
+ListIterator<Integer> listIterator = al.listIterator();
+
+while (listIterator.hasNext()) {
+    System.out.println(listIterator.next());
+}
+
+// Backward traversal
+
+while (listIterator.hasPrevious()) {
+    System.out.println(listIterator.previous());
+}
+
+
+// Example 3: Enumeration
+
+Vector<Integer> v = new Vector<>();
+
+v.add(10);
+v.add(20);
+v.add(30);
+
+Enumeration<Integer> e = v.elements();
+
+while (e.hasMoreElements()) {
+    System.out.println(e.nextElement());
+}
