@@ -10974,3 +10974,814 @@ NOTE:
 
 Methods like get(index), set(index), indexOf() and
 lastIndexOf() belong to List, not Collection.
+
+
+============================================================
+          ARRAYLIST – ITERATION APPROACHES
+============================================================
+
+Create an ArrayList:
+
+ArrayList<Integer> al = new ArrayList<>();
+
+al.add(10);
+al.add(20);
+al.add(30);
+al.add(40);
+
+
+APPROACH 1: FOR LOOP
+-------------------
+
+- Uses index-based iteration.
+- Suitable for List implementations.
+
+for (int i = 0; i < al.size(); i++) {
+
+    System.out.println(al.get(i));
+
+}
+
+
+APPROACH 2: ENHANCED FOR LOOP
+-----------------------------
+
+- Also known as for-each loop.
+- Simple way to iterate elements.
+- Does not require index management.
+
+for (Object obj : al) {
+
+    System.out.println(obj);
+
+}
+
+
+APPROACH 3: ITERATOR
+--------------------
+
+- Used for forward traversal.
+- Applicable to different Collection implementations.
+
+Iterator<Integer> iterator = al.iterator();
+
+while (iterator.hasNext()) {
+
+    System.out.println(iterator.next());
+
+}
+
+
+APPROACH 4: LISTITERATOR
+------------------------
+
+- Supports forward and backward traversal.
+- Applicable only to List implementations.
+
+ListIterator<Integer> listIterator = al.listIterator();
+
+while (listIterator.hasNext()) {
+
+    System.out.println(listIterator.next());
+
+}
+
+
+APPROACH 5: FOR EACH METHOD (LAMBDA EXPRESSION)
+-----------------------------------------------
+
+- Uses the forEach() method.
+- Introduced in Java 8.
+- Uses Lambda Expression.
+
+al.forEach(i -> {
+
+    System.out.println(i);
+
+});
+
+============================================================
+               CUSTOM OBJECT IN ARRAYLIST
+============================================================
+
+We can store user-defined class objects inside ArrayList.
+
+Example:
+
+public class Student {
+
+    int id;
+    String name;
+
+    public Student(int id, String name) {
+
+        this.id = id;
+        this.name = name;
+
+    }
+
+    @Override
+    public String toString() {
+
+        return id + " - " + name;
+
+    }
+
+}
+
+
+MAIN CLASS:
+
+import java.util.ArrayList;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        ArrayList<Student> al = new ArrayList<>();
+
+        al.add(new Student(101, "Raj"));
+        al.add(new Student(102, "Rohit"));
+        al.add(new Student(103, "Amit"));
+
+        for (Student student : al) {
+
+            System.out.println(student);
+
+        }
+
+    }
+
+}
+
+
+OUTPUT:
+
+101 - Raj
+102 - Rohit
+103 - Amit
+
+
+IMPORTANT:
+----------
+
+1. ArrayList can store user-defined objects.
+2. We can create objects using the new keyword.
+3. toString() is overridden to provide meaningful
+   object representation.
+4. Without overriding toString(), the default output
+   generally displays class name and hash-code information.
+
+============================================================
+                REVERSE TRAVERSAL
+============================================================
+
+ListIterator supports both forward and backward traversal.
+
+Example:
+
+ArrayList<Integer> al = new ArrayList<>();
+
+al.add(10);
+al.add(20);
+al.add(30);
+al.add(40);
+
+ListIterator<Integer> li = al.listIterator(al.size());
+
+while (li.hasPrevious()) {
+
+    System.out.println(li.previous());
+
+}
+
+
+OUTPUT:
+
+40
+30
+20
+10
+
+
+IMPORTANT:
+----------
+
+listIterator() starts at the beginning of the list.
+
+listIterator(al.size()) starts at the end of the list.
+
+Therefore, for backward traversal, use:
+
+ListIterator<Integer> li = al.listIterator(al.size());
+
+
+NOTE:
+-----
+
+If you call hasPrevious() immediately after creating
+a default ListIterator, it returns false because the
+cursor is initially at index 0.
+
+============================================================
+                     LINKEDLIST
+============================================================
+
+Definition:
+-----------
+
+LinkedList is an implementation class of the List and
+Deque interfaces.
+
+Internal Data Structure:
+------------------------
+
+- Doubly Linked List.
+- Each node contains:
+    1. Previous node reference
+    2. Data
+    3. Next node reference
+
+Structure:
+
+HEAD
+ |
+ v
+[NULL | 10 | NEXT] <--> [PREV | 20 | NEXT] <--> [PREV | 30 | NULL]
+
+
+FEATURES:
+---------
+
+1. Implements List and Deque interfaces.
+2. Internal data structure is a doubly linked list.
+3. Insertion order is maintained.
+4. Duplicate objects are allowed.
+5. Multiple null values are allowed.
+6. No default initial capacity.
+7. Supports insertion and deletion at both ends.
+8. Supports heterogeneous and homogeneous data
+   depending on generic type declaration.
+
+
+EXAMPLE:
+
+import java.util.LinkedList;
+
+public class LinkedListDemo {
+
+    public static void main(String[] args) {
+
+        LinkedList<Integer> ll = new LinkedList<>();
+
+        ll.add(10);
+        ll.add(20);
+        ll.add(30);
+
+        System.out.println(ll);
+
+        ll.addFirst(100);
+
+        System.out.println(ll);
+
+        ll.addLast(200);
+
+        System.out.println(ll);
+
+        System.out.println(ll.getFirst());
+
+        System.out.println(ll.getLast());
+
+    }
+
+}
+
+
+OUTPUT:
+
+[10, 20, 30]
+
+[100, 10, 20, 30]
+
+[100, 10, 20, 30, 200]
+
+100
+200
+
+
+============================================================
+6. LINKEDLIST – METHODS
+============================================================
+
+1. add(Object obj)
+   - Adds an element.
+
+2. addFirst(Object obj)
+   - Adds an element at the beginning.
+
+3. addLast(Object obj)
+   - Adds an element at the end.
+
+4. getFirst()
+   - Retrieves the first element.
+
+5. getLast()
+   - Retrieves the last element.
+
+6. removeFirst()
+   - Removes the first element.
+
+7. removeLast()
+   - Removes the last element.
+
+8. peek()
+   - Retrieves the first element without removing it.
+
+9. poll()
+   - Retrieves and removes the first element.
+
+10. offer(Object obj)
+    - Adds an element to the end of the queue.
+
+11. push(Object obj)
+    - Pushes an element onto the stack (front of deque).
+
+12. pop()
+    - Removes and returns the first element.
+
+
+IMPORTANT:
+----------
+
+LinkedList is useful when frequent insertions and
+deletions at the beginning or end are required.
+
+However, accessing an element by index requires traversal.
+
+LinkedList is not automatically faster than ArrayList
+for all insertion and deletion operations.
+
+
+============================================================
+7. VECTOR
+============================================================
+
+Definition:
+-----------
+
+Vector is a legacy implementation class of the List
+interface.
+
+Features:
+---------
+
+1. Implements the List interface.
+2. Uses a dynamic array internally.
+3. Maintains insertion order.
+4. Duplicate elements are allowed.
+5. Multiple null values are allowed.
+6. Methods are synchronized.
+7. It is thread-safe for individual synchronized methods.
+8. Automatically increases its capacity when required.
+
+Example:
+
+import java.util.Vector;
+
+public class VectorDemo {
+
+    public static void main(String[] args) {
+
+        Vector<Integer> v = new Vector<>();
+
+        v.add(10);
+        v.add(20);
+        v.add(30);
+
+        System.out.println(v);
+
+    }
+
+}
+
+
+OUTPUT:
+
+[10, 20, 30]
+
+
+Vector vs ArrayList:
+--------------------
+
+ArrayList:
+- Non-synchronized by default.
+- Better suited for single-threaded usage.
+- Dynamic array.
+
+Vector:
+- Synchronized methods.
+- Legacy collection class.
+- Dynamic array.
+- Generally has additional synchronization overhead.
+
+
+============================================================
+8. VECTOR – IMPORTANT POINTS
+============================================================
+
+1. Vector is a legacy class.
+2. Implements the List interface.
+3. Internally uses a growable array.
+4. Allows duplicate objects.
+5. Maintains insertion order.
+6. Supports thread-safe individual methods through
+   synchronization.
+
+NOTE:
+-----
+
+Vector's synchronization does not automatically make
+a multi-step operation atomic or make iteration safe
+against concurrent modifications.
+
+
+============================================================
+             SORTING CUSTOM OBJECTS
+============================================================
+
+Suppose we have an ArrayList of Student objects.
+
+ArrayList<Student> al = new ArrayList<>();
+
+al.add(new Student(103, "Raj"));
+al.add(new Student(101, "Rohit"));
+al.add(new Student(102, "Amit"));
+
+
+PROBLEM:
+--------
+
+If we try:
+
+Collections.sort(al);
+
+Java does not automatically know how to compare Student
+objects.
+
+We need to define the sorting logic.
+
+
+APPROACH 1: COMPARABLE INTERFACE
+--------------------------------
+
+- Comparable is an interface in java.lang package.
+- Used to define the natural ordering of objects.
+- Implemented by the class whose objects need sorting.
+- Provides compareTo() method.
+
+Example:
+
+import java.util.*;
+
+class Student implements Comparable<Student> {
+
+    int id;
+    String name;
+
+    public Student(int id, String name) {
+
+        this.id = id;
+        this.name = name;
+
+    }
+
+    @Override
+    public int compareTo(Student s) {
+
+        return this.id - s.id;
+
+    }
+
+    @Override
+    public String toString() {
+
+        return id + " " + name;
+
+    }
+
+}
+
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        ArrayList<Student> al = new ArrayList<>();
+
+        al.add(new Student(103, "Raj"));
+        al.add(new Student(101, "Rohit"));
+        al.add(new Student(102, "Amit"));
+
+        Collections.sort(al);
+
+        System.out.println(al);
+
+    }
+
+}
+
+
+OUTPUT:
+
+101 Rohit
+102 Amit
+103 Raj
+
+
+NOTE:
+-----
+
+compareTo() defines natural ordering.
+
+this.id - s.id:
+- Positive: current object is greater.
+- Negative: current object is smaller.
+- Zero: both are equal for this comparison.
+
+For production code, prefer Integer.compare():
+
+return Integer.compare(this.id, s.id);
+
+
+APPROACH 2: COMPARATOR INTERFACE
+--------------------------------
+
+- Comparator is an interface in java.util package.
+- Used to define custom sorting logic.
+- Sorting logic can be defined outside the class.
+- Provides compare() method.
+- Allows multiple sorting strategies.
+
+Example:
+
+import java.util.*;
+
+class Student {
+
+    int id;
+    String name;
+
+    Student(int id, String name) {
+
+        this.id = id;
+        this.name = name;
+
+    }
+
+    @Override
+    public String toString() {
+
+        return id + " " + name;
+
+    }
+
+}
+
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        ArrayList<Student> al = new ArrayList<>();
+
+        al.add(new Student(103, "Raj"));
+        al.add(new Student(101, "Rohit"));
+        al.add(new Student(102, "Amit"));
+
+        // Sort by ID
+
+        Comparator<Student> c = (s1, s2) ->
+                Integer.compare(s1.id, s2.id);
+
+        Collections.sort(al, c);
+
+        System.out.println(al);
+
+    }
+
+}
+
+
+SORTING BY NAME:
+
+al.sort((s1, s2) -> s1.name.compareTo(s2.name));
+
+
+COMPARABLE VS COMPARATOR:
+-------------------------
+
+Comparable:
+- Natural ordering.
+- compareTo() method.
+- Implemented inside the class.
+- java.lang package.
+
+Comparator:
+- Custom ordering.
+- compare() method.
+- Can be implemented outside the class.
+- java.util package.
+- Multiple sorting strategies possible.
+
+
+============================================================
+10. STACK
+============================================================
+
+Definition:
+-----------
+
+Stack is a legacy implementation class of the List
+interface.
+
+- Extends Vector.
+- Follows LIFO (Last In, First Out).
+- Elements are inserted and removed from the top.
+
+LIFO:
+-----
+
+Last In, First Out.
+
+Example:
+
+Stack<Integer> s = new Stack<>();
+
+s.push(10);
+s.push(20);
+s.push(30);
+
+Stack:
+
+      | 30 |  <-- TOP
+      | 20 |
+      | 10 |
+      -------
+
+push() -> Inserts an element.
+pop()  -> Removes the top element.
+peek() -> Retrieves the top element.
+
+
+STACK EXAMPLE:
+
+import java.util.Stack;
+
+public class StackDemo {
+
+    public static void main(String[] args) {
+
+        Stack<Integer> s = new Stack<>();
+
+        s.push(10);
+        s.push(20);
+        s.push(30);
+
+        System.out.println(s);
+
+        System.out.println(s.peek());
+
+        System.out.println(s.pop());
+
+        System.out.println(s);
+
+        System.out.println(s.search(10));
+
+    }
+
+}
+
+
+OUTPUT:
+
+[10, 20, 30]
+
+30
+
+30
+
+[10, 20]
+
+2
+
+
+STACK METHODS:
+--------------
+
+1. push(Object obj)
+   - Inserts an object at the top.
+
+2. pop()
+   - Removes and returns the top element.
+
+3. peek()
+   - Returns the top element without removing it.
+
+4. empty()
+   - Checks whether the stack is empty.
+
+5. search(Object obj)
+   - Returns the 1-based position from the top.
+   - Returns -1 if the object is not found.
+
+
+IMPORTANT:
+----------
+
+Stack extends Vector.
+
+Stack follows LIFO ordering.
+
+Modern Java generally recommends ArrayDeque for
+stack operations instead of the legacy Stack class.
+
+Example:
+
+Deque<Integer> stack = new ArrayDeque<>();
+
+stack.push(10);
+stack.push(20);
+stack.push(30);
+
+System.out.println(stack.pop());
+
+
+============================================================
+11. ARRAYLIST VS LINKEDLIST VS VECTOR VS STACK
+============================================================
+
+ArrayList:
+----------
+
+- Growable array.
+- Implements List.
+- Duplicates allowed.
+- Insertion order maintained.
+- Fast index-based retrieval.
+- Not synchronized by default.
+
+LinkedList:
+-----------
+
+- Doubly linked list.
+- Implements List and Deque.
+- Duplicates allowed.
+- Insertion order maintained.
+- Supports operations at both ends.
+- Not synchronized by default.
+
+Vector:
+-------
+
+- Growable array.
+- Implements List.
+- Duplicates allowed.
+- Insertion order maintained.
+- Synchronized methods.
+- Legacy class.
+
+Stack:
+------
+
+- Extends Vector.
+- Follows LIFO.
+- push() and pop() operations.
+- Legacy class.
+- ArrayDeque is generally preferred for stack usage.
+
+
+============================================================
+12. CURSORS – FINAL COMPARISON
+============================================================
+
+ITERATOR:
+---------
+
+- Forward direction.
+- Supports remove().
+- Applicable to Collection implementations.
+
+LISTITERATOR:
+-------------
+
+- Forward and backward direction.
+- Supports add(), set() and remove().
+- Applicable only to List implementations.
+
+ENUMERATION:
+------------
+
+- Forward direction.
+- Legacy cursor.
+- Used with Vector and Hashtable.
+- Does not support remove().
