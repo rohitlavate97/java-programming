@@ -5712,12 +5712,10 @@ password = null               //transient variable data is not stored in the ser
 | Static + Transient | ❌ No        |
 
 
-# Session 58 – Java Multithreading
+-Java Multithreading
+-------------------
 
 ## 1. Introduction to Multithreading
-
-### What is a Task?
-
 A task is a unit of work that needs to be performed by a computer program.
 
 Examples:
@@ -6225,35 +6223,1141 @@ Multithreading is commonly used in:
 6. Web applications – Handling multiple incoming requests.
 7. Background jobs – Performing scheduled or asynchronous tasks.
 
-## 14. Key Takeaways
 
-- Multitasking means handling multiple tasks during the same period.
-- Multithreading means executing multiple threads within a process.
-- A Java application starts with a main thread.
-- Java supports multithreading through Thread and Runnable.
-- There are two traditional ways to create threads.
-- `start()` starts a new thread.
-- `run()` contains the task logic.
-- Calling `run()` directly does not create a new thread.
-- Thread execution order is not guaranteed.
-- Runnable is generally preferred over extending Thread.
-- Threads share heap memory but have individual stacks.
+## 1. Getting Information About the Current Thread
+
+Java provides the `Thread.currentThread()` method to get a reference to the currently executing thread.
+
+### Example
+
+```java
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Thread t = Thread.currentThread();
+
+        System.out.println("Name: " + t.getName());
+        System.out.println("Group: " + t.getThreadGroup().getName());
+        System.out.println("Priority: " + t.getPriority());
+    }
+}
+```
+
+Typical output:
+
+```text
+Name: main
+Group: main
+Priority: 5
+```
+
+### Important methods
+
+| Method | Purpose |
+|---|---|
+| `Thread.currentThread()` | Returns the current thread |
+| `getName()` | Returns thread name |
+| `getThreadGroup()` | Returns the thread group |
+| `getPriority()` | Returns thread priority |
+| `setName()` | Changes thread name |
+| `setPriority()` | Changes thread priority |
+
+## 2. Implementing the Runnable Interface
+
+Another way to implement multithreading is by implementing the `Runnable` interface.
+
+The `Runnable` interface belongs to the `java.lang` package.
+
+It is a functional interface containing one abstract method:
+
+```java
+public interface Runnable {
+    public abstract void run();
+}
+```
+
+### Example
+
+```java
+public class Demo implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("run() method called");
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        Thread t = new Thread(d);
+
+        t.start();
+    }
+}
+```
+
+### Execution flow
+
+1. Create an object of the Demo class.
+2. Pass that object to the Thread constructor.
+3. Call `start()`.
+4. JVM starts a new thread.
+5. The new thread executes the overridden `run()` method.
+
+**Important:** Runnable represents the task, while Thread represents the execution mechanism.
+
+### Why is implementing Runnable recommended?
+
+Java does not support multiple inheritance of classes.
+
+If we extend the Thread class, we cannot extend another class.
+
+However, if we implement Runnable, we can extend another class because Java allows a class to extend one class and implement multiple interfaces.
+
+Example:
+
+```java
+class Parent {
+    void display() {
+        System.out.println("Parent method");
+    }
+}
+
+class Demo extends Parent implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Child thread executing");
+    }
+}
+```
+
+This provides greater flexibility.
+
+**Recommendation:** Prefer implementing Runnable when using the traditional Thread API. For production applications, ExecutorService is generally preferred for managing concurrent tasks.
+
+## 3. Difference Between Extending Thread and Implementing Runnable
+
+| Extending Thread | Implementing Runnable |
+|---|---|
+| Uses class inheritance | Uses interface implementation |
+| Cannot extend another class | Can extend another class |
+| Task and execution are coupled | Task and execution are separated |
+| Less flexible | More flexible |
+| Not ideal for reusable task logic | Supports reusable task logic |
+| Suitable for simple demonstrations | Generally preferred over extending Thread |
+
+## 4. What Is a Thread Scheduler?
+
+A thread scheduler is responsible for determining which eligible thread gets CPU execution time.
+
+Thread scheduling is influenced by the operating system and JVM implementation.
+
+When we call the `start()` method, the thread becomes eligible for execution.
+
+The scheduler determines when the thread gets CPU time.
+
+### What happens when we call start()?
+
+Conceptually:
+
+1. Thread initialization and resource setup.
+2. Thread becomes eligible for scheduling.
+3. Thread gets CPU execution time.
+4. Its `run()` method executes.
+
+Note: Exact internal implementation and resource allocation depend on the JVM and operating system.
+
+### Important points
+
+- Multiple threads can exist within one Java process.
+- Multiple threads share the process heap.
+- Each thread has its own stack.
+- The scheduler controls which eligible thread gets CPU time.
+- We cannot guarantee the exact execution order of threads.
+
+## 5. Difference Between start() and run()
+
+This is one of the most important Java multithreading interview questions.
+
+### start() method
+
+- Starts a new thread.
+- Makes the thread eligible for scheduling.
+- The new thread eventually executes the `run()` method.
+- Allows concurrent execution with the calling thread.
+
+### run() method
+
+- Contains the actual task logic.
+- Calling it directly does not start a new thread.
+- It executes like a normal method in the calling thread.
+
+### Example
+
+```java
+public class Demo implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println(
+            "Running on: "
+            + Thread.currentThread().getName()
+        );
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        Thread t = new Thread(d);
+
+        t.start();
+
+        t.run();
+    }
+}
+```
+
+Possible output:
+
+```text
+Running on: main
+Running on: Thread-0
+```
+
+The order may vary.
+
+### Understanding the output
+
+When we call:
+
+```java
+t.start();
+```
+
+The new thread executes `run()`.
+
+When we call:
+
+```java
+t.run();
+```
+
+The main thread executes `run()` directly.
+
+Therefore, `run()` can be called directly, but it does not create a new thread.
+
+**Remember:**
+
+`start()` → New thread execution.
+
+`run()` → Normal method execution when called directly.
+
+## 6. Thread Lifecycle
+
+A thread passes through different states during its lifetime.
+
+Java defines six official thread states in the `Thread.State` enum.
+
+### 1. NEW
+
+A thread enters the NEW state when its Thread object is created but `start()` has not been called.
+
+Example:
+
+```java
+Thread t = new Thread();
+
+System.out.println(t.getState());
+```
+
+Output:
+
+```text
+NEW
+```
+
+### 2. RUNNABLE
+
+After calling `start()`, the thread enters the RUNNABLE state.
+
+It is eligible to execute and may be waiting for CPU time or actively executing.
+
+Example:
+
+```java
+t.start();
+
+System.out.println(t.getState());
+```
+
+The state may be RUNNABLE, depending on when it is checked.
+
+### 3. BLOCKED
+
+A thread enters the BLOCKED state when it is waiting to acquire a monitor lock to enter a synchronized block or method.
+
+Example:
+
+```java
+synchronized (lock) {
+    // Critical section
+}
+```
+
+If another thread holds the same lock, the current thread may enter BLOCKED.
+
+### 4. WAITING
+
+A thread enters WAITING when it waits indefinitely for another thread to perform a particular action.
+
+Common examples:
+
+```java
+thread.join();
+```
+
+```java
+object.wait();
+```
+
+### 5. TIMED_WAITING
+
+A thread enters TIMED_WAITING when it waits for a specified period.
+
+Examples:
+
+```java
+Thread.sleep(2000);
+```
+
+```java
+thread.join(2000);
+```
+
+```java
+object.wait(2000);
+```
+
+### 6. TERMINATED
+
+A thread enters the TERMINATED state when its execution completes or it terminates because of an uncaught exception.
+
+Once terminated, a thread cannot be started again.
+
+### Thread lifecycle diagram
+
+```text
+        NEW
+         |
+       start()
+         |
+      RUNNABLE
+         |
+    CPU execution
+         |
+   +-----+------+
+   |            |
+ BLOCKED      WAITING
+   |            |
+   +-----+------+
+         |
+      RUNNABLE
+         |
+    TIMED_WAITING
+         |
+      RUNNABLE
+         |
+    TERMINATED
+```
+
+Note: This is a simplified conceptual diagram. A thread can move between RUNNABLE, BLOCKED, WAITING and TIMED_WAITING depending on the operation it performs.
+
+**Important correction:** Java does not define RUNNING as a separate Thread.State. Both running and ready-to-run threads are represented by RUNNABLE.
+
+## 7. Using the sleep() Method
+
+The `sleep()` method temporarily pauses the execution of the currently executing thread.
+
+It is a static method of the Thread class.
+
+### Syntax
+
+```java
+Thread.sleep(2000);
+```
+
+Here, 2000 milliseconds means 2 seconds.
+
+### Example
+
+```java
+public class Demo implements Runnable {
+
+    @Override
+    public void run() {
+
+        System.out.println("Thread started");
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Thread execution completed");
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        Thread t = new Thread(d);
+
+        t.start();
+    }
+}
+```
+
+### Execution flow
+
+1. Thread starts execution.
+2. Prints Thread started.
+3. Calls `Thread.sleep(5000)`.
+4. Enters TIMED_WAITING state.
+5. Waits approximately 5 seconds.
+6. Becomes eligible for execution again.
+7. Continues executing.
+
+### Important points about sleep()
+
+- `sleep()` is a static method.
+- It pauses the currently executing thread.
+- It can throw `InterruptedException`.
+- It does not release any monitor locks held by the thread.
+- It does not guarantee that the thread will execute immediately after the specified duration.
+
+## 8. Creating Multiple Threads
+
+We can create multiple threads using the same Runnable object.
+
+### Example
+
+```java
+public class Demo implements Runnable {
+
+    @Override
+    public void run() {
+
+        System.out.println(
+            "Thread started: "
+            + Thread.currentThread().getName()
+        );
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        Thread t1 = new Thread(d);
+        Thread t2 = new Thread(d);
+        Thread t3 = new Thread(d);
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
+
+Possible output:
+
+```text
+Thread started: Thread-0
+Thread started: Thread-1
+Thread started: Thread-2
+```
+
+The execution order is not guaranteed.
+
+### Important observation
+
+All three threads execute the same Runnable task.
+
+However, each thread has its own execution stack.
+
+If the Runnable object contains shared mutable instance variables, all three threads may access those variables. This can lead to race conditions, which we will study later.
+
+## 9. Setting Thread Names
+
+We can assign meaningful names to threads using `setName()`.
+
+Example:
+
+```java
+Thread t1 = new Thread(d);
+
+t1.setName("Worker-1");
+
+t1.start();
+```
+
+We can retrieve the name using:
+
+```java
+System.out.println(t1.getName());
+```
+
+Meaningful thread names are useful for debugging and monitoring production applications.
+
+## 10. Thread Priority
+
+Java allows us to assign priority values to threads.
+
+Thread priority ranges from 1 to 10.
+
+There are three predefined constants:
+
+| Constant | Value |
+|---|---:|
+| `Thread.MIN_PRIORITY` | 1 |
+| `Thread.NORM_PRIORITY` | 5 |
+| `Thread.MAX_PRIORITY` | 10 |
+
+### Example
+
+```java
+public class Demo implements Runnable {
+
+    @Override
+    public void run() {
+
+        System.out.println(
+            Thread.currentThread().getName()
+            + " - "
+            + Thread.currentThread().getPriority()
+        );
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        Thread t1 = new Thread(d);
+        Thread t2 = new Thread(d);
+        Thread t3 = new Thread(d);
+
+        t1.setName("High-Priority");
+        t1.setPriority(Thread.MAX_PRIORITY);
+
+        t2.setName("Normal-Priority");
+        t2.setPriority(Thread.NORM_PRIORITY);
+
+        t3.setName("Low-Priority");
+        t3.setPriority(Thread.MIN_PRIORITY);
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
+
+### Important points
+
+- Minimum priority is 1.
+- Normal priority is 5.
+- Maximum priority is 10.
+- Default priority of a newly created thread is generally inherited from its parent thread.
+- An invalid priority value throws `IllegalArgumentException`.
+- Thread priority does not guarantee execution order.
+- Higher priority does not guarantee that a thread will execute first.
+
+Thread priority is a scheduling hint, not a reliable mechanism for controlling execution order.
 
 ---
 
-## 15. Next Topics to Learn
 
-After understanding basic thread creation, continue with:
+# Session 60 – Java Multithreading (Part 3)
 
-1. Thread Synchronization
-2. Race Conditions
-3. Critical Sections
-4. Synchronized Methods and Blocks
-5. Inter-thread Communication (`wait()`, `notify()`, `notifyAll()`)
-6. Deadlock
-7. Volatile Keyword
-8. ExecutorService and Thread Pools
-9. Callable and Future
-10. CompletableFuture
-11. Concurrent Collections
-12. Java Concurrency Utilities
+## 1. Can We Start a Thread Multiple Times?
+
+No. We cannot start the same Thread object more than once.
+
+### Example
+
+```java
+public class Demo extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println("Thread is executing");
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        d.start();
+        d.start(); // Illegal
+    }
+}
+```
+
+### Output
+
+The first `start()` call starts the thread.
+
+The second `start()` call throws:
+
+```text
+java.lang.IllegalThreadStateException
+```
+
+### Important points
+
+- A Thread object can be started only once.
+- After a thread terminates, it cannot be restarted.
+- If we need to execute the same task again, create a new Thread object or submit the task again to an ExecutorService.
+
+Example:
+
+```java
+Demo d1 = new Demo();
+Demo d2 = new Demo();
+
+d1.start();
+d2.start();
+```
+
+Both are separate Thread objects.
+
+---
+
+## 2. Callable Interface
+
+Java provides another way to represent a task: the `Callable` interface.
+
+The `Callable` interface was introduced in Java 5 as part of the `java.util.concurrent` package.
+
+It is a functional interface.
+
+Unlike Runnable, Callable can:
+1. Return a result.
+2. Throw checked exceptions.
+
+### Callable Interface Structure
+
+```java
+@FunctionalInterface
+public interface Callable<V> {
+
+    V call() throws Exception;
+
+}
+```
+
+Here:
+- `V` represents the return type.
+- `call()` contains the task logic.
+- The method can return a value.
+- The method can throw an exception.
+
+### Example
+
+```java
+import java.util.concurrent.Callable;
+
+public class Demo implements Callable<String> {
+
+    @Override
+    public String call() throws Exception {
+
+        System.out.println("Task is executing");
+
+        return "Hello Java";
+    }
+}
+```
+
+Here, `Callable<String>` means the task returns a String.
+
+## 3. Difference Between Runnable and Callable
+
+This is an important Java interview question.
+
+| Runnable | Callable |
+|---|---|
+| Introduced in Java 1.0 | Introduced in Java 5 |
+| Package: `java.lang` | Package: `java.util.concurrent` |
+| Uses `run()` method | Uses `call()` method |
+| Returns `void` | Returns a value of type V |
+| Cannot declare checked exceptions in its method signature | Can throw checked exceptions |
+| Represents a task | Represents a task that can return a result |
+| Can be passed to Thread constructor | Cannot be passed directly to Thread constructor |
+
+### Runnable example
+
+```java
+Runnable task = () -> {
+    System.out.println("Task executed");
+};
+```
+
+### Callable example
+
+```java
+Callable<String> task = () -> {
+    return "Task completed";
+};
+```
+
+### Why can't we pass Callable directly to Thread?
+
+The Thread class provides constructors that accept Runnable, not Callable.
+
+Therefore, this is invalid:
+
+```java
+Callable<String> task = () -> "Hello";
+
+// Invalid: Callable is not Runnable
+Thread t = new Thread(task);
+```
+
+To execute a Callable task, we generally use ExecutorService.
+
+---
+
+## 4. ExecutorService
+
+ExecutorService is an interface introduced in Java 5.
+
+It belongs to the `java.util.concurrent` package.
+
+It provides a framework for managing and executing tasks using threads.
+
+Instead of manually creating a new Thread object for every task, we can submit tasks to ExecutorService.
+
+### Why do we need ExecutorService?
+
+Consider an application receiving 1,000 requests.
+
+If we create 1,000 individual threads, it can result in:
+- High memory consumption.
+- Thread creation overhead.
+- Increased context switching.
+- Difficult thread management.
+
+Instead, we can create a thread pool containing a limited number of reusable threads.
+
+ExecutorService manages these threads and executes submitted tasks.
+
+## 5. Thread Pool
+
+A thread pool is a collection of reusable worker threads.
+
+Instead of creating a new thread for every task, we reuse existing threads.
+
+### Example
+
+Suppose we create a thread pool with 10 threads.
+
+```java
+ExecutorService executorService =
+        Executors.newFixedThreadPool(10);
+```
+
+This creates a fixed-size thread pool with 10 worker threads.
+
+If we submit 15 tasks:
+- Initially, up to 10 tasks can execute concurrently.
+- The remaining 5 tasks wait in the work queue.
+- When a worker thread finishes its current task, it can pick up another task.
+
+### Thread Pool Architecture
+
+```text
+       Main Application
+              |
+              |
+       ExecutorService
+              |
+        Task Submission
+              |
+       +--------------+
+       |  Task Queue  |
+       +--------------+
+              |
+      +-------+-------+
+      |       |       |
+   Thread 1 Thread 2 Thread 3
+      |       |       |
+      +-------+-------+
+              |
+       Task Execution
+```
+
+The pool can contain more or fewer threads depending on its configuration.
+
+## 6. Creating a Thread Pool Using Executors
+
+Java provides the `Executors` utility class to create different types of thread pools.
+
+### A. Fixed Thread Pool
+
+```java
+ExecutorService executorService =
+        Executors.newFixedThreadPool(10);
+```
+
+- Creates a pool with a fixed number of worker threads.
+- Threads are reused.
+- Additional tasks wait in the queue when all workers are busy.
+
+Use case: Processing a controlled number of concurrent background tasks.
+
+### B. Single Thread Executor
+
+```java
+ExecutorService executorService =
+        Executors.newSingleThreadExecutor();
+```
+
+- Uses one worker thread.
+- Tasks execute sequentially.
+- Useful when task execution must be serialized.
+
+### C. Cached Thread Pool
+
+```java
+ExecutorService executorService =
+        Executors.newCachedThreadPool();
+```
+
+- Creates new threads when necessary.
+- Reuses previously created idle threads.
+- Suitable for certain short-lived asynchronous tasks.
+
+Note: It can grow significantly under heavy load, so use it carefully in production.
+
+### D. Scheduled Thread Pool
+
+```java
+ScheduledExecutorService executorService =
+        Executors.newScheduledThreadPool(5);
+```
+
+- Executes tasks after a specified delay.
+- Supports periodic task execution.
+- Useful for scheduled background operations.
+
+---
+
+## 7. Submitting Tasks Using ExecutorService
+
+ExecutorService provides two important methods:
+
+1. `execute()`
+2. `submit()`
+
+### execute()
+
+Accepts a Runnable task.
+
+```java
+executorService.execute(task);
+```
+
+It does not return a Future.
+
+### submit()
+
+Accepts Runnable or Callable tasks.
+
+```java
+Future<?> future = executorService.submit(task);
+```
+
+For Callable:
+
+```java
+Future<String> future =
+        executorService.submit(callableTask);
+```
+
+It returns a Future object that represents the result of asynchronous execution.
+
+---
+
+## 8. Practical Example – Fixed Thread Pool
+
+Let's create a Callable task and execute it using ExecutorService.
+
+```java
+import java.util.concurrent.*;
+
+public class Demo implements Callable<String> {
+
+    @Override
+    public String call() throws Exception {
+
+        System.out.println(
+            "Executing: " +
+            Thread.currentThread().getName()
+        );
+
+        return "Hello Java";
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        ExecutorService executorService =
+                Executors.newFixedThreadPool(10);
+
+        for (int i = 1; i <= 15; i++) {
+
+            executorService.submit(d);
+        }
+
+        executorService.shutdown();
+    }
+}
+```
+
+### Understanding the execution
+
+1. Create a Demo object implementing Callable.
+2. Create a fixed thread pool containing 10 worker threads.
+3. Submit 15 tasks.
+4. Up to 10 tasks can execute concurrently.
+5. The remaining tasks wait until worker threads become available.
+6. Worker threads are reused.
+7. `shutdown()` stops accepting new tasks and allows submitted tasks to complete.
+
+### Important
+
+Submitting the same Callable object multiple times is allowed.
+
+Each submission represents a separate task execution. If the task object contains mutable shared state, thread safety must be considered.
+
+---
+
+## 9. Understanding shutdown()
+
+After submitting tasks, we should shut down the ExecutorService when it is no longer needed.
+
+```java
+executorService.shutdown();
+```
+
+Important points:
+- Stops accepting new tasks.
+- Previously submitted tasks are allowed to finish.
+- Does not immediately terminate running tasks.
+- Does not wait for all tasks to finish.
+
+### shutdownNow()
+
+```java
+executorService.shutdownNow();
+```
+
+- Attempts to stop currently executing tasks.
+- Interrupts running worker threads.
+- Returns tasks that never commenced execution.
+- Does not guarantee immediate termination.
+
+For graceful shutdown, we can use:
+
+```java
+executorService.shutdown();
+
+try {
+    if (!executorService.awaitTermination(
+            60, TimeUnit.SECONDS)) {
+
+        executorService.shutdownNow();
+    }
+
+} catch (InterruptedException e) {
+
+    executorService.shutdownNow();
+
+    Thread.currentThread().interrupt();
+}
+```
+
+---
+
+## 10. Future Interface
+
+Future represents the result of an asynchronous computation.
+
+It was introduced in Java 5.
+
+When we submit a Callable task, ExecutorService returns a Future object.
+
+### Important Future methods
+
+| Method | Description |
+|---|---|
+| `get()` | Retrieves the result; waits if necessary |
+| `get(timeout, unit)` | Waits for a specified duration |
+| `isDone()` | Checks whether execution has completed |
+| `isCancelled()` | Checks whether the task was cancelled |
+| `cancel(true)` | Attempts cancellation and may interrupt execution |
+| `cancel(false)` | Attempts cancellation without interrupting a running task |
+
+### Example
+
+```java
+import java.util.concurrent.*;
+
+public class Demo implements Callable<String> {
+
+    @Override
+    public String call() throws Exception {
+
+        Thread.sleep(2000);
+
+        return "Task completed successfully";
+    }
+
+    public static void main(String[] args)
+            throws Exception {
+
+        ExecutorService executorService =
+                Executors.newFixedThreadPool(2);
+
+        Future<String> future =
+                executorService.submit(new Demo());
+
+        System.out.println("Task submitted");
+
+        String result = future.get();
+
+        System.out.println(result);
+
+        executorService.shutdown();
+    }
+}
+```
+
+Possible output:
+
+```text
+Task submitted
+Task completed successfully
+```
+
+### Understanding future.get()
+
+```java
+String result = future.get();
+```
+
+- Retrieves the result of the task.
+- If the task is still running, the calling thread waits.
+- Once completed, the result is returned.
+- If the task fails, `ExecutionException` is thrown.
+
+Important: `get()` is a blocking operation.
+
+---
+
+## 11. Complete Example – Executing Callable Tasks and Retrieving Results
+
+```java
+import java.util.concurrent.*;
+
+public class Demo implements Callable<String> {
+
+    @Override
+    public String call() throws Exception {
+
+        System.out.println(
+            "Executing on: " +
+            Thread.currentThread().getName()
+        );
+
+        return "Hello from Callable";
+    }
+
+    public static void main(String[] args) {
+
+        ExecutorService executorService =
+                Executors.newFixedThreadPool(10);
+
+        try {
+
+            for (int i = 1; i <= 15; i++) {
+
+                Future<String> future =
+                        executorService.submit(new Demo());
+
+                try {
+                    String result = future.get();
+
+                    System.out.println(result);
+
+                } catch (InterruptedException e) {
+
+                    Thread.currentThread().interrupt();
+                    break;
+
+                } catch (ExecutionException e) {
+
+                    System.err.println(
+                        "Task failed: " + e.getCause()
+                    );
+                }
+            }
+
+        } finally {
+
+            executorService.shutdown();
+        }
+    }
+}
+```
+
+Note: This example demonstrates result retrieval, but calling `get()` immediately after each submission makes the loop effectively sequential from the main thread's perspective. To benefit from concurrent execution, submit all tasks first and retrieve their results afterward.
+
+---
+
+## 12. Key Takeaways
+
+1. A Thread object can be started only once.
+2. Runnable was introduced in Java 1.0.
+3. Callable was introduced in Java 5.
+4. Runnable uses `run()`, which returns void.
+5. Callable uses `call()`, which can return a value.
+6. Callable can throw checked exceptions.
+7. Callable cannot be passed directly to the Thread constructor.
+8. ExecutorService manages task execution.
+9. Thread pools reuse worker threads.
+10. `newFixedThreadPool(10)` creates a pool with 10 workers.
+11. `submit()` accepts Runnable and Callable tasks.
+12. Submitting a Callable returns a Future.
+13. `Future.get()` retrieves the result and can block.
+14. `shutdown()` allows submitted tasks to finish.
+15. `shutdownNow()` attempts to interrupt running tasks.
+
+## 13. Next Topics
+
+1. Future and CompletableFuture in depth.
+2. Thread Synchronization.
+3. Race Conditions.
+4. Synchronized Methods and Blocks.
+5. Inter-thread Communication.
+6. Deadlock.
+7. Volatile Keyword.
+8. Concurrent Collections.
+9. ForkJoinPool.
+10. Virtual Threads (Java 21).
