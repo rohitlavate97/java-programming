@@ -7329,35 +7329,539 @@ public class Demo implements Callable<String> {
 
 Note: This example demonstrates result retrieval, but calling `get()` immediately after each submission makes the loop effectively sequential from the main thread's perspective. To benefit from concurrent execution, submit all tasks first and retrieve their results afterward.
 
----
 
-## 12. Key Takeaways
+## Daemon Threads and Synchronization
+-------------------------------------
 
-1. A Thread object can be started only once.
-2. Runnable was introduced in Java 1.0.
-3. Callable was introduced in Java 5.
-4. Runnable uses `run()`, which returns void.
-5. Callable uses `call()`, which can return a value.
-6. Callable can throw checked exceptions.
-7. Callable cannot be passed directly to the Thread constructor.
-8. ExecutorService manages task execution.
-9. Thread pools reuse worker threads.
-10. `newFixedThreadPool(10)` creates a pool with 10 workers.
-11. `submit()` accepts Runnable and Callable tasks.
-12. Submitting a Callable returns a Future.
-13. `Future.get()` retrieves the result and can block.
-14. `shutdown()` allows submitted tasks to finish.
-15. `shutdownNow()` attempts to interrupt running tasks.
+I've organized your handwritten notes into structured Java notes, corrected a few technical inaccuracies, and added practical examples and interview-relevant explanations.
 
-## 13. Next Topics
+# 1. Types of Threads in Java
 
-1. Future and CompletableFuture in depth.
-2. Thread Synchronization.
-3. Race Conditions.
-4. Synchronized Methods and Blocks.
-5. Inter-thread Communication.
-6. Deadlock.
-7. Volatile Keyword.
-8. Concurrent Collections.
-9. ForkJoinPool.
-10. Virtual Threads (Java 21).
+Java threads can broadly be categorized into three types:
+
+1. Main Thread – Created automatically by the JVM when a Java application starts.
+2. User Threads – Threads created by developers to execute application tasks.
+3. Daemon Threads – Background threads that provide supporting services to user threads.
+
+## 1.1 Main Thread
+
+- The JVM creates the main thread automatically.
+- Execution starts from the `main()` method.
+- It can create additional user or daemon threads.
+
+```
+public class Demo {
+    public static void main(String[] args) {
+        Thread currentThread = Thread.currentThread();
+
+        System.out.println("Thread Name: "
+                + currentThread.getName());
+
+        System.out.println("Thread Group: "
+                + currentThread.getThreadGroup());
+
+        System.out.println("Priority: "
+                + currentThread.getPriority());
+    }
+}
+```
+
+Output (typical):
+
+```
+Thread Name: main
+Thread Group: java.lang.ThreadGroup[name=main,...]
+Priority: 5
+```
+
+## 1.2 User Threads
+
+User threads perform the main application work.
+
+Examples:
+
+- Processing customer transactions.
+- Generating reports.
+- Processing payments.
+- Executing business logic.
+
+The JVM normally continues running as long as at least one user thread is alive.
+
+## 1.3 Daemon Threads
+
+A daemon thread is a background thread that provides supporting services to user threads.
+
+Examples:
+
+- Garbage Collector (GC).
+- Background monitoring tasks.
+- JVM housekeeping activities.
+
+Important characteristics:
+
+- Daemon threads have lower priority in terms of their role, but daemon status does not automatically mean lower thread priority.
+- They run in the background.
+- They do not prevent JVM termination.
+- When all user threads finish, the JVM can terminate even if daemon threads are still running.
+- Daemon threads should not be used for tasks that must complete reliably, such as saving critical data.
+
+### How to create a Daemon Thread
+
+Use the `setDaemon(true)` method before calling `start()`.
+
+```
+public class Demo implements Runnable {
+
+    @Override
+    public void run() {
+        Thread currentThread = Thread.currentThread();
+
+        if (currentThread.isDaemon()) {
+            System.out.println("Daemon Thread Executing...");
+        } else {
+            System.out.println("Normal Thread Executing...");
+        }
+    }
+
+    public static void main(String[] args) {
+        Demo d = new Demo();
+
+        Thread t1 = new Thread(d);
+
+        // Convert into a daemon thread
+        t1.setDaemon(true);
+
+        t1.start();
+    }
+}
+```
+
+### Important methods
+
+| Method            | Description                       |
+| ----------------- | --------------------------------- |
+| `setDaemon(true)` | Marks a thread as daemon          |
+| `isDaemon()`      | Checks whether a thread is daemon |
+| `setPriority()`   | Sets thread priority              |
+| `getPriority()`   | Returns thread priority           |
+
+Important: Calling `setDaemon()` after `start()` throws `IllegalThreadStateException`.
+
+## 1.4 What happens when the JVM terminates?
+
+Consider this example:
+
+```
+public class Demo {
+
+    public static void main(String[] args) {
+
+        Thread t1 = new Thread(() -> {
+            while (true) {
+                System.out.println("Daemon thread running...");
+            }
+        });
+
+        t1.setDaemon(true);
+        t1.start();
+
+        System.out.println("Main thread completed");
+    }
+}
+```
+
+When the main thread finishes and no other user threads are alive, the JVM may terminate without waiting for the daemon thread.
+
+The daemon thread is not guaranteed to complete its remaining operations.
+
+Remember: Daemon threads provide background support; user threads perform application work.
+
+# 2. Thread Synchronization in Java
+
+## 2.1 What is Synchronization?
+------------------------------
+Synchronization is a mechanism in Java that controls access to shared resources when multiple threads execute concurrently.
+
+It ensures that only one thread at a time can execute a particular synchronized section protected by the same lock.
+
+Why do we need synchronization?
+
+Consider this situation:
+
+- Thread 1 wants to increment a shared variable.
+- Thread 2 also wants to increment the same variable.
+- Both threads access the variable simultaneously.
+- Their operations may interfere with each other.
+- The final result may be incorrect.
+
+This problem is called a Race Condition.
+
+### Example: Without Synchronization
+
+```
+class Counter {
+
+    int count = 0;
+
+    public void increment() {
+        count++;
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        Counter counter = new Counter();
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println(counter.count);
+    }
+}
+```
+
+Expected output: `2000`
+
+However, without synchronization, the actual result may be less than 2000.
+
+Why?
+
+Because `count++` is not an atomic operation. Internally, it involves:
+
+1. Reading the current value.
+2. Incrementing the value.
+3. Writing the updated value.
+
+Two threads can interfere with these steps.
+
+## 2.2 How to achieve Synchronization?
+
+Java provides the `synchronized` keyword.
+
+There are two commonly used approaches:
+
+1. Synchronized Method.
+2. Synchronized Block.
+
+### Approach 1: Synchronized Method
+
+We can declare an entire method as synchronized.
+
+```
+class Counter {
+
+    int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+}
+
+public class Demo {
+
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        Counter counter = new Counter();
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println(counter.count);
+    }
+}
+```
+
+Output:
+
+```
+2000
+```
+
+Explanation:
+
+- Thread 1 acquires the object's monitor lock.
+- Thread 2 must wait until Thread 1 releases the lock.
+- Once Thread 1 finishes executing the synchronized method, Thread 2 acquires the lock.
+- This prevents simultaneous modification of the shared counter.
+
+### Approach 2: Synchronized Block
+
+Instead of locking the entire method, we can synchronize only the critical section.
+
+```
+class Counter {
+
+    int count = 0;
+
+    public void increment() {
+
+        synchronized (this) {
+            count++;
+        }
+    }
+}
+```
+
+Here:
+
+- `this` represents the current object.
+- The current object's monitor lock is acquired.
+- Only one thread can execute a synchronized block using the same object's monitor at a time.
+- Other threads must wait until the lock is released.
+
+Why use a synchronized block?
+
+It provides better control over the critical section and avoids locking unnecessary code.
+
+## 2.3 Difference Between Synchronized Method and Block
+
+| Synchronized Method                  | Synchronized Block            |
+| ------------------------------------ | ----------------------------- |
+| Locks the entire method              | Locks only a specific section |
+| Less granular control                | More granular control         |
+| Easier to implement                  | More flexible                 |
+| May reduce concurrency unnecessarily | Can improve concurrency       |
+
+# 3. Types of Synchronization
+
+Java supports two important forms of intrinsic synchronization.
+
+## 3.1 Instance-Level Synchronization
+
+When we use `synchronized` on an instance method, the lock is acquired on the current object (`this`).
+
+```
+class Demo {
+
+    public synchronized void display() {
+        System.out.println(
+            Thread.currentThread().getName()
+        );
+    }
+}
+```
+
+Important points:
+
+- The lock belongs to the object instance.
+- Only one thread can execute synchronized instance methods on the same object at a time.
+- Different objects have different instance locks.
+
+For example:
+
+```
+Demo d1 = new Demo();
+Demo d2 = new Demo();
+
+Thread t1 = new Thread(() -> d1.display());
+Thread t2 = new Thread(() -> d1.display());
+
+t1.start();
+t2.start();
+```
+
+Here, both threads use the same object `d1`, so they compete for the same lock.
+
+However, if Thread 1 uses `d1` and Thread 2 uses `d2`, they can execute simultaneously because the objects have different locks.
+
+## 3.2 Class-Level Synchronization
+
+When we declare a static method as synchronized, the lock is acquired on the class object.
+
+```
+class Demo {
+
+    public static synchronized void display() {
+        System.out.println(
+            Thread.currentThread().getName()
+        );
+    }
+}
+```
+
+Important points:
+
+- The lock belongs to the class, not an individual object.
+- Only one thread can execute synchronized static methods of that class at a time.
+- All instances share the same class-level lock.
+
+The equivalent synchronized block is:
+
+```
+class Demo {
+
+    public static void display() {
+
+        synchronized (Demo.class) {
+            System.out.println("Executing...");
+        }
+    }
+}
+```
+
+## 3.3 Instance-Level vs Class-Level Synchronization
+
+| Instance-level                         | Class-level                             |
+| -------------------------------------- | --------------------------------------- |
+| Uses object lock                       | Uses class object lock                  |
+| `synchronized` instance method         | `static synchronized` method            |
+| Lock is `this`                         | Lock is `ClassName.class`               |
+| Different objects have different locks | All instances share the same class lock |
+
+Important interview point: Instance-level and class-level locks are different. A thread executing a static synchronized method does not automatically block another thread executing an instance synchronized method of the same class.
+
+# 4. Important Rules of Synchronization
+
+1. Every Java object has an intrinsic lock (monitor lock).
+2. A thread must acquire the corresponding lock before entering a synchronized method or block.
+3. If another thread already holds that lock, the requesting thread must wait.
+4. The lock is automatically released when the synchronized method or block completes, including when it exits due to an exception.
+5. Synchronization provides mutual exclusion and memory visibility.
+6. Synchronization does not guarantee the order in which waiting threads will acquire the lock.
+
+## 4.1 What is a Critical Section?
+
+A critical section is the part of the program where shared resources are accessed or modified.
+
+Example:
+
+```
+synchronized (this) {
+    // Critical section
+    balance = balance - amount;
+}
+```
+
+Only one thread at a time can execute this critical section using the same object's lock.
+
+## 4.2 Real-world Example: Bank Account
+
+Suppose two threads attempt to withdraw money from the same bank account.
+
+```
+class BankAccount {
+
+    private int balance = 10000;
+
+    public synchronized void withdraw(int amount) {
+
+        if (balance >= amount) {
+
+            System.out.println(
+                Thread.currentThread().getName()
+                + " is withdrawing " + amount
+            );
+
+            balance -= amount;
+
+            System.out.println(
+                "Remaining balance: " + balance
+            );
+
+        } else {
+            System.out.println("Insufficient balance");
+        }
+    }
+}
+```
+
+```
+public class Demo {
+
+    public static void main(String[] args) {
+
+        BankAccount account = new BankAccount();
+
+        Thread t1 = new Thread(
+            () -> account.withdraw(7000), "Thread-1"
+        );
+
+        Thread t2 = new Thread(
+            () -> account.withdraw(5000), "Thread-2"
+        );
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+Because both threads use the same account object, synchronization ensures that only one withdrawal executes at a time.
+
+The final balance cannot become negative through these synchronized withdrawals.
+
+# 5. Quick Revision – Interview Questions
+
+Q1. What is synchronization in Java?
+
+Synchronization is a mechanism to control concurrent access to shared resources and prevent race conditions.
+
+Q2. What is a race condition?
+
+A race condition occurs when multiple threads access shared data concurrently and the result depends on the timing or execution order of their operations.
+
+Q3. What is a monitor lock?
+
+A monitor lock, also called an intrinsic lock, is an object-associated lock used by Java's synchronized methods and blocks.
+
+Q4. Can two threads execute two synchronized methods simultaneously?
+
+- Same object and same instance lock: No.
+- Different objects: Yes.
+- Static synchronized methods on the same class: No.
+- Static and instance synchronized methods: Yes, because they use different locks.
+
+Q5. Can we use synchronized with constructors?
+
+No. Java does not allow the `synchronized` keyword on constructors.
+
+Q6. Does synchronization guarantee thread execution order?
+
+No. It guarantees mutual exclusion, not execution order or fairness.
+
+Q7. What is the difference between `sleep()` and `wait()`?
+
+| `sleep()`                             | `wait()`                                         |
+| ------------------------------------- | ------------------------------------------------ |
+| Defined in Thread class               | Defined in Object class                          |
+| Does not release the monitor lock     | Releases the object's monitor lock               |
+| Used for pausing execution            | Used for inter-thread communication              |
+| Does not require synchronized context | Must be called while owning the object's monitor |
+
+Q8. What happens if a thread calls `wait()` without owning the monitor?
+
+It throws `IllegalMonitorStateException`.
